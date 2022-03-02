@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {auth} from '../Configurations/Firebase'
 import {
   StyleSheet,
   Text,
@@ -15,6 +16,17 @@ import {
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const HandleLogin = () => {
+   
+    auth
+    .signInWithEmailAndPassword(email , password)
+    .then(userCredentials => {
+      const user = userCredentials.user
+      console.log(user.email)
+    })
+    .catch(error => console.log(error.message))
+  }
  
   return (
       
@@ -43,15 +55,14 @@ export default function LoginScreen({ navigation }) {
       </View>
  
       <TouchableOpacity>
-        <Text style={styles.forgot_button}>Forgot Password?</Text>
+        <Text onPress={()=> navigation.navigate('forgetpassword')} style={styles.forgot_button}>Forgot Password?</Text>
       </TouchableOpacity>
  
-      <TouchableOpacity style={styles.loginBtn}>
+      <TouchableOpacity  onPress={HandleLogin} style={styles.loginBtn}>
         <Text style={styles.loginText}>Login</Text>
       </TouchableOpacity>
-      <TouchableOpacity >
+      
         <Text style={styles.TextForgot}>Don't have an account <Text onPress={()=> navigation.navigate('signup')} style={styles.SignUptext}>Sign up?</Text></Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -83,6 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginLeft: 20,
+    textAlign: 'center'
   },
  
   forgot_button: {

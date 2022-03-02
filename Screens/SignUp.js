@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import firebase from "firebase";
+import { auth } from "../Configurations/Firebase";
 import {
   StyleSheet,
   Text,
@@ -11,12 +11,50 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
+import { user } from "../redux/reducers/user";
  
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
+
+
+
+
+
+
+  const HandleSignUP = () => {
+     if(!FirstName){
+      alert('Last Name Field cannot be empty ')
+      return null
+     }
+     if(!LastName){
+       alert('Last Name Field cannot be empty ')
+       return null
+     }
+    auth
+    .createUserWithEmailAndPassword(email , password)
+    .then(() => {
+      
+      firebase.firestore().collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .set({
+        email,
+        FirstName,
+        LastName
+      })
+
+    })
+    .catch(error => alert(error.message))
+  }
+
+
+
+
+
+
+
  
   return (
     <View style={styles.container}>
@@ -62,12 +100,10 @@ export default function SignUp({ navigation }) {
  
      
  
-      <TouchableOpacity style={styles.loginBtn}>
-        <Text style={styles.loginText}>LOGIN</Text>
+      <TouchableOpacity style={styles.loginBtn} onPress={HandleSignUP}>
+        <Text style={styles.loginText}>Create Account</Text>
       </TouchableOpacity>
-      <TouchableOpacity >
         <Text style={styles.TextForgot}>Already got an account ? <Text onPress={()=> navigation.navigate('Login')} style={styles.SignUptext}>Sign in</Text></Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -99,6 +135,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginLeft: 20,
+    textAlign: 'center'
   },
  
   forgot_button: {
@@ -121,5 +158,8 @@ const styles = StyleSheet.create({
   },
   SignUptext: {
      color : '#e8500e'
+  },
+  loginText :  {
+    color : 'white'
   }
 });
