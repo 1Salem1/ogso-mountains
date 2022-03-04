@@ -15,6 +15,8 @@ import firebase from 'firebase';
 import Main from './components/MainScreen';
 import MainScreen from './components/MainScreen';
 import ForgetPassword from './Screens/ForgetPassword';
+import { getAuth, sendEmailVerification } from "firebase/auth";
+
 const store = createStore(rootReducer, applyMiddleware(thunk))
 
 const Stack = createNativeStackNavigator();
@@ -33,18 +35,25 @@ export default class App extends Component {
     }
   }
   componentDidMount() {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebase.auth().onIdTokenChanged((user) => {
       if (!user) {
         this.setState({
           loggedIn: false,
           loaded: true,
         })
-      } else {
+      } else if (user.emailVerified){
         this.setState({
           loggedIn: true,
           loaded: true,
-        })
+        }) 
       }
+      else if (!user.emailVerified){
+        this.setState({
+          loggedIn: false,
+          loaded:  true,
+        })
+        alert("Please verify your email Address")
+            }  
     })
   }
 
@@ -63,7 +72,7 @@ export default class App extends Component {
     if (!loggedIn) {
       return (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="forgetpassword">
+          <Stack.Navigator initialRouteName="Login">
             <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
             <Stack.Screen options={{ headerShown: false }} name="signup" component={SignUp} />
             <Stack.Screen options={{ headerShown: false }} name="forgetpassword" component={ForgetPassword} />

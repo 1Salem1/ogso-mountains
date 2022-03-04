@@ -2,6 +2,8 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import firebase from "firebase";
 import { auth } from "../Configurations/Firebase";
+import { getAuth, sendEmailVerification } from "firebase/auth";
+
 import {
   StyleSheet,
   Text,
@@ -36,7 +38,10 @@ export default function SignUp({ navigation }) {
     auth
     .createUserWithEmailAndPassword(email , password)
     .then(() => {
-      
+    firebase.auth().currentUser.sendEmailVerification()
+    .then(() => {
+      console.log("Email verification is sent")
+  });
       firebase.firestore().collection("users")
       .doc(firebase.auth().currentUser.uid)
       .set({
