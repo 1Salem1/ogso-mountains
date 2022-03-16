@@ -1,16 +1,13 @@
 import { Text, View, StyleSheet } from 'react-native'
 import React, { Component } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { fetchUser } from '../redux/actions/index';
 import Home from './Home'
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import FontAwesome from "react-native-vector-icons/FontAwesome5";
+import Profile from './Profile';
 const Tab = createBottomTabNavigator();
 
 export class MainScreen extends Component {
   componentDidMount() {
-    this.props.fetchUser()
 
   }
 
@@ -21,34 +18,43 @@ export class MainScreen extends Component {
     return (
 
       <Tab.Navigator>
-        <Tab.Screen name="Home" options={{ headerShown: true}} component={Home}
+        <Tab.Screen name="Home" options={{ headerShown: false}} component={Home}
           options={{
+            tabBarActiveTintColor: '#e8500e',
             header: () => null,
             tabBarIcon: ({ color, size }) => (
               <FontAwesome name="home" color={color} size={26} />
             ),
           }} />
-           <Tab.Screen name="Home1" options={{ headerShown: false }} component={Home}
+           <Tab.Screen name="Ski Practice" options={{ headerShown: false }} component={Home}
           options={{
+            tabBarActiveTintColor: '#e8500e',
             header: () => null,
             tabBarIcon: ({ color, size }) => (
-              <FontAwesome name="home" color={color} size={26} />
+              <FontAwesome name="snowboarding" color={color} size={26} />
             ),
           }} />
-           <Tab.Screen name="Home2" options={{ headerShown: false }} component={Home}
+           <Tab.Screen name="Ogso Selector" options={{ headerShown: false }} component={Home}
           options={{
+            tabBarActiveTintColor: '#e8500e',
             header: () => null,
             tabBarIcon: ({ color, size }) => (
-              <FontAwesome name="home" color={color} size={26} />
+              <FontAwesome name="flask" color={color} size={26} />
+            ),
+          }} />
+            <Tab.Screen name="Profile" options={{ headerShown: false }} component={Profile}
+          options={{
+            tabBarActiveTintColor: '#e8500e',
+            header: () => null,
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome name="user" color={color} size={26} />
             ),
           }} />
       </Tab.Navigator>
     )
   }
 }
-const mapStateToProps = (store) => ({
-  currentUser: store.userState.currentUser
-})
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -58,6 +64,5 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatchProps = (dispatch) => bindActionCreators({ fetchUser }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchProps)(MainScreen);
+export default MainScreen;

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1047529689642",
+    "project_id": "ogso-application",
+    "storage_bucket": "ogso-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047529689642:android:8666f898076d9764ba2953",
+        "android_client_info": {
+          "package_name": "com.ogso"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1047529689642-a57sonmkssed7ohl96of4ph292d967sd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQemt_hqIx5zIR5mcTNl3dAbZFPaXsex4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1047529689642-a57sonmkssed7ohl96of4ph292d967sd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1047529689642-l7u9bsn987ddnfjam9v5ur47rj2e8r6d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ogso"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

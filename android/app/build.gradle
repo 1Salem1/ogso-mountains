@@ -132,6 +132,7 @@ android {
     }
 
     defaultConfig {
+        manifestPlaceholders = [appAuthRedirectScheme: 'dev.expo.app']
         applicationId 'ogso.mounains.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

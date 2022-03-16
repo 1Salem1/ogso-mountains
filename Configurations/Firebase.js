@@ -4,11 +4,11 @@ import firebase from "firebase";
 const firebaseConfig = {
   apiKey: "AIzaSyD3fyIAWBOxdWggVo_jIkPO8MFSAaD8yXU",
   authDomain: "ogso-application.firebaseapp.com",
+  databaseURL: "https://ogso-application-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "ogso-application",
   storageBucket: "ogso-application.appspot.com",
   messagingSenderId: "1047529689642",
-  appId: "1:1047529689642:web:60e21ba5485395d8ba2953",
-  measurementId: "G-365N46GPY0"
+  appId: "1:1047529689642:web:1b5"
 };
 
 // Initialize Firebase

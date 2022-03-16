@@ -1,5 +1,13 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-facebook",
+        {
+          "userTrackingPermission": false
+        }
+      ]
+    ],
     "name": "ogso",
     "slug": "ogso",
     "version": "1.0.0",
@@ -17,7 +25,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ogso",
+      "buildNumber": "1.0.0",
+      "googleServicesFile": "./Configurations/GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {

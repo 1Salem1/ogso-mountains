@@ -7,6 +7,7 @@ import firebase from 'firebase'
 
 export default function Home() {
   
+  
     const onLogout = () => {
         firebase.auth().signOut().then((x) => {
           console.log(x)
@@ -36,3 +37,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
   });
+
+
+  

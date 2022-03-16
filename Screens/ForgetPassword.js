@@ -1,6 +1,5 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import firebase from "firebase";
 import {
   StyleSheet,
   Text,
@@ -15,13 +14,7 @@ export default function ForgetPassword({ navigation }) {
   const [email, setEmail] = useState("");
 
   const HandleForgetPassword =() => {
-  firebase.auth().sendPasswordResetEmail(email)
-  .then(sucess => {
-      alert(sucess)
-  })
-  .catch(e => {
-      alert (e)
-  })
+  
 
   }
 
@@ -30,7 +23,7 @@ export default function ForgetPassword({ navigation }) {
       
     <View style={styles.container}>
         
-      <Image style={styles.image} source={require("../assets/logo.png")} />
+     
  
       <StatusBar style="auto" />
       <View style={styles.inputView}>

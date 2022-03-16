@@ -1,11 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { auth } from '../Configurations/Firebase'
-import FontAwesome from "react-native-vector-icons/FontAwesome";
+import * as GoogleSignIn from 'expo-google-app-auth';
 import firebase from "firebase";
-
-
-
+import * as Facebook from 'expo-facebook';
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { AntDesign } from '@expo/vector-icons'; 
 import {
   StyleSheet,
   Text,
@@ -14,113 +13,239 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  ImageBackground,
+  KeyboardAwareScrollView 
 } from "react-native";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  var provider = new firebase.auth.FacebookAuthProvider();
-
-const LoginWithFacebook = () => {
+  state = { user: null };
+  var database = firebase.database();
 
 
-  firebase
-  .auth()
-  .signInWithPopup(provider)
-  .then((result) => {
-    /** @type {firebase.auth.OAuthCredential} */
-    var credential = result.credential;
-
-    // The signed-in user info.
-    var user = result.user;
-
-    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-    var accessToken = credential.accessToken;
-
-    // ...
-  })
-  .catch((error) => {
-    // Handle Errors here.
-    var errorCode = error.code;
-    var errorMessage = error.message;
-    // The email of the user's account used.
-    var email = error.email;
-    // The firebase.auth.AuthCredential type that was used.
-    var credential = error.credential;
-
-    // ...
-  });
-}
 
 
+  const onSignIn = (googleUser) => {
+    console.log(googleUser)
+    firebase.auth().createUserWithEmailAndPassword(googleUser.user.email, googleUser.user.id)
+      .catch(e => {
+        if (e.message == 'The email address is already in use by another account.') {
+          firebase.auth().signInWithEmailAndPassword(googleUser.user.email, googleUser.user.id)
+        }
+      })
+      .then((userCredential) => {
+        // Signed in 
+        const dbRef = firebase.database().ref();
+        dbRef.child("users").child(googleUser.user.id).get().then((snapshot) => {
+          if (snapshot.exists()) {
+            console.log(snapshot.val());
+            return 0
+          }
+          else {
+            database.ref(googleUser.user.id).set({
+              id_user: googleUser.user.id,
+              first_name: googleUser.user.familyName,
+              last_name: googleUser.user.givenName,
+              email: googleUser.user.email,
+              profile_picture: googleUser.user.photoUrl,
+              location: 'no Location for this provider',
+              provider: 'Google',
+            })
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
+      })
+
+  }
+  const HandleLoginWithFacebook = async () => {
+    try {
+      await Facebook.initializeAsync({
+        appId: '2813714962259392',
+      });
+      const { type, token, expirationDate, permissions, declinedPermissions } =
+        await Facebook.logInWithReadPermissionsAsync({
+          permissions: ['public_profile']
+        });
+      if (type === 'success') {
+        await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);  // Set persistent auth state
+        const credential = firebase.auth.FacebookAuthProvider.credential(token);
+        const facebookProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(credential);  // Sign in with Facebook credential
+
+        // Do something with Facebook profile data
+        // OR you have subscribed to auth state change, authStateChange handler will process the profile data
+        let email_user = facebookProfileData.additionalUserInfo.profile.email
+        let first_name = facebookProfileData.additionalUserInfo.profile.first_name
+        let last_name = facebookProfileData.additionalUserInfo.profile.last_name
+        let location = facebookProfileData.additionalUserInfo.profile.location.name
+        let imageUrl = facebookProfileData.additionalUserInfo.profile.picture.data.url
+        let id = facebookProfileData.additionalUserInfo.profile.location.id
+        let provider = 'facebook'
+
+        const dbRef = firebase.database().ref();
+        dbRef.child("users").child(id).get().then((snapshot) => {
+          if (snapshot.exists()) {
+            console.log(snapshot.val());
+            return 0
+          } else {
+            console.log("No data available");
+          }
+        }).catch((error) => {
+          console.error(error);
+        });
+
+        database.ref(id).set({
+          id_user: id,
+          first_name: first_name,
+          last_name: last_name,
+          email: email_user,
+          profile_picture: imageUrl,
+          location: location,
+          provider: provider
+        })
+      } else {
+      }
+    } catch ({ message }) {
+      console.log(`Facebook Login Error: ${message}`);
+    }
+
+  }
 
   const HandleLogin = () => {
-
-    auth
-      .signInWithEmailAndPassword(email, password)
-      .then(userCredentials => {
-        const user = userCredentials.user
-        console.log(user.email)
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Signed in
+        var user = userCredential.user;
+        // ...
       })
-      .catch(error => console.log(error.message))
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+      });
+
+
+  }
+  const HandleLoginWithGoogle = () => {
+    const config = {
+      iosClientId: `734034396875-pqk29bc8eosn8e345fu2fljl6fq8adib.apps.googleusercontent.com`,
+      androidClientId: `734034396875-d2sdsiabd607imcjcietevhpre9f811t.apps.googleusercontent.com`,
+      scopes: ['profile', 'email']
+    }
+    GoogleSignIn.logInAsync(config).then((res) => {
+      const { type, user } = res
+
+
+      if (type == 'success') {
+        onSignIn(res)
+        return res.accessToken
+      }
+
+    })
+      .catch(err => {
+        console.log(err)
+        console.log("an Error occurred . Check your network and try again")
+      })
   }
 
   return (
 
     <View style={styles.container}>
 
-      <Image style={styles.image} source={require("../assets/logo.png")} />
 
-      <StatusBar style="auto" />
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Email"
-          placeholderTextColor="#003f5c"
-          onChangeText={(email) => setEmail(email)}
-        />
-      </View>
 
-      <View style={styles.inputView}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Password"
-          placeholderTextColor="#003f5c"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-      </View>
 
-      <TouchableOpacity>
-        <Text onPress={() => navigation.navigate('forgetpassword')} style={styles.forgot_button}>Forgot Password?</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity onPress={HandleLogin} style={styles.loginBtn}>
-        <Text style={styles.loginText}>Login</Text>
-      </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.loginBtnFacebook} onPress={LoginWithFacebook}>
-        <FontAwesome style={{  marginTop : 20 }} name='facebook' size={20} color='#fff' />
-        <Text style={{  color: '#fff', fontWeight: 'bold' }}>
-      
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.loginBtnGoogle}>
-        <FontAwesome style={{  marginTop : 20 }} name='google' size={20} color='#fff' />
-        <Text style={{  color: '#fff', fontWeight: 'bold' }}>
-      
-        </Text>
-      </TouchableOpacity>
-   
-      <Text style={styles.TextForgot}>Don't have an account <Text onPress={() => navigation.navigate('signup')} style={styles.SignUptext}>Sign up?</Text></Text>
+
+
+            <View style={{ flexDirection: "row",  marginTop: 70  ,  }} >
+            <AntDesign style={{right : 150}}onPress={navigation.goBack} name="left" size={24} color="black" />
+            
+               <Text   onPress={()=> navigation.navigate('signup')}   style={{left : 140 , fontWeight :'bold'}}>Sign Up</Text>
+            
+       </View>
+
+
+
+      <ImageBackground source={require('../assets/Backgrounds/Sign-In.png')} resizeMode="cover" style={styles.image}>
+        <Text style={{ "marginBottom": 30, "color": 'black', "fontSize": 35, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`SIGN IN`}</Text>
+       
+        <View style={{ flexDirection: "row", marginBottom: 50, marginTop: 60    }} >
+         <View  style={{width: 155,
+    height: 55,
+    borderRadius: 5,
+    backgroundColor: '#4285f4', }}>
+         <FontAwesome5Icon.Button  style={{padding : 10 , top : 5}}name="google"
+          
+            title="With Google" onPress={HandleLoginWithGoogle} >With Google</FontAwesome5Icon.Button>
+
+         </View>
+         <View style={styles.space} /> 
+        <View style={{width: 155,
+    height: 55,
+    borderRadius: 5,
+    backgroundColor: '#3b5998',}}>
+        <FontAwesome5Icon.Button  name='facebook' style={{padding : 10 ,  top : 5}}
+                backgroundColor={'#3b5998'}
+           onPress={HandleLoginWithFacebook} >With Facebook</FontAwesome5Icon.Button>
+
+        </View>
+         
+        </View>
+        <Text style={{marginBottom :30 , color : 'grey' , fontWeight :'bold'}}>Or With Email</Text>
+
+        <StatusBar style="auto" />
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Your Email"
+            placeholderTextColor="#003f5c"
+            onChangeText={(email) => setEmail(email)}
+          />
+
+
+        </View>
+        <View style={styles.inputView}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Password"
+            placeholderTextColor="#003f5c"
+            onChangeText={(password) => setEmail(password)}
+            secureTextEntry={true}
+          />
+
+
+        </View>
+
+
+
+        <TouchableOpacity onPress={HandleLogin} style={styles.loginBtn}>
+          <Text style={styles.loginText}>Sign In</Text>
+        </TouchableOpacity>
+
+
+
+      </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+
+
+searchIcon: {
+    padding: 10,
+},
+input: {
+    flex: 1,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 0,
+    backgroundColor: '#fff',
+    color: '#424242',
+},
   container: {
     flex: 1,
     backgroundColor: "#fff",
@@ -131,14 +256,21 @@ const styles = StyleSheet.create({
   image: {
     marginBottom: 40,
   },
+  space: {
+    width: 20, 
+    height: 20,
+  },
 
   inputView: {
-    backgroundColor: "#FFC0CB",
-    borderRadius: 30,
+    borderRadius: 5,
+    borderStyle: "solid",
+    borderColor: '#cccccc',
     width: "70%",
     height: 45,
     marginBottom: 20,
-
+    width: 308,
+    height: 50,
+    backgroundColor: '#ffffff',
     alignItems: "center",
   },
 
@@ -147,34 +279,42 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     marginLeft: 20,
-    textAlign: 'center'
+    left : 15,
+    width: 340
   },
 
   forgot_button: {
     height: 30,
     marginBottom: 30,
   },
-  loginBtnGoogle : {
-    width: "80%",
+  loginBtnGoogle: {
     borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
     backgroundColor: "#d34836",
-    color: 'white'
+    color: 'white',
+  },
+  image: {
+    alignContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    width: '100%'
   },
 
   loginBtn: {
-    width: "80%",
-    borderRadius: 25,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,
     backgroundColor: "#e8500e",
-    color: 'white'
-  }, 
+    color: 'white',
+    width: 340
+  },
   loginBtnFacebook: {
     width: "80%",
     borderRadius: 25,
@@ -193,6 +333,8 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: 'white',
-    fontSize: 16
+    fontSize: 16,
+    fontWeight: 'bold'
+
   }
 });
