@@ -1,9 +1,13 @@
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet , Image } from 'react-native'
 import React, { Component } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home'
+import Icon from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import Profile from './Profile';
+import Faq from "./FAQ/faq"
+import { AntDesign } from '@expo/vector-icons'; 
+import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 const Tab = createBottomTabNavigator();
 
 export class MainScreen extends Component {
@@ -18,36 +22,36 @@ export class MainScreen extends Component {
     return (
 
       <Tab.Navigator>
-        <Tab.Screen name="Home" options={{ headerShown: false}} component={Home}
+        <Tab.Screen name="Home"  component={Faq}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
             tabBarIcon: ({ color, size }) => (
-              <FontAwesome name="home" color={color} size={26} />
+              <AntDesign name="home" size={30} />
             ),
           }} />
-           <Tab.Screen name="Ski Practice" options={{ headerShown: false }} component={Home}
+           <Tab.Screen name="Ski Practice"  component={Home}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
             tabBarIcon: ({ color, size }) => (
-              <FontAwesome name="snowboarding" color={color} size={26} />
+              <Icon name="md-notifications" size={26} style={styles.icon}></Icon>
             ),
           }} />
-           <Tab.Screen name="Ogso Selector" options={{ headerShown: false }} component={Home}
+           <Tab.Screen name="Ogso Selector"  component={Home}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
             tabBarIcon: ({ color, size }) => (
-              <FontAwesome name="flask" color={color} size={26} />
+              <Icon2 name="comment-question-outline" size={26}  style={styles.icon}></Icon2>
             ),
           }} />
-            <Tab.Screen name="Profile" options={{ headerShown: false }} component={Profile}
+            <Tab.Screen name="Profile" component={Profile}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
             tabBarIcon: ({ color, size }) => (
-              <FontAwesome name="user" color={color} size={26} />
+              <Icon name="ios-mail" size={26} style={styles.icon2}></Icon>
             ),
           }} />
       </Tab.Navigator>

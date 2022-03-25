@@ -9,11 +9,10 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TextInput,
-  Button,
   TouchableOpacity,
-  ImageBackground
+  ImageBackground,
+
 } from "react-native";
  
 export default function SignUp({ navigation }) {
@@ -24,6 +23,7 @@ export default function SignUp({ navigation }) {
 
 
 
+  var database = firebase.database();
 
 
 
@@ -32,15 +32,23 @@ export default function SignUp({ navigation }) {
     .then((success) => {
        console.log(success) 
        const dbRef = firebase.database().ref();
-           database.ref(uuid.v4()).set({
-             id_user: uuid.v4(),
+       var myUserId = firebase.auth().currentUser.uid;
+       
+       database.ref('users/' +  myUserId).set({
+             id_user:  myUserId,
              first_name: FirstName,
              last_name: LastName,
              email: email,
              profile_picture: 'No Image',
              location: 'no Location for this provider',
              provider: 'By Signing in',
+           }.then( er => {
+             console.log('done')
            })
+           .catch(e => {
+             console.log(e)
+           })
+           )
          
  
     })
@@ -51,8 +59,7 @@ export default function SignUp({ navigation }) {
 
 
 
-  var database = firebase.database();
-
+ 
 
 
 
@@ -67,13 +74,14 @@ export default function SignUp({ navigation }) {
       .then((userCredential) => {
         // Signed in 
         const dbRef = firebase.database().ref();
-        dbRef.child("users").child(googleUser.user.id).get().then((snapshot) => {
+        dbRef.child("users").child('users/' + googleUser.user.id).get().then((snapshot) => {
           if (snapshot.exists()) {
             console.log(snapshot.val());
             return 0
           }
           else {
-            database.ref(googleUser.user.id).set({
+         
+            database.ref( 'users/' + googleUser.user.id).set({
               id_user: googleUser.user.id,
               first_name: googleUser.user.familyName,
               last_name: googleUser.user.givenName,
@@ -114,7 +122,8 @@ export default function SignUp({ navigation }) {
         let provider = 'facebook'
 
         const dbRef = firebase.database().ref();
-        dbRef.child("users").child(id).get().then((snapshot) => {
+        var myUserId = firebase.auth().currentUser.uid;
+        dbRef.child("users").child('users/' + id).get().then((snapshot) => {
           if (snapshot.exists()) {
             console.log(snapshot.val());
             return 0
@@ -125,7 +134,7 @@ export default function SignUp({ navigation }) {
           console.error(error);
         });
 
-        database.ref(id).set({
+        database.ref('users/' + id ).set({
           id_user: id,
           first_name: first_name,
           last_name: last_name,
@@ -145,8 +154,8 @@ export default function SignUp({ navigation }) {
 
   const HandleLoginWithGoogle = () => {
     const config = {
-      iosClientId: `734034396875-pqk29bc8eosn8e345fu2fljl6fq8adib.apps.googleusercontent.com`,
-      androidClientId: `734034396875-d2sdsiabd607imcjcietevhpre9f811t.apps.googleusercontent.com`,
+      androidClientId:'734034396875-d2sdsiabd607imcjcietevhpre9f811t.apps.googleusercontent.com',
+      iosClientId: '734034396875-pqk29bc8eosn8e345fu2fljl6fq8adib.apps.googleusercontent.com',
       scopes: ['profile', 'email']
     }
     GoogleSignIn.logInAsync(config).then((res) => {
@@ -172,18 +181,23 @@ export default function SignUp({ navigation }) {
 
  
   return (
-    <View style={styles.container}>
+    <View 
+  
+    
+    style={styles.container}>
 
 
 
      <ImageBackground source={require('../assets/Backgrounds/Sign-Up.png')} resizeMode="cover" style={styles.image}>
-       
+     <AntDesign style={{top : 50 , left : 10 , width : 30}}onPress={navigation.goBack} name="left" size={24} color="black" />
+     <Text   onPress={()=> navigation.navigate('signup')}   style={{left :310 ,top : 35, fontWeight :'bold' , marginRight : 20}}>Sign Up</Text>
 
-     <Text style={{ top :140, "marginTop": 0, "color": 'black', "fontSize": 35, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`SIGN up`}</Text>
-        <View style={{ flexDirection: "row",  marginTop : 30  , justifyContent :'center'}} >
-         <View  style={{width : 140  }}>
+      <View>
+      <Text style={{ top :80, "marginTop": 0, "color": 'black', "fontSize": 35, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`SIGN UP`}</Text>
+        <View style={{ flexDirection: "row",  position:'relative' , top : 130  , justifyContent :'center' , paddingBottom : 50 }} >
+         <View  style={{width : 140  , backgroundColor :'' }}>
          <FontAwesome5Icon.Button  style={{padding : 15}}name="google"
-          
+               backgroundColor={'#3367D6'}
             title="With Google" onPress={HandleLoginWithGoogle} >With Google</FontAwesome5Icon.Button>
 
          </View>
@@ -196,8 +210,13 @@ export default function SignUp({ navigation }) {
         </View>
          
         </View>
+      </View>
+    
+        
       <StatusBar style="auto" />
-      <View style={[styles.container ,{Top :50}]}>
+      <View style={[styles.container,{bottom:110} ] }>
+      
+      
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
@@ -218,7 +237,7 @@ export default function SignUp({ navigation }) {
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
-          placeholder="YourEmail"
+          placeholder="Your  Email"
           placeholderTextColor="#003f5c"
           onChangeText={(email) => setEmail(email)}
         />
@@ -232,14 +251,16 @@ export default function SignUp({ navigation }) {
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
+          
         />
+         
       </View>
-       
+  
       <TouchableOpacity style={styles.loginBtn} onPress={HandleSignUP}>
         <Text style={styles.loginText }>Sign Up</Text>
       </TouchableOpacity>
-      <View style={{textAlign :'center'}}>
-      <Text style={styles.TextForgot }>By Singing Up , you agree to {"\n"}our <Text onPress={()=> navigation.navigate('Login')} style={styles.SignUptext}>Privacy Policy</Text></Text>
+      <View style={{textAlign :'center' , top : 45} }>
+      <Text style={[styles.TextForgot ]}>By Singing Up , you agree to {"\n"}our <Text onPress={()=> navigation.navigate('Login')} style={styles.SignUptext}>Privacy Policy</Text></Text>
 
       </View>
        
@@ -273,16 +294,17 @@ const styles = StyleSheet.create({
     width: "70%",
     height: 45,
     marginBottom: 20,
- 
-    alignItems: "center",
+    top : 140,
+    width: 280,
   },
  
   TextInput: {
+     width: 280,
     height: 50,
     flex: 1,
     padding: 10,
     marginLeft: 20,
-    textAlign: 'center'
+    right : 10
   },
  
   forgot_button: {
@@ -295,12 +317,11 @@ const styles = StyleSheet.create({
   },
  
   loginBtn: {
-    width: "80%",
-    borderRadius: 25,
+    width: 280,
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    top : 100,
+    top : 160,
     backgroundColor: "#e8500e",
     color : 'white'
   },

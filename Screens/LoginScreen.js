@@ -5,6 +5,7 @@ import firebase from "firebase";
 import * as Facebook from 'expo-facebook';
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { AntDesign } from '@expo/vector-icons'; 
+
 import {
   StyleSheet,
   Text,
@@ -14,7 +15,8 @@ import {
   Button,
   TouchableOpacity,
   ImageBackground,
-  KeyboardAwareScrollView 
+  KeyboardAvoidingView, 
+  Platform
 } from "react-native";
 
 export default function LoginScreen({ navigation }) {
@@ -43,7 +45,7 @@ export default function LoginScreen({ navigation }) {
             return 0
           }
           else {
-            database.ref(googleUser.user.id).set({
+            database.ref('users/' + googleUser.user.id).set({
               id_user: googleUser.user.id,
               first_name: googleUser.user.familyName,
               last_name: googleUser.user.givenName,
@@ -64,16 +66,16 @@ export default function LoginScreen({ navigation }) {
       await Facebook.initializeAsync({
         appId: '2813714962259392',
       });
-      const { type, token, expirationDate, permissions, declinedPermissions } =
+      const { type, token} =
         await Facebook.logInWithReadPermissionsAsync({
           permissions: ['public_profile']
         });
       if (type === 'success') {
         await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);  // Set persistent auth state
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const facebookProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(credential);  // Sign in with Facebook credential
+        const facebookProfileData = await firebase.auth().signInWithCredential(credential);  // Sign in with Facebook credential
 
-        // Do something with Facebook profile data
+        // Do something with Facebook profile dataa
         // OR you have subscribed to auth state change, authStateChange handler will process the profile data
         let email_user = facebookProfileData.additionalUserInfo.profile.email
         let first_name = facebookProfileData.additionalUserInfo.profile.first_name
@@ -84,18 +86,15 @@ export default function LoginScreen({ navigation }) {
         let provider = 'facebook'
 
         const dbRef = firebase.database().ref();
-        dbRef.child("users").child(id).get().then((snapshot) => {
+         dbRef.child("users").child('users/' + id).get().then((snapshot) => {
           if (snapshot.exists()) {
-            console.log(snapshot.val());
             return 0
-          } else {
-            console.log("No data available");
           }
         }).catch((error) => {
           console.error(error);
         });
 
-        database.ref(id).set({
+        database.ref('users/'+ id).set({
           id_user: id,
           first_name: first_name,
           last_name: last_name,
@@ -104,7 +103,6 @@ export default function LoginScreen({ navigation }) {
           location: location,
           provider: provider
         })
-      } else {
       }
     } catch ({ message }) {
       console.log(`Facebook Login Error: ${message}`);
@@ -147,9 +145,7 @@ export default function LoginScreen({ navigation }) {
         console.log("an Error occurred . Check your network and try again")
       })
   }
-
-  return (
-
+     return(
     <View style={styles.container}>
 
 
@@ -160,7 +156,7 @@ export default function LoginScreen({ navigation }) {
 
 
             <View style={{ flexDirection: "row",  marginTop: 70  ,  }} >
-            <AntDesign style={{right : 150}}onPress={navigation.goBack} name="left" size={24} color="black" />
+            <AntDesign style={{right : 150}} onPress={navigation.goBack} name="left" size={24} color="black" />
             
                <Text   onPress={()=> navigation.navigate('signup')}   style={{left : 140 , fontWeight :'bold'}}>Sign Up</Text>
             
@@ -177,7 +173,7 @@ export default function LoginScreen({ navigation }) {
     borderRadius: 5,
     backgroundColor: '#4285f4', }}>
          <FontAwesome5Icon.Button  style={{padding : 10 , top : 5}}name="google"
-          
+            backgroundColor={'#4285f4'}
             title="With Google" onPress={HandleLoginWithGoogle} >With Google</FontAwesome5Icon.Button>
 
          </View>
@@ -211,13 +207,16 @@ export default function LoginScreen({ navigation }) {
             style={styles.TextInput}
             placeholder="Password"
             placeholderTextColor="#003f5c"
-            onChangeText={(password) => setEmail(password)}
+            onChangeText={(password) => setPassword(password)}
             secureTextEntry={true}
           />
 
 
         </View>
-
+      
+        <Text    onPress={()=> navigation.navigate('forgetpassword')}  style={{ left : 290, top : -10,  color : 'black'  , height :20,  width :'100%'}}>Forgot?</Text>
+    
+       
 
 
         <TouchableOpacity onPress={HandleLogin} style={styles.loginBtn}>
@@ -228,8 +227,14 @@ export default function LoginScreen({ navigation }) {
 
       </ImageBackground>
     </View>
-  );
-}
+
+
+
+     ) 
+  }
+
+  
+
 
 const styles = StyleSheet.create({
 
@@ -239,9 +244,6 @@ searchIcon: {
 },
 input: {
     flex: 1,
-    paddingTop: 10,
-    paddingRight: 10,
-    paddingBottom: 10,
     paddingLeft: 0,
     backgroundColor: '#fff',
     color: '#424242',
@@ -249,12 +251,12 @@ input: {
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    alignContent :'center',
     alignItems: "center",
     justifyContent: "center",
   },
 
   image: {
-    marginBottom: 40,
   },
   space: {
     width: 20, 
@@ -277,8 +279,7 @@ input: {
   TextInput: {
     height: 50,
     flex: 1,
-    padding: 10,
-    marginLeft: 20,
+    marginLeft: 30,
     left : 15,
     width: 340
   },
@@ -292,7 +293,6 @@ input: {
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 10,
     backgroundColor: "#d34836",
     color: 'white',
   },
@@ -313,7 +313,7 @@ input: {
     marginTop: 10,
     backgroundColor: "#e8500e",
     color: 'white',
-    width: 340
+    width: 308
   },
   loginBtnFacebook: {
     width: "80%",

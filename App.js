@@ -17,6 +17,7 @@ import WelcomeStep3 from './Screens/tuto/step3';
 import WelcomeStep4 from './Screens/tuto/step4';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
+
 const Stack = createNativeStackNavigator();
 
 

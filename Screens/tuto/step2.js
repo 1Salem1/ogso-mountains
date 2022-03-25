@@ -20,7 +20,7 @@ export default function Step1({ navigation }) {
         <TouchableOpacity   onPress={()=> navigation.navigate('step3')}  style={{alignItems:'center',justifyContent:'center' , height : 1000} }>
         
             < SvgComponent    style={{top : 280}} />
-         
+            <StatusBar style="auto" />
         </TouchableOpacity>
       </ImageBackground>
     </View>

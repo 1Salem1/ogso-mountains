@@ -1,7 +1,6 @@
 import { View, Text  , StyleSheet , ImageBackground } from 'react-native'
 import { Button } from 'react-native-elements';
 import React from 'react'
-import uuid from 'react-native-uuid';
 import { StatusBar  } from 'expo-status-bar';
 
 export default function Step4({ navigation }) {
@@ -12,7 +11,7 @@ export default function Step4({ navigation }) {
         <Text style={styles.containerText} >{`LET'S ENJOY`}</Text>
       <Text style={styles.containerText}>{`YOUR`}</Text>
       <Text style={styles.containerText}>{`EXPEDITION!`}</Text>
-
+      <StatusBar style="auto" />
 
 
 

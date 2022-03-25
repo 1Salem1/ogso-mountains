@@ -1,5 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+import { AntDesign } from '@expo/vector-icons';
+import firebase from "firebase"; 
 import {
   StyleSheet,
   Text,
@@ -8,13 +10,20 @@ import {
   TextInput,
   Button,
   TouchableOpacity,
+  ImageBackground
 } from "react-native";
  
 export default function ForgetPassword({ navigation }) {
   const [email, setEmail] = useState("");
 
   const HandleForgetPassword =() => {
-  
+    firebase.auth().sendPasswordResetEmail(email)
+    .then(sucess => {
+        alert('Check your email')
+    })
+    .catch(e => {
+        alert (e)
+    })
 
   }
 
@@ -22,10 +31,12 @@ export default function ForgetPassword({ navigation }) {
   return (
       
     <View style={styles.container}>
-        
-     
- 
-      <StatusBar style="auto" />
+          <ImageBackground source={require('../assets/Backgrounds/Sign-In.png')} resizeMode="cover" style={styles.image}>
+          <AntDesign style={{top : 50 , right : 170 }}onPress={navigation.goBack} name="left" size={24} color="black" />
+          <Text style={{ top :110 , "color": 'black', "fontSize": 30, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`FORGET PASSWORD`}</Text>
+          <Text style={{ top : 130,  color : 'grey' }}>We will send you a reset link by email</Text>
+        <View style={{flex : 1 , justifyContent :'center' }}>
+        <StatusBar style="auto" />
       <View style={styles.inputView}>
         <TextInput
           style={styles.TextInput}
@@ -34,11 +45,15 @@ export default function ForgetPassword({ navigation }) {
           onChangeText={(email) => setEmail(email)}
         />
       </View>
-      <TouchableOpacity onPress={HandleForgetPassword} style={styles.loginBtn}>
-        <Text style={styles.loginText}>Send a mail verification</Text>
+      <TouchableOpacity  style={styles.loginBtn}>
+        <Text onPress={HandleForgetPassword} style={styles.loginText}>Send a reset link</Text>
       </TouchableOpacity>
+
+        </View>
+    
       
-        <Text style={styles.TextForgot}>Back to the  <Text onPress={()=> navigation.navigate('Login')} style={styles.SignUptext}>Login</Text></Text>
+       </ImageBackground>
+     
     </View>
   );
 }
@@ -52,25 +67,29 @@ const styles = StyleSheet.create({
   },
  
   image: {
-    marginBottom: 40,
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+    width: '100%',
+    alignItems:'center'
   },
  
   inputView: {
-    backgroundColor: "#FFC0CB",
-    borderRadius: 30,
-    width: "70%",
-    height: 45,
-    marginBottom: 20,
- 
-    alignItems: "center",
+    width: 308,
+    height: 50,
+    borderRadius: 5,
+    borderColor: '#cccccc',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    backgroundColor: '#ffffff',
+    marginBottom :30
   },
  
   TextInput: {
+    
     height: 50,
     flex: 1,
-    padding: 10,
-    marginLeft: 20,
-    textAlign: 'center'
+    left : 30
   },
  
   forgot_button: {
@@ -79,8 +98,7 @@ const styles = StyleSheet.create({
   },
  
   loginBtn: {
-    width: "80%",
-    borderRadius: 25,
+    width: 308,
     height: 50,
     alignItems: "center",
     justifyContent: "center",

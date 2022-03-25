@@ -1,7 +1,6 @@
 
 import React from 'react'
 import { Image, StyleSheet, Text, View, ImageBackground  , TouchableOpacity} from 'react-native';
-import { Button } from 'react-native-web';
 import SvgComponent from '../../components/SvgComponents/ButtonStep';
 import { StatusBar } from 'expo-status-bar';
 
@@ -20,7 +19,7 @@ export default function Step1({ navigation }) {
         <TouchableOpacity   onPress={()=> navigation.navigate('step2')}  style={{alignItems:'center',justifyContent:'center' , height : 1000} }>
         
             < SvgComponent    style={{top : 280}} />
-         
+            <StatusBar style="auto" />
         </TouchableOpacity>
       </ImageBackground>
     </View>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import firebase from 'firebase';
 import {
   StyleSheet,
   Text,
@@ -6,29 +7,76 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native';
+import ProfileTab from './Profile/ProfileTab';
 
-export  class Profile extends Component {
-  componentDidMount() {
+
+
+
+
+
+
+
+
+
+export default class Profile extends Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      Name : 'Dear Martian',
+      Email: null,
+      imageUrl : require('../assets/Avatar/avatar6.png')
+    }
+
+
   }
-  
+
+  componentDidMount() {
+    firebase.auth().onIdTokenChanged((user) => {
+      var users = firebase.database().ref('users').once('value').then(r => {
+
+      
+      });
+    if (user) {
+        if(user.displayName)
+      this.setState({Name : user.displayName})
+      this.setState({Email : user.email})
+      
+    } else {
+    }
+
+  }) 
+}
+
+
+
+
+
 
   render() {
-  
-  
-    const {currentUser} = this.props
     return (
+      <View style={styles.container}>
+        <View>
       
-              <Add />
+           <View style={{top : 130}} >
+           <View style={styles.bgCopy}>
+           <Image style={styles.avatar} source={this.state.imageUrl}/>
          
+           </View>
+           <Text style={styles.welcomeBack}>Welcome back</Text>
+           <Text style={styles.flenBen}>{this.state.Name}</Text>
+           </View>
+
+        </View>
+         
+          <ProfileTab   />
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  header:{
-    backgroundColor: "#e8500e",
-    height:200,
-  },
+ 
   avatar: {
     width: 130,
     height: 130,
@@ -37,52 +85,46 @@ const styles = StyleSheet.create({
     borderColor: "white",
     marginBottom:10,
     alignSelf:'center',
-    position: 'absolute',
-    marginTop:130
+  
   },
-  name:{
-    fontSize:22,
-    color:"#FFFFFF",
-    fontWeight:'600',
+  bgCopy: {
+    shadowColor: 'rgba(91, 77, 188, 0.18)',
+    shadowOffset: { width: 12, height: 0 },
+    shadowRadius: 32,
+    borderRadius: 25,
+    backgroundColor: '#ffffff',
+    bottom : 50
   },
-  body:{
-    marginTop:40,
-  },
-  bodyContent: {
+  container :{
+    backgroundColor: '#ffffff',
     flex: 1,
-    alignItems: 'center',
-    padding:30,
+    backgroundColor: "#fff",
+    alignContent :'center',
+    alignItems: "center",
+    justifyContent: "center",
+  
+  }
+  ,
+  welcomeBack : {
+    top : -60,
+    color: '#000000',
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontStyle: 'normal',
+    textAlign: 'center',
+    lineHeight: 36,
   },
-  name:{
-    fontSize:28,
-    color: "#696969",
-    fontWeight: "600"
-  },
-  info:{
-    fontSize:16,
-    color: "#00BFFF",
-    marginTop:10
-  },
-  description:{
-    fontSize:16,
-    color: "#696969",
-    marginTop:10,
-    textAlign: 'center'
-  },
-  buttonContainer: {
-    marginTop:10,
-    height:45,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom:20,
-    width:250,
-    borderRadius:30,
-    backgroundColor: "#00BFFF",
-  },
+  flenBen : {
+    top  : -50,
+    height: 37,
+    color: '#eb5c26',
+    fontFamily: 'Museo',
+    fontSize: 30,
+    fontWeight: '400',
+    fontStyle: 'normal',
+    textAlign: 'center',
+    lineHeight: 36,
+    marginBottom : 110
+  }
 });
-
-
-
-export default Profile;
                     
