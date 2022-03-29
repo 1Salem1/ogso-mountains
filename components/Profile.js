@@ -33,9 +33,10 @@ export default class Profile extends Component {
 
   componentDidMount() {
     firebase.auth().onIdTokenChanged((user) => {
-      var users = firebase.database().ref('users').once('value').then(r => {
-
-      
+       firebase.database().ref('users').once('value').then(result => {
+         console.log(user.email)
+         console.log(result)
+      console.log(userProfileData)
       });
     if (user) {
         if(user.displayName)

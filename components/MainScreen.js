@@ -8,6 +8,7 @@ import Profile from './Profile';
 import Faq from "./FAQ/faq"
 import { AntDesign } from '@expo/vector-icons'; 
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+import Contact from './Contact';
 const Tab = createBottomTabNavigator();
 
 export class MainScreen extends Component {
@@ -38,7 +39,7 @@ export class MainScreen extends Component {
               <Icon name="md-notifications" size={26} style={styles.icon}></Icon>
             ),
           }} />
-           <Tab.Screen name="Ogso Selector"  component={Home}
+           <Tab.Screen name="Ogso Selector"  component={Contact}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
