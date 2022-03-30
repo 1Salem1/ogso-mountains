@@ -16,29 +16,16 @@ export default function Contact({ navigation }) {
 
 
    const  handleEmail = () => {
-        Mailer.mail({
-          subject: 'ogso mountain essentiels applications',
-          recipients: ['salem.d@ogso.eu'],
-          ccRecipients: ['supportCC@example.com'],
-          bccRecipients: ['supportBCC@example.com'],
-          body: '<b>A Bold Body</b>',
-          isHTML: true,
-          attachment: {
-            path: '',  // The absolute path of the file from which to read data.
-            type: '',   // Mime Type: jpg, png, doc, ppt, html, pdf, csv
-            name: '',   // Optional: Custom filename for attachment
-          }
-        }, (error, event) => {
-          Alert.alert(
-            error,
-            event,
-            [
-              {text: 'Ok', onPress: () => console.log('OK: Email Error Response')},
-              {text: 'Cancel', onPress: () => console.log('CANCEL: Email Error Response')}
-            ],
-            { cancelable: true }
-          )
-        });
+    Communications.email(
+        ["salem.d@ogso.eu", "salem.dahmani345@gmail.com"],   //<---- destination emails
+        null,                      // <--- CC email
+        null,                      // <--- bcc   
+        Subject,            //<--- Subject
+        
+        `From ${Name},
+         
+        ${Message}`   //<--- Body Text
+      );
     }
 
 
@@ -80,7 +67,7 @@ export default function Contact({ navigation }) {
                             placeholderTextColor='black'
                             value={Name}
                         />
-                        <Text style={{ top: 10, justifyContent: 'center', right: 13, color: "#e8500e" }}>*</Text>
+                   
                     </View>
                     <View style={styles.input}>
                         <TextInput
@@ -90,7 +77,7 @@ export default function Contact({ navigation }) {
                             placeholderTextColor='black'
                             placeholder="Your Email"
                         />
-                        <Text style={{ top: 10, justifyContent: 'center', right: 13, color: "#e8500e" }}>*</Text>
+                     
                     </View>
                     <View style={styles.input}>
 
@@ -102,7 +89,7 @@ export default function Contact({ navigation }) {
                             placeholderTextColor='black'
 
                         />
-                        <Text style={{ top: 10, justifyContent: 'center', right: 35, color: "#e8500e" }}>*</Text>
+                       
                     </View>
 
                     <View style={[styles.input, { height: 300 }]}>
@@ -113,7 +100,7 @@ export default function Contact({ navigation }) {
                             placeholder="Your Message"
                             placeholderTextColor='black'
                         />
-                        <Text style={{ top: 15, justifyContent: 'center', left: 6, color: "#e8500e" }}>*</Text>
+                       
                     </View>
                     <View >
                         <TouchableOpacity
@@ -139,7 +126,6 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         alignItems: "center",
         justifyContent: 'center',
-
     },
     title: {
         bottom: 40,
@@ -175,14 +161,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
     },
     TextStyle: {
-        color: '#eb5c26',
+        color: 'black',
         fontFamily: 'Museo',
         fontSize: 13,
         fontWeight: '400',
         fontStyle: 'normal',
         textAlign: 'left',
         left: 30,
-        width: 120,
+        width: 320,
     },
     loginScreenButton: {
         width: 159,

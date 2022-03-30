@@ -9,6 +9,7 @@ import Faq from "./FAQ/faq"
 import { AntDesign } from '@expo/vector-icons'; 
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import Contact from './Contact';
+import b2c from './PDF/b2c';
 const Tab = createBottomTabNavigator();
 
 export class MainScreen extends Component {
@@ -31,7 +32,7 @@ export class MainScreen extends Component {
               <AntDesign name="home" size={30} />
             ),
           }} />
-           <Tab.Screen name="Ski Practice"  component={Home}
+           <Tab.Screen name="Ski Practice"  component={b2c}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
