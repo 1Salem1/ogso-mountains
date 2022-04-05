@@ -17,6 +17,8 @@ import WelcomeStep3 from './Screens/tuto/step3';
 import WelcomeStep4 from './Screens/tuto/step4';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
+import { email } from 'react-native-communications';
+import EmailVerification from './Screens/EmailVerification';
 
 const Stack = createNativeStackNavigator();
 
@@ -67,7 +69,8 @@ export default class App extends Component {
     this.state = {
       loaded: false,
       fontloaded: false,
-      firstLaunch: null
+      emailverified: false,
+      startCheck:true
     }
 
 
@@ -75,11 +78,16 @@ export default class App extends Component {
 
 
 
-
+  componentWillUnmount() {
+    
+    }
 
 
 
   componentDidMount() {
+
+
+
 
 
 
@@ -95,7 +103,15 @@ export default class App extends Component {
           loggedIn: false,
           loaded: true,
         })
-      } else {
+      } else if (user.emailVerified){
+
+        this.setState({
+          loggedIn: true,
+          loaded: true,
+          emailVerified : true ,
+        })
+      }      
+      else {
         this.setState({
           loggedIn: true,
           loaded: true,
@@ -108,7 +124,7 @@ export default class App extends Component {
 
   render() {
 
-    const { loggedIn, loaded, fontloaded } = this.state;
+    const { loggedIn, loaded, fontloaded , emailVerified } = this.state;
     if (!fontloaded) {
       return (
         <AppLoading
@@ -184,7 +200,14 @@ export default class App extends Component {
         </NavigationContainer>
       );
     }
-    return (
+
+
+
+
+
+  else
+  {
+  return (
       <NavigationContainer >
         <Stack.Navigator initialRouteName="Main">
           <Stack.Screen options={{
@@ -198,7 +221,7 @@ export default class App extends Component {
 
   }
 }
-
+}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

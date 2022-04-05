@@ -159,7 +159,6 @@ If you choose to use our Service, then you agree to the collection and use of in
 The terms used in this Privacy Policy have the same meanings as in our Terms and Conditions, which are accessible at The Martian unless otherwise defined in this Privacy Policy.
 </Text>
           <Accordion 
-         
             activeSections={activeSections}
             //for any default active section
             sections={CONTENT}
@@ -193,6 +192,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#ffffff',
     paddingTop: 30,
+    marginBottom : 10,
   },
   icon: {
     color: "rgba(128,128,128,1)",
@@ -200,12 +200,11 @@ const styles = StyleSheet.create({
     color :"#eb5c26",
   },
   title: {
-    width: 144,
-    height: 18,
+  
     color: '#000000',
     fontFamily: 'Museo',
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: 'bold',
     fontStyle: 'normal',
     textAlign: 'left',
     lineHeight: 14,
@@ -218,6 +217,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontStyle: 'normal',
     textAlign: 'left',
+    marginBottom : 10,
     
   },
   headerText: {
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     marginRight : 10,
     marginBottom : 20,
     color: '#000000',
-    fontFamily: 'Museo Sans 300',
+    fontFamily: 'Museo',
     fontSize: 14,
     fontWeight: '400',
     fontStyle: 'normal',
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     marginLeft : 40,
     marginBottom : 20,
     color: '#666666',
-    fontFamily: 'Museo Sans 300',
+    fontFamily: 'Museo',
     fontSize: 14,
     fontWeight: '400',
     fontStyle: 'normal',
@@ -279,10 +279,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   privacyPolicy: {
+    marginBottom:  10,
     color: '#000000',
-    fontFamily: 'Museo Sans 900',
+    fontFamily: 'Museo',
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: 'bold',
     fontStyle: 'normal',
     textAlign: 'left',
     lineHeight: 36,

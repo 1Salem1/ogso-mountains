@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import * as GoogleSignIn from 'expo-google-app-auth';
+import * as GoogleSignIn from 'expo-google-sign-in';
 import firebase from "firebase";
 import * as Facebook from 'expo-facebook';
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
@@ -18,6 +18,7 @@ import {
   KeyboardAvoidingView, 
   Platform
 } from "react-native";
+
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
@@ -124,10 +125,13 @@ export default function LoginScreen({ navigation }) {
 
 
   }
+
+
+
   const HandleLoginWithGoogle = () => {
     const config = {
-      iosClientId: `734034396875-pqk29bc8eosn8e345fu2fljl6fq8adib.apps.googleusercontent.com`,
-      androidClientId: `734034396875-d2sdsiabd607imcjcietevhpre9f811t.apps.googleusercontent.com`,
+      androidStandaloneAppClientId:'1815160492-ao58sqjvjau8rjc8mefqe56c65b24is3.apps.googleusercontent.com',
+      iosStandaloneAppClientId: '1815160492-vu1gb42ak0fgu2pkmkqr0ir89fmtdqb2.apps.googleusercontent.com',
       scopes: ['profile', 'email']
     }
     GoogleSignIn.logInAsync(config).then((res) => {
@@ -145,6 +149,7 @@ export default function LoginScreen({ navigation }) {
         console.log("an Error occurred . Check your network and try again")
       })
   }
+  
      return(
     <View style={styles.container}>
 

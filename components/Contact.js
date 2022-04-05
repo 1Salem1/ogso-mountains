@@ -38,9 +38,11 @@ export default function Contact({ navigation }) {
                 <Text style={styles.title}>Contact us </Text>
 
             </View>
-            <ScrollView 
+            <ScrollView
+             
              Vertical
              height ='100%'
+             showsVerticalScrollIndicator ={false}
              showsHorizontalScrollIndicator={false}
              contentContainerStyle={{ flexGrow: 1 }}>
                 <View style={{     justifyContent: 'center',  alignItems: 'center', }}>

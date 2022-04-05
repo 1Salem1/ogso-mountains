@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import * as GoogleSignIn from 'expo-google-app-auth';
 import firebase from "firebase";
+import * as AppAuth from 'expo-app-auth';
 import * as Facebook from 'expo-facebook';
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { AntDesign } from '@expo/vector-icons'; 
@@ -15,6 +16,8 @@ import {
 
 } from "react-native";
  
+const { URLSchemes } = AppAuth;
+
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,8 +33,11 @@ export default function SignUp({ navigation }) {
   const HandleSignUP = () => {
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then((success) => {
+      firebase.auth().currentUser.sendEmailVerification()
+      .then(() => {
+        // Email verification sent!
+      });
        console.log(success) 
-       const dbRef = firebase.database().ref();
        var myUserId = firebase.auth().currentUser.uid;
        
        database.ref('users/' +  myUserId).set({
@@ -42,21 +48,11 @@ export default function SignUp({ navigation }) {
              profile_picture: 'No Image',
              location: 'no Location for this provider',
              provider: 'By Signing in',
-           }.then( er => {
-             console.log('done')
            })
-           .catch(e => {
-             console.log(e)
-           })
-           )
          
- 
-    })
-    .catch((error) => {
-     console.log(error)
-    });
   }
-
+    )}
+  
 
 
  
@@ -69,6 +65,10 @@ export default function SignUp({ navigation }) {
       .catch(e => {
         if (e.message == 'The email address is already in use by another account.') {
           firebase.auth().signInWithEmailAndPassword(googleUser.user.email, googleUser.user.id)
+          .catch((e)=> {
+            console.log('email exist ')
+            return 0
+          })
         }
       })
       .then((userCredential) => {
@@ -154,8 +154,8 @@ export default function SignUp({ navigation }) {
 
   const HandleLoginWithGoogle = () => {
     const config = {
-      androidClientId:'734034396875-d2sdsiabd607imcjcietevhpre9f811t.apps.googleusercontent.com',
-      iosClientId: '734034396875-pqk29bc8eosn8e345fu2fljl6fq8adib.apps.googleusercontent.com',
+      androidStandaloneAppClientId:'1815160492-ao58sqjvjau8rjc8mefqe56c65b24is3.apps.googleusercontent.com',
+      iosStandaloneAppClientId: '1815160492-vu1gb42ak0fgu2pkmkqr0ir89fmtdqb2.apps.googleusercontent.com',
       scopes: ['profile', 'email']
     }
     GoogleSignIn.logInAsync(config).then((res) => {
@@ -348,3 +348,5 @@ const styles = StyleSheet.create({
     width: '100%'
   },
 });
+
+

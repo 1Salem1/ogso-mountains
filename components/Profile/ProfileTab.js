@@ -20,7 +20,7 @@ export default class ProfileTab extends Component {
             
               renderTabBar={() => <TabBar 
               underlineColor="#e8500e"
-              tabBarTextStyle={{fontSize : 12}}
+              tabBarTextStyle={{fontSize : 12 , fontWeight : 'bold'}}
              
               
               />}>

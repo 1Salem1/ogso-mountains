@@ -10,8 +10,10 @@ import { AntDesign } from '@expo/vector-icons';
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import Contact from './Contact';
 import b2c from './PDF/b2c';
+import { createStackNavigator} from '@react-navigation/stack';
+import EmailVerification from '../Screens/EmailVerification';
 const Tab = createBottomTabNavigator();
-
+const Stack = createStackNavigator();
 export class MainScreen extends Component {
   componentDidMount() {
 
@@ -32,7 +34,7 @@ export class MainScreen extends Component {
               <AntDesign name="home" size={30} />
             ),
           }} />
-           <Tab.Screen name="Ski Practice"  component={b2c}
+           <Tab.Screen name="Ski Practice"  component={Home}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
@@ -48,14 +50,15 @@ export class MainScreen extends Component {
               <Icon2 name="comment-question-outline" size={26}  style={styles.icon}></Icon2>
             ),
           }} />
-            <Tab.Screen name="Profile" component={Profile}
+            <Stack.Screen name="Profile" component={Profile}
           options={{
-            tabBarActiveTintColor: '#e8500e',
+            tabBarStyle: { display: "none" },
             header: () => null,
             tabBarIcon: ({ color, size }) => (
               <Icon name="ios-mail" size={26} style={styles.icon2}></Icon>
             ),
           }} />
+   
       </Tab.Navigator>
     )
   }

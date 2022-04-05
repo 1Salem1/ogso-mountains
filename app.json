@@ -8,7 +8,7 @@
         }
       ]
     ],
-    "name": "ogso",
+    "name": "The Martian",
     "slug": "ogso",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -25,17 +25,26 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
       "bundleIdentifier": "com.ogso",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.0",
+      "googleServicesFile": "./Configurations/GoogleService-Info.plist" ,
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "734034396875-pqk29bc8eosn8e345fu2fljl6fq8adib.apps.googleusercontent.com"
+        }
+      }
+    
+      
     },
     "android": {
+      "googleServicesFile": "./Configurations/google-services.json",
+      "package": "ogso.mounains.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "softwareKeyboardLayoutMode": "pan",
-      "package": "ogso.mounains.app"
+      "softwareKeyboardLayoutMode": "pan"
+      
     },
     "web": {
       "favicon": "./assets/favicon.png"
