@@ -1,29 +1,20 @@
-import * as React from 'react'
-import { Dimensions, View , StyleSheet } from 'react-native'
-import PDFReader from 'rn-pdf-reader-js'
-import { StatusBar } from 'expo-status-bar';
-export default class App extends React.Component {
-  render() {
-    return (
+import React, { Component } from 'react';
+import { Platform, StyleSheet, Text, View, Dimensions } from 'react-native'; 
+import { WebView } from 'react-native-webview'; 
+const deviceHeight = Dimensions.get('window').height; 
+const deviceWidth = Dimensions.get('window').width;
 
-        <View style={styles.container}>
-               <StatusBar style="auto" />
-             <PDFReader style={{width: Dimensions.get('window').width , height:Dimensions.get('window').height}}
-        source={{
-          uri: 'https://ogso-mountain-essentials.com/wp-content/uploads/2021/12/OGSO-B2C-CATALOG-21-22-V15_compressed.pdf',
-        }}
-      />
-        </View>
+export default function b2c () {
+ return ( <View style={{flex:1}}> 
+ <WebView style={styles.webview} source={{uri: 'https://online.flippingbook.com/view/467555189/',}} 
+ javaScriptEnabled={true} 
+ domStorageEnabled={true} 
+ startInLoadingState={false} 
+ scalesPageToFit={true} /> </View> ); } 
  
-    )
-  }
-}
-
-const styles =StyleSheet.create({
-container :
-    {
-        paddingTop: 30,
-        flex: 1,
-    }
-   
-})
+ const styles = StyleSheet.create({
+   webview:{
+     flex: 1, backgroundColor: 'yellow',
+     width: deviceWidth,
+     height: deviceHeight } 
+    });

@@ -31,22 +31,23 @@ export default class Profile extends Component {
 
   }
 
-  componentDidMount() {
-    firebase.auth().onIdTokenChanged((user) => {
-       firebase.database().ref('users').once('value').then(result => {
-         console.log(user.email)
-         console.log(result)
-      console.log(userProfileData)
-      });
-    if (user) {
-        if(user.displayName)
-      this.setState({Name : user.displayName})
-      this.setState({Email : user.email})
-      
-    } else {
-    }
 
-  }) 
+  componentDidMount() {
+    function fetchDate(){
+      var firebaseRef =firebase.database().ref('users')
+      firebaseRef.once("value" ,function(snapshot){
+        var data = snapshot.val()
+        for(let i in data){
+          if (data[i].email.toLowerCase() == user.email.toLowerCase()){
+              setFirstName(data[i].first_name)
+              setLastName(data[i].last_name)
+              setEmail(data[i].email)
+              setId(data[i].id_user)
+              break
+          } 
+        }
+      })
+    }
 }
 
 

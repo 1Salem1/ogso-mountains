@@ -164,10 +164,7 @@ The terms used in this Privacy Policy have the same meanings as in our Terms and
             sections={CONTENT}
             //title and content of accordion
             touchableComponent={TouchableOpacity}
-            //which type of touchable component you want
-            //It can be the following Touchables
-            //TouchableHighlight, TouchableNativeFeedback
-            //TouchableOpacity , TouchableWithoutFeedback
+
             expandMultiple={multipleSelect}
             //Do you want to expand mutiple at a time or single at a time
             renderHeader={renderHeader}

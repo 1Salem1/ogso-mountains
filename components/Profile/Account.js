@@ -7,11 +7,11 @@ import firebase from 'firebase';
 export default function Account() {
   const user = firebase.auth().currentUser;
   console.log(user)
-  const [FirstName,setFirstName] = useState("The Martian");
+  const [FirstName,setFirstName] = useState();
   const [LastName,setLastName] = useState();
   const [email, setEmail] =useState()
   const [name , setName] =useState()
-  
+  const [id , setId] = useState()
   useEffect(() => {
     fetchDate()
   }, [])
@@ -29,6 +29,7 @@ function fetchDate(){
           setFirstName(data[i].first_name)
           setLastName(data[i].last_name)
           setEmail(data[i].email)
+          setId(data[i].id_user)
           break
       } 
     }
@@ -45,7 +46,7 @@ const SaveProfile =() => {
     // An error occurred
     // ...
   });
-
+  firebase.database().ref('users').child(id).remove();
 
   firebase.database().ref('users/'+ user.uid).set({
     id_user: user.uid,
