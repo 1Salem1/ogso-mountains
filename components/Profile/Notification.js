@@ -1,9 +1,10 @@
-import { View, Text , StyleSheet , TextInput ,TouchableOpacity} from 'react-native'
+import { Switch, View, Text , StyleSheet , TextInput ,TouchableOpacity} from 'react-native'
 import React , {useState , useEffect} from 'react'
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import firebase from 'firebase';
 export default function Notification() {
-
+  const [isEnabled, setIsEnabled] = useState(true);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const user = firebase.auth().currentUser;
   console.log(user)
 
@@ -24,18 +25,61 @@ export default function Notification() {
 }
   return (
     <View style={styles.container}>
+     
       <Text style={styles.title}>Notification</Text>
-       <Text style={{ width: 146,
+          <View style={{marginLeft :150}}>
+            <View>
+          <Text style={{ width: 146,
     height: 15,
-    right: 80,
+   marginBottom:5,
     color: '#666666',
     fontFamily: 'Museo',
     fontSize: 12,
     fontWeight: '400',
     fontStyle: 'normal',
-    textAlign: 'left',
+    right : 110,
     lineHeight: 14,}}>Notification settings</Text>
-        <Text>Allow The MARTIAN to send notifications</Text>
+    </View>
+    <View style={{flexDirection :'row'}}>
+        <Text style={{
+ 
+  
+    color: '#666666',
+    fontFamily: 'Museo',
+    fontSize: 12,
+    fontWeight: '400',
+    right : 110,
+    fontStyle: 'normal',
+ 
+    lineHeight: 14,}}
+        
+        >Allow The MARTIAN to send notifications</Text>
+          <Switch style={{right : 50 ,bottom : 5}}
+        trackColor={{ false: "#767577", true: "#eb5c26" }}
+        thumbColor={isEnabled ? "white" : "white"}
+        ios_backgroundColor="#3e3e3e"
+        onValueChange={toggleSwitch}
+        value={isEnabled}
+      />
+        
+        
+        </View>
+
+          </View>
+
+          <Text style={{
+    height: 15,
+    color: '#666666',
+    fontFamily: 'Museo',
+    fontSize: 12,
+    right : 110,
+    
+    fontWeight: '400',
+    fontStyle: 'normal',
+    textAlign: 'left',
+   
+    lineHeight: 14,}}>RECENT NOTIFICATIONS</Text>
+
       <View style={{ marginTop : 40, flexDirection: 'row' }}>
         <TouchableOpacity  
         

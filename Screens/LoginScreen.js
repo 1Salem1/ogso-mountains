@@ -4,6 +4,7 @@ import * as GoogleSignIn from 'expo-google-sign-in';
 import firebase from "firebase";
 import * as Facebook from 'expo-facebook';
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
+import { FontAwesome5 } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
 
 import {
@@ -173,25 +174,55 @@ export default function LoginScreen({ navigation }) {
         <Text style={{ "marginBottom": 30, "color": 'black', "fontSize": 35, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`SIGN IN`}</Text>
        
         <View style={{ flexDirection: "row", marginBottom: 50, marginTop: 60    }} >
-         <View  style={{width: 155,
+         <TouchableOpacity  onPress={HandleLoginWithGoogle}
+    style={{width: 155,
     height: 55,
     borderRadius: 5,
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
     backgroundColor: '#4285f4', }}>
-         <FontAwesome5Icon.Button  style={{padding : 10 , top : 5}}name="google"
-            backgroundColor={'#4285f4'}
-            title="With Google" onPress={HandleLoginWithGoogle} >With Google</FontAwesome5Icon.Button>
+      <AntDesign style={{color : 'white' , marginRight:15}} name="google" size={24} color="black" />
+   <Text style={{
+        color: '#ffffff',
+        fontFamily: 'Museo',
+        fontSize: 14,
+        fontWeight: '400',
+        fontStyle: 'normal',
+        lineHeight: 32,
+        textAlign :'center',
+        justifyContent :'center',
+        alignContent :'center',
+        alignItems:'center'
 
-         </View>
+
+   }}>Google</Text>
+
+         </TouchableOpacity>
          <View style={styles.space} /> 
-        <View style={{width: 155,
-    height: 55,
-    borderRadius: 5,
-    backgroundColor: '#3b5998',}}>
-        <FontAwesome5Icon.Button  name='facebook' style={{padding : 10 ,  top : 5}}
-                backgroundColor={'#3b5998'}
-           onPress={HandleLoginWithFacebook} >With Facebook</FontAwesome5Icon.Button>
+        <TouchableOpacity  onPress={HandleLoginWithFacebook}
+    style={{width: 155,
+     height: 55,
+     borderRadius: 5,
+     flexDirection:'row',
+     justifyContent:'center',
+     alignItems:'center',
+     backgroundColor: '#3b5998',}}>
+      <FontAwesome5  style={{color : 'white' , marginRight:15}}  name="facebook-f" size={24} color="black" />
+  <Text style={{
+            color: '#ffffff',
+            fontFamily: 'Museo',
+            fontSize: 14,
+            fontWeight: '400',
+            fontStyle: 'normal',
+            lineHeight: 32,
+            textAlign :'center',
+            justifyContent :'center',
+            alignContent :'center',
+            alignItems:'center'
+  }}>Facebook</Text>
 
-        </View>
+        </TouchableOpacity>
          
         </View>
         <Text style={{marginBottom :30 , color : 'grey' , fontWeight :'bold'}}>Or With Email</Text>
