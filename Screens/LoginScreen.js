@@ -29,7 +29,6 @@ export default function LoginScreen({ navigation }) {
 
 
 
-
   const onSignIn = (googleUser) => {
     console.log(googleUser)
     firebase.auth().createUserWithEmailAndPassword(googleUser.user.email, googleUser.user.id)
@@ -131,7 +130,7 @@ export default function LoginScreen({ navigation }) {
 
   const HandleLoginWithGoogle = () => {
     const config = {
-      androidStandaloneAppClientId:'1815160492-ao58sqjvjau8rjc8mefqe56c65b24is3.apps.googleusercontent.com',
+      androidStandaloneAppClientId:'1047529689642-j6mkgejc3qiah3olqfi14pes47ph1oim.apps.googleusercontent.com',
       iosStandaloneAppClientId: '1815160492-vu1gb42ak0fgu2pkmkqr0ir89fmtdqb2.apps.googleusercontent.com',
       scopes: ['profile', 'email']
     }
@@ -161,8 +160,8 @@ export default function LoginScreen({ navigation }) {
 
 
 
-            <View style={{ flexDirection: "row",  marginTop: 70  ,  }} >
-            <AntDesign style={{right : 150}} onPress={navigation.goBack} name="left" size={24} color="black" />
+            <View style={{ flexDirection: "row",  marginTop: 60  ,  }} >
+            <AntDesign  style={{right : 150}} onPress={navigation.goBack} name="left" size={24} color="black" />
             
                <Text   onPress={()=> navigation.navigate('signup')}   style={{left : 140 , fontWeight :'bold'}}>Sign Up</Text>
             
@@ -172,6 +171,8 @@ export default function LoginScreen({ navigation }) {
 
       <ImageBackground source={require('../assets/Backgrounds/Sign-In.png')} resizeMode="cover" style={styles.image}>
         <Text style={{ "marginBottom": 30, "color": 'black', "fontSize": 35, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`SIGN IN`}</Text>
+        
+        
        
         <View style={{ flexDirection: "row", marginBottom: 50, marginTop: 60    }} >
          <TouchableOpacity  onPress={HandleLoginWithGoogle}
@@ -227,9 +228,16 @@ export default function LoginScreen({ navigation }) {
         </View>
         <Text style={{marginBottom :30 , color : 'grey' , fontWeight :'bold'}}>Or With Email</Text>
 
-        <StatusBar style="auto" />
+        <StatusBar  style='dark' />
         <View style={styles.inputView}>
           <TextInput
+            onBlur={function(){
+              if (!this.validateEmail(this.state.text_input_email)) {
+                // not a valid email
+             } else {
+                // valid email
+             }
+            }}
             style={styles.TextInput}
             placeholder="Your Email"
             placeholderTextColor="#003f5c"

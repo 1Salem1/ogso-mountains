@@ -1,7 +1,8 @@
-import { Switch, View, Text , StyleSheet , TextInput ,TouchableOpacity} from 'react-native'
+import { Switch, View, Text , StyleSheet , TextInput ,TouchableOpacity, Image} from 'react-native'
 import React , {useState , useEffect} from 'react'
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import firebase from 'firebase';
+import { Linking } from 'react-native';
 export default function Notification() {
   const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -37,7 +38,8 @@ export default function Notification() {
     fontSize: 12,
     fontWeight: '400',
     fontStyle: 'normal',
-    right : 110,
+    right : 90,
+    
     lineHeight: 14,}}>Notification settings</Text>
     </View>
     <View style={{flexDirection :'row'}}>
@@ -48,7 +50,8 @@ export default function Notification() {
     fontFamily: 'Museo',
     fontSize: 12,
     fontWeight: '400',
-    right : 110,
+    right : 90,
+    
     fontStyle: 'normal',
  
     lineHeight: 14,}}
@@ -72,15 +75,98 @@ export default function Notification() {
     color: '#666666',
     fontFamily: 'Museo',
     fontSize: 12,
-    right : 110,
-    
+    right : 90,
+    marginTop:15,
     fontWeight: '400',
     fontStyle: 'normal',
     textAlign: 'left',
-   
+   marginBottom:20,
     lineHeight: 14,}}>RECENT NOTIFICATIONS</Text>
 
-      <View style={{ marginTop : 40, flexDirection: 'row' }}>
+     <View 
+     style={styles.notifications}>
+      <View style={{padding:10}} >
+      <Image style={{height : 50 , width : 50}}source={require('../../assets/icons/Notification.png')} />
+        </View>
+        <View style={{
+          padding : 20
+        }}>
+        <Text style={{
+           
+          
+              color: '#000000',
+              fontFamily: 'Museo',
+              fontSize: 14,
+              fontWeight: '400',
+              fontStyle: 'normal',
+              textAlign: 'left',
+             
+              lineHeight: 14,
+        }}>New Products are coming</Text>
+       <Text style={{
+          
+     
+           color: '#a1a1a1',
+           fontFamily: 'Museo',
+           fontSize: 13,
+           fontWeight: '400',
+           fontStyle: 'normal',
+           textAlign: 'left',
+           lineHeight: 14,
+       }}>checkout our website</Text>
+        </View>
+     
+     </View>
+     <View 
+     style={styles.notifications}>
+      <View style={{padding:10}} >
+      <Image style={{height : 50 , width : 50}}source={require('../../assets/icons/Notification.png')} />
+        </View>
+        <View style={{
+          padding : 20
+        }}>
+        <Text style={{
+           
+          
+              color: '#000000',
+              fontFamily: 'Museo',
+              fontSize: 14,
+              fontWeight: '400',
+              fontStyle: 'normal',
+              textAlign: 'left',
+             
+              lineHeight: 14,
+        }}>New Products are coming</Text>
+       <Text style={{
+          
+     
+           color: '#a1a1a1',
+           fontFamily: 'Museo',
+           fontSize: 13,
+           fontWeight: '400',
+           fontStyle: 'normal',
+           textAlign: 'left',
+           lineHeight: 14,
+       }}>checkout our website</Text>
+        </View>
+     
+     </View>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <View style={{ marginTop : 30, flexDirection: 'row' }}>
         <TouchableOpacity  
         
         
@@ -180,6 +266,15 @@ const styles = StyleSheet.create({
   },
   child: {
     backgroundColor: '#00000000'
+  },
+  notifications :{
+    borderRadius: 10,
+    borderColor: '#ffd6c7',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    width: 335,
+    flexDirection:'row',
+    marginBottom:15
   }
 
 })

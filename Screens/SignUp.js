@@ -1,11 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import * as GoogleSignIn from 'expo-google-app-auth';
 import firebase from "firebase";
 import * as AppAuth from 'expo-app-auth';
 import * as Facebook from 'expo-facebook';
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { AntDesign } from '@expo/vector-icons'; 
+import * as GoogleAuthentication from 'expo-google-app-auth';
 import {
   StyleSheet,
   Text,
@@ -151,28 +151,28 @@ export default function SignUp({ navigation }) {
 
   }
 
-
-  const HandleLoginWithGoogle = () => {
-    const config = {
-      androidStandaloneAppClientId:'1815160492-ao58sqjvjau8rjc8mefqe56c65b24is3.apps.googleusercontent.com',
-      iosStandaloneAppClientId: '1815160492-vu1gb42ak0fgu2pkmkqr0ir89fmtdqb2.apps.googleusercontent.com',
+  const HandleLoginWithGoogle = () => 
+  GoogleAuthentication.logInAsync({
+    androidClientId: '1047529689642-7gp53kk96rv7fu8adtb6i4e1qcodhhqt.apps.googleusercontent.com',
+    iosClientId: '1047529689642-l7u9bsn987ddnfjam9v5ur47rj2e8r6d.apps.googleusercontent.com',
       scopes: ['profile', 'email']
-    }
-    GoogleSignIn.logInAsync(config).then((res) => {
-      const { type, user } = res
+  })
+      .then((logInResult) => {
+          if (logInResult.type === 'success') {
+              const { idToken, accessToken } = logInResult;
+              const credential = firebase.auth.GoogleAuthProvider.credential(
+                  idToken,
+                  accessToken
+              );
 
-
-      if (type == 'success') {
-        onSignIn(res)
-        return res.accessToken
-      }
-
-    })
-      .catch(err => {
-        console.log(err)
-        console.log("an Error occurred . Check your network and try again")
+              return firebase.auth().signInWithCredential(credential);
+              // Successful sign in is handled by firebase.auth().onAuthStateChanged
+          }
+          return Promise.reject(); // Or handle user cancelation separatedly
       })
-  }
+      .catch((error) => {
+          // ...
+      });
 
 
 
@@ -189,8 +189,9 @@ export default function SignUp({ navigation }) {
 
 
      <ImageBackground source={require('../assets/Backgrounds/Sign-Up.png')} resizeMode="cover" style={styles.image}>
-     <AntDesign style={{top : 50 , left : 10 , width : 30}}onPress={navigation.goBack} name="left" size={24} color="black" />
-     <Text   onPress={()=> navigation.navigate('signup')}   style={{left :310 ,top : 35, fontWeight :'bold' , marginRight : 20}}>Sign Up</Text>
+     <AntDesign style={{top : 50 , left : 10 , width : 30}}
+     onPress={navigation.goBack} name="left" size={24} color="black" />
+     <Text   onPress={()=> navigation.navigate('step4')}   style={{left :310 ,top : 35, fontWeight :'bold' , marginRight : 20}}>Sign In</Text>
 
       <View>
       <Text style={{ top :80, "marginTop": 0, "color": 'black', "fontSize": 35, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`SIGN UP`}</Text>
@@ -213,7 +214,7 @@ export default function SignUp({ navigation }) {
       </View>
     
         
-      <StatusBar style="auto" />
+      <StatusBar  style='dark' />
       <View style={[styles.container,{bottom:110} ] }>
       
       

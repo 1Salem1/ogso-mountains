@@ -44,7 +44,7 @@ export class MainScreen extends Component {
           }} />
            <Tab.Screen name="Ogso Selector"  component={Contact}
           options={{
-            tabBarActiveTintColor: '#e8500e',
+            tabBarStyle: { display: "none" },
             header: () => null,
             tabBarIcon: ({ color, size }) => (
               <Icon2 name="comment-question-outline" size={26}  style={styles.icon}></Icon2>

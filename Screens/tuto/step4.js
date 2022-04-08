@@ -13,7 +13,7 @@ export default function Step4({ navigation }) {
         <Text style={styles.containerText} >{`LET'S ENJOY`}</Text>
       <Text style={styles.containerText}>{`YOUR`}</Text>
       <Text style={styles.containerText}>{`EXPEDITION!`}</Text>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
 
 
 
