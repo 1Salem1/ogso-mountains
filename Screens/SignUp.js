@@ -5,7 +5,7 @@ import * as AppAuth from 'expo-app-auth';
 import * as Facebook from 'expo-facebook';
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { AntDesign } from '@expo/vector-icons'; 
-import * as GoogleAuthentication from 'expo-google-app-auth';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 import {
   StyleSheet,
   Text,
@@ -24,6 +24,13 @@ export default function SignUp({ navigation }) {
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
 
+  GoogleSignin.configure({
+    // scopes: ['https://www.googleapis.com/auth/drive.readonly'], 
+     webClientId: '1047529689642-62qj96fckel3rc8e2014svlul8k9cl4u.apps.googleusercontent.com', 
+     offlineAccess: true, 
+     forceConsentPrompt: true, 
+    
+   });
 
 
   var database = firebase.database();
@@ -59,44 +66,7 @@ export default function SignUp({ navigation }) {
 
 
 
-  const onSignIn = (googleUser) => {
-    console.log(googleUser)
-    firebase.auth().createUserWithEmailAndPassword(googleUser.user.email, googleUser.user.id)
-      .catch(e => {
-        if (e.message == 'The email address is already in use by another account.') {
-          firebase.auth().signInWithEmailAndPassword(googleUser.user.email, googleUser.user.id)
-          .catch((e)=> {
-            console.log('email exist ')
-            return 0
-          })
-        }
-      })
-      .then((userCredential) => {
-        // Signed in 
-        const dbRef = firebase.database().ref();
-        dbRef.child("users").child('users/' + googleUser.user.id).get().then((snapshot) => {
-          if (snapshot.exists()) {
-            console.log(snapshot.val());
-            return 0
-          }
-          else {
-         
-            database.ref( 'users/' + googleUser.user.id).set({
-              id_user: googleUser.user.id,
-              first_name: googleUser.user.familyName,
-              last_name: googleUser.user.givenName,
-              email: googleUser.user.email,
-              profile_picture: googleUser.user.photoUrl,
-              location: 'no Location for this provider',
-              provider: 'Google',
-            })
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
-      })
 
-  }
   const HandleLoginWithFacebook = async () => {
     try {
       await Facebook.initializeAsync({
@@ -151,30 +121,27 @@ export default function SignUp({ navigation }) {
 
   }
 
-  const HandleLoginWithGoogle = () => 
-  GoogleAuthentication.logInAsync({
-    androidClientId: '1047529689642-7gp53kk96rv7fu8adtb6i4e1qcodhhqt.apps.googleusercontent.com',
-    iosClientId: '1047529689642-l7u9bsn987ddnfjam9v5ur47rj2e8r6d.apps.googleusercontent.com',
-      scopes: ['profile', 'email']
-  })
-      .then((logInResult) => {
-          if (logInResult.type === 'success') {
-              const { idToken, accessToken } = logInResult;
-              const credential = firebase.auth.GoogleAuthProvider.credential(
-                  idToken,
-                  accessToken
-              );
-
-              return firebase.auth().signInWithCredential(credential);
-              // Successful sign in is handled by firebase.auth().onAuthStateChanged
-          }
-          return Promise.reject(); // Or handle user cancelation separatedly
-      })
-      .catch((error) => {
-          // ...
-      });
+  const HandleLoginWithGoogle = async  () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const Token = await GoogleSignin.getTokens()
+      const user = firebase.auth.GoogleAuthProvider.credential(Token.idToken)
+      return firebase.auth().signInWithCredential(user);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+       console.log(error)
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log(error)
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log(error)
+      } else {
+        console.log(error)
+      }
+    }
 
 
+    }
 
 
 

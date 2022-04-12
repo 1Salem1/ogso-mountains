@@ -1,11 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import * as GoogleSignIn from 'expo-google-sign-in';
 import firebase from "firebase";
 import * as Facebook from 'expo-facebook';
-import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
+import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+
 
 import {
   StyleSheet,
@@ -21,47 +21,58 @@ import {
 } from "react-native";
 
 
+
+
+
+
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  state = { user: null };
   var database = firebase.database();
 
 
 
-  const onSignIn = (googleUser) => {
-    console.log(googleUser)
-    firebase.auth().createUserWithEmailAndPassword(googleUser.user.email, googleUser.user.id)
-      .catch(e => {
-        if (e.message == 'The email address is already in use by another account.') {
-          firebase.auth().signInWithEmailAndPassword(googleUser.user.email, googleUser.user.id)
-        }
-      })
-      .then((userCredential) => {
-        // Signed in 
-        const dbRef = firebase.database().ref();
-        dbRef.child("users").child(googleUser.user.id).get().then((snapshot) => {
-          if (snapshot.exists()) {
-            console.log(snapshot.val());
-            return 0
-          }
-          else {
-            database.ref('users/' + googleUser.user.id).set({
-              id_user: googleUser.user.id,
-              first_name: googleUser.user.familyName,
-              last_name: googleUser.user.givenName,
-              email: googleUser.user.email,
-              profile_picture: googleUser.user.photoUrl,
-              location: 'no Location for this provider',
-              provider: 'Google',
-            })
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
-      })
+  const signIn = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const Token = await GoogleSignin.getTokens()
+      const user = firebase.auth.GoogleAuthProvider.credential(Token.idToken)
+      return firebase.auth().signInWithCredential(user);
+    } catch (error) {
+      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+       console.log(error)
+      } else if (error.code === statusCodes.IN_PROGRESS) {
+        console.log(error)
+      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        console.log(error)
+      } else {
+        console.log(error)
+      }
+    }
+  };
 
-  }
+
+
+  
+  
+    GoogleSignin.configure({
+     // scopes: ['https://www.googleapis.com/auth/drive.readonly'], 
+      webClientId: '1047529689642-62qj96fckel3rc8e2014svlul8k9cl4u.apps.googleusercontent.com', 
+      offlineAccess: true, 
+      forceConsentPrompt: true, 
+     
+    });
+    
+   
+
+
+  
+
+
+
+
+
   const HandleLoginWithFacebook = async () => {
     try {
       await Facebook.initializeAsync({
@@ -128,27 +139,6 @@ export default function LoginScreen({ navigation }) {
 
 
 
-  const HandleLoginWithGoogle = () => {
-    const config = {
-      androidStandaloneAppClientId:'1047529689642-j6mkgejc3qiah3olqfi14pes47ph1oim.apps.googleusercontent.com',
-      iosStandaloneAppClientId: '1815160492-vu1gb42ak0fgu2pkmkqr0ir89fmtdqb2.apps.googleusercontent.com',
-      scopes: ['profile', 'email']
-    }
-    GoogleSignIn.logInAsync(config).then((res) => {
-      const { type, user } = res
-
-
-      if (type == 'success') {
-        onSignIn(res)
-        return res.accessToken
-      }
-
-    })
-      .catch(err => {
-        console.log(err)
-        console.log("an Error occurred . Check your network and try again")
-      })
-  }
   
      return(
     <View style={styles.container}>
@@ -175,7 +165,7 @@ export default function LoginScreen({ navigation }) {
         
        
         <View style={{ flexDirection: "row", marginBottom: 50, marginTop: 60    }} >
-         <TouchableOpacity  onPress={HandleLoginWithGoogle}
+         <TouchableOpacity  onPress={signIn}
     style={{width: 155,
     height: 55,
     borderRadius: 5,
