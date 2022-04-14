@@ -211,7 +211,8 @@ export default class App extends Component {
       <NavigationContainer >
         <Stack.Navigator initialRouteName="Main">
           <Stack.Screen options={{
-            headerShown: false
+            headerShown: false,
+            animation: "slide_from_right",
           }} name="MainScreen" component={MainScreen} />
         </Stack.Navigator>
       </NavigationContainer>

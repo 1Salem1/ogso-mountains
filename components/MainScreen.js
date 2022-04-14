@@ -25,11 +25,21 @@ export class MainScreen extends Component {
   render() {
     return (
 
-      <Tab.Navigator>
+      <Tab.Navigator tabBarOptions={{
+        activeTintColor: '#e91e63',
+        labelStyle: {
+          fontSize: 12,
+        },
+        style: {
+          backgroundColor: '#e9500e',
+        },
+        
+      }} >
         <Tab.Screen name="Home"  component={Faq}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
+            animation: "slide_from_right",
             tabBarIcon: ({ color, size }) => (
               <AntDesign name="home" size={30} />
             ),
@@ -38,6 +48,7 @@ export class MainScreen extends Component {
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
+            animation: "slide_from_right",
             tabBarIcon: ({ color, size }) => (
               <Icon name="md-notifications" size={26} style={styles.icon}></Icon>
             ),
@@ -46,6 +57,7 @@ export class MainScreen extends Component {
           options={{
             tabBarStyle: { display: "none" },
             header: () => null,
+            animation: "slide_from_right",
             tabBarIcon: ({ color, size }) => (
               <Icon2 name="comment-question-outline" size={26}  style={styles.icon}></Icon2>
             ),
@@ -54,6 +66,7 @@ export class MainScreen extends Component {
           options={{
             tabBarStyle: { display: "none" },
             header: () => null,
+            animation: "slide_from_right",
             tabBarIcon: ({ color, size }) => (
               <Icon name="ios-mail" size={26} style={styles.icon2}></Icon>
             ),

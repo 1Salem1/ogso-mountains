@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, SafeAreaView, TextInput, ScrollView, TouchableOpacity, Image, Button } from 'react-native'
 import React from 'react'
+import { StatusBar } from "expo-status-bar";
 import { AntDesign } from '@expo/vector-icons';
 import Mailer from 'react-native-mail';
 import Communications from "react-native-communications";
@@ -32,7 +33,7 @@ export default function Contact({ navigation }) {
 
     return (
         <View style={styles.container}>
-
+               <StatusBar  style='dark' />
             <View style={{ marginTop: 70 }}>
                 <AntDesign onPress={() => navigation.navigate('Home')} style={{ right: 100, bottom: 10 }} name="left" size={24} color="black" />
                 <Text style={styles.title}>Contact us </Text>

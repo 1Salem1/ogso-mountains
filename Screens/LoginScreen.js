@@ -1,5 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
+
 import firebase from "firebase";
 import * as Facebook from 'expo-facebook';
 import { FontAwesome5 } from '@expo/vector-icons'; 
@@ -38,18 +39,54 @@ export default function LoginScreen({ navigation }) {
       const userInfo = await GoogleSignin.signIn();
       const Token = await GoogleSignin.getTokens()
       const user = firebase.auth.GoogleAuthProvider.credential(Token.idToken)
+   
+      const GoogleProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(user)
+     // console.log(GoogleProfileData)
+        let email_user = GoogleProfileData.additionalUserInfo.profile.email
+        let first_name =GoogleProfileData.additionalUserInfo.profile.family_name
+        let last_name = GoogleProfileData.additionalUserInfo.profile.given_name
+        let location = 'No Location for this Provider'
+        let imageUrl = GoogleProfileData.additionalUserInfo.profile.picture
+        let id = GoogleProfileData.user.uid
+        let provider = 'Google'
+
+        const dbRef = firebase.database().ref();
+        dbRef.child("users").child('users/' + id).get().then((snapshot) => {
+          if (snapshot.exists()) {
+         //   console.log(snapshot.val());
+            return 0
+          } else {
+          //  console.log("No data available");
+          }
+        })
+
+        database.ref('users/' + id ).set({
+          id_user: id,
+          first_name: first_name,
+          last_name: last_name,
+          email: email_user,
+          profile_picture: imageUrl,
+          location: location,
+          provider: provider
+        })
+      
+
+
+
       return firebase.auth().signInWithCredential(user);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-       console.log(error)
+     //  console.log(error)
       } else if (error.code === statusCodes.IN_PROGRESS) {
-        console.log(error)
+       // console.log(error)
       } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-        console.log(error)
+       // console.log(error)
       } else {
-        console.log(error)
+      //  console.log(error)
       }
     }
+return  firebase.auth().signInWithCredential(user)
+
   };
 
 

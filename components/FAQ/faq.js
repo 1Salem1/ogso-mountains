@@ -3,7 +3,7 @@
 
 // import React in our code
 import React, { useState } from 'react';
-
+import { StatusBar } from 'expo-status-bar';
 // import all the components we are going to use
 import {
   SafeAreaView,
@@ -99,7 +99,7 @@ const App = () => {
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
         <ScrollView>
-        
+        <StatusBar style='dark'/>
           <Accordion
             activeSections={activeSections}
             //for any default active section

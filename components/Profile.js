@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
+import { AntDesign } from '@expo/vector-icons'; 
 import {
   StyleSheet,
   Text,
@@ -7,7 +8,10 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native';
+
 import ProfileTab from './Profile/ProfileTab';
+import { StatusBar } from "expo-status-bar";
+import { withNavigation } from 'react-navigation';
 
 
 
@@ -16,9 +20,7 @@ import ProfileTab from './Profile/ProfileTab';
 
 
 
-
-
-export default class Profile extends Component {
+class Profile extends Component {
 
   constructor(props) {
     super(props)
@@ -39,10 +41,8 @@ export default class Profile extends Component {
         var data = snapshot.val()
         for(let i in data){
           if (data[i].email.toLowerCase() == user.email.toLowerCase()){
-              setFirstName(data[i].first_name)
-              setLastName(data[i].last_name)
-              setEmail(data[i].email)
-              setId(data[i].id_user)
+          
+       
               break
           } 
         }
@@ -58,6 +58,10 @@ export default class Profile extends Component {
   render() {
     return (
       <View style={styles.container}>
+        
+        <AntDesign onPress={() => { this.props.navigation.goBack() }} style={{top : 50 , right : 160 , width : 30}}
+     name="left" size={24} color="black" />
+           <StatusBar  style='dark' />
         <View>
       
            <View style={{top : 130}} >
@@ -129,4 +133,7 @@ const styles = StyleSheet.create({
     marginBottom : 110
   }
 });
-                    
+
+
+
+export default  withNavigation (Profile)
