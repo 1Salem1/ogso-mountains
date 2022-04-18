@@ -25,16 +25,7 @@ export class MainScreen extends Component {
   render() {
     return (
 
-      <Tab.Navigator tabBarOptions={{
-        activeTintColor: '#e91e63',
-        labelStyle: {
-          fontSize: 12,
-        },
-        style: {
-          backgroundColor: '#e9500e',
-        },
-        
-      }} >
+      <Tab.Navigator>
         <Tab.Screen name="Home"  component={Faq}
           options={{
             tabBarActiveTintColor: '#e8500e',

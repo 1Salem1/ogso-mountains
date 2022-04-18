@@ -141,22 +141,22 @@ export default function SignUp({ navigation }) {
         const dbRef = firebase.database().ref();
         dbRef.child("users").child('users/' + id).get().then((snapshot) => {
           if (snapshot.exists()) {
-         //   console.log(snapshot.val());
+            database.ref('users/' + id ).set({
+              id_user: id,
+              first_name: first_name,
+              last_name: last_name,
+              email: email_user,
+              profile_picture: imageUrl,
+              location: location,
+              provider: provider
+            })
             return 0
           } else {
-          //  console.log("No data available");
+
           }
         })
 
-        database.ref('users/' + id ).set({
-          id_user: id,
-          first_name: first_name,
-          last_name: last_name,
-          email: email_user,
-          profile_picture: imageUrl,
-          location: location,
-          provider: provider
-        })
+
       
 
 

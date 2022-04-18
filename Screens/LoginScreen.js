@@ -35,8 +35,6 @@ export default function LoginScreen({ navigation }) {
 
   const signIn = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
       const Token = await GoogleSignin.getTokens()
       const user = firebase.auth.GoogleAuthProvider.credential(Token.idToken)
    
@@ -51,7 +49,7 @@ export default function LoginScreen({ navigation }) {
         let provider = 'Google'
 
         const dbRef = firebase.database().ref();
-        dbRef.child("users").child('users/' + id).get().then((snapshot) => {
+        dbRef.child("users").child('users/' +id).get().then((snapshot) => {
           if (snapshot.exists()) {
          //   console.log(snapshot.val());
             return 0
@@ -85,7 +83,6 @@ export default function LoginScreen({ navigation }) {
       //  console.log(error)
       }
     }
-return  firebase.auth().signInWithCredential(user)
 
   };
 
