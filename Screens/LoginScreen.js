@@ -1,11 +1,19 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-
+import uuid from 'react-native-uuid';
 import firebase from "firebase";
 import * as Facebook from 'expo-facebook';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
-import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
+import { GoogleSignin, statusCodes } from 'react-native-google-signin';
+
+GoogleSignin.configure({
+  // scopes: ['https://www.googleapis.com/auth/drive.readonly'], 
+   webClientId: '1047529689642-62qj96fckel3rc8e2014svlul8k9cl4u.apps.googleusercontent.com', 
+   offlineAccess: true, 
+   forceConsentPrompt: true, 
+  
+ });
 
 
 import {
@@ -33,70 +41,80 @@ export default function LoginScreen({ navigation }) {
 
 
 
-  const signIn = async () => {
-    try {
-      const Token = await GoogleSignin.getTokens()
-      const user = firebase.auth.GoogleAuthProvider.credential(Token.idToken)
-   
-      const GoogleProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(user)
-     // console.log(GoogleProfileData)
-        let email_user = GoogleProfileData.additionalUserInfo.profile.email
-        let first_name =GoogleProfileData.additionalUserInfo.profile.family_name
-        let last_name = GoogleProfileData.additionalUserInfo.profile.given_name
-        let location = 'No Location for this Provider'
-        let imageUrl = GoogleProfileData.additionalUserInfo.profile.picture
-        let id = GoogleProfileData.user.uid
-        let provider = 'Google'
 
-        const dbRef = firebase.database().ref();
-        dbRef.child("users").child('users/' +id).get().then((snapshot) => {
-          if (snapshot.exists()) {
-         //   console.log(snapshot.val());
-            return 0
-          } else {
-          //  console.log("No data available");
-          }
-        })
-
-        database.ref('users/' + id ).set({
-          id_user: id,
-          first_name: first_name,
-          last_name: last_name,
-          email: email_user,
-          profile_picture: imageUrl,
-          location: location,
-          provider: provider
-        })
-      
-
-
-
-      return firebase.auth().signInWithCredential(user);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-     //  console.log(error)
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-       // console.log(error)
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-       // console.log(error)
-      } else {
-      //  console.log(error)
+  const exist = (email) => {
+    var firebaseRef =firebase.database().ref('users')
+    firebaseRef.once("value" ,function(snapshot){
+      var data = snapshot.val()
+      for(let i in data){
+        if (data[i].email.toLowerCase() == email.toLowerCase()){
+           return false
+        } 
+        else {
+          return true
+        }
       }
-    }
-
-  };
-
+    })
+  }
 
 
-  
-  
-    GoogleSignin.configure({
-     // scopes: ['https://www.googleapis.com/auth/drive.readonly'], 
-      webClientId: '1047529689642-62qj96fckel3rc8e2014svlul8k9cl4u.apps.googleusercontent.com', 
-      offlineAccess: true, 
-      forceConsentPrompt: true, 
+
+
+
+
+
+
+
+  const HandleLoginWithGoogle = async () => {
+   
+    try {
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signIn();
+        const Token = await GoogleSignin.getTokens()
+        const user = firebase.auth.GoogleAuthProvider.credential(Token.idToken)
      
-    });
+        const GoogleProfileData = await firebase.auth().signInWithCredential(user)
+       // console.log(GoogleProfileData)
+          let email_user = GoogleProfileData.additionalUserInfo.profile.email
+          let first_name =GoogleProfileData.additionalUserInfo.profile.family_name
+          let last_name = GoogleProfileData.additionalUserInfo.profile.given_name
+          let location = 'No Location for this Provider'
+          let imageUrl = GoogleProfileData.additionalUserInfo.profile.picture
+          let id = uuid.v4()
+          let provider = 'Google'
+  
+          const dbRef = firebase.database().ref();
+       
+            if (exist(email_user)) {
+  
+              return 0
+            } else {
+              database.ref('users/' + id ).set({
+                id_user: id,
+                first_name: first_name,
+                last_name: last_name,
+                email: email_user,
+                profile_picture: imageUrl,
+                location: location,
+                provider: provider
+              })
+            }
+
+      } catch (error) {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+       //  console.log(error)
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+         // console.log(error)
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+         // console.log(error)
+        } else {
+        //  console.log(error)
+        }
+      }
+  
+    
+    
+    }
     
    
 
@@ -112,35 +130,35 @@ export default function LoginScreen({ navigation }) {
       await Facebook.initializeAsync({
         appId: '2813714962259392',
       });
-      const { type, token} =
+      const { type, token, expirationDate, permissions, declinedPermissions } =
         await Facebook.logInWithReadPermissionsAsync({
           permissions: ['public_profile']
         });
       if (type === 'success') {
         await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);  // Set persistent auth state
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const facebookProfileData = await firebase.auth().signInWithCredential(credential);  // Sign in with Facebook credential
+        const facebookProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(credential);  // Sign in with Facebook credential
 
-        // Do something with Facebook profile dataa
+        // Do something with Facebook profile data
         // OR you have subscribed to auth state change, authStateChange handler will process the profile data
         let email_user = facebookProfileData.additionalUserInfo.profile.email
         let first_name = facebookProfileData.additionalUserInfo.profile.first_name
         let last_name = facebookProfileData.additionalUserInfo.profile.last_name
         let location = facebookProfileData.additionalUserInfo.profile.location.name
         let imageUrl = facebookProfileData.additionalUserInfo.profile.picture.data.url
-        let id = facebookProfileData.additionalUserInfo.profile.location.id
+        let id = uuid.v4()
         let provider = 'facebook'
 
         const dbRef = firebase.database().ref();
-         dbRef.child("users").child('users/' + id).get().then((snapshot) => {
-          if (snapshot.exists()) {
+       
+          if (exist(email_user)) {
+       //     console.log(snapshot.val());
             return 0
+          } else {
+         //   console.log("No data available");
           }
-        }).catch((error) => {
-          console.error(error);
-        });
 
-        database.ref('users/'+ id).set({
+        database.ref('users/' + id ).set({
           id_user: id,
           first_name: first_name,
           last_name: last_name,
@@ -149,9 +167,10 @@ export default function LoginScreen({ navigation }) {
           location: location,
           provider: provider
         })
+      } else {
       }
     } catch ({ message }) {
-      console.log(`Facebook Login Error: ${message}`);
+    //  console.log(`Facebook Login Error: ${message}`);
     }
 
   }
@@ -163,12 +182,6 @@ export default function LoginScreen({ navigation }) {
         var user = userCredential.user;
         // ...
       })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-      });
-
-
   }
 
 
@@ -199,7 +212,7 @@ export default function LoginScreen({ navigation }) {
         
        
         <View style={{ flexDirection: "row", marginBottom: 50, marginTop: 60    }} >
-         <TouchableOpacity  onPress={signIn}
+         <TouchableOpacity  onPress={HandleLoginWithGoogle}
     style={{width: 155,
     height: 55,
     borderRadius: 5,

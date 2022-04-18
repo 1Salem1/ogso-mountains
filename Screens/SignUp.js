@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import firebase from "firebase";
 import * as AppAuth from 'expo-app-auth';
 import * as Facebook from 'expo-facebook';
+import uuid from 'react-native-uuid';
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { AntDesign } from '@expo/vector-icons'; 
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
@@ -37,6 +38,41 @@ export default function SignUp({ navigation }) {
 
 
 
+
+
+  const exist = (email) => {
+    var firebaseRef =firebase.database().ref('users')
+    firebaseRef.once("value" ,function(snapshot){
+      var data = snapshot.val()
+      for(let i in data){
+        if (data[i].email.toLowerCase() == email.toLowerCase()){
+           return false
+        } 
+        else {
+          return true 
+        }
+      }
+    })
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const HandleSignUP = () => {
     firebase.auth().createUserWithEmailAndPassword(email, password)
     .then((success) => {
@@ -45,10 +81,10 @@ export default function SignUp({ navigation }) {
         // Email verification sent!
       });
     //   console.log(success) 
-       var myUserId = firebase.auth().currentUser.uid;
+      
        
-       database.ref('users/' +  myUserId).set({
-             id_user:  myUserId,
+       database.ref('users/' + uuid.v4()).set({
+             id_user:  uuid.v4(),
              first_name: FirstName,
              last_name: LastName,
              email: email,
@@ -79,7 +115,7 @@ export default function SignUp({ navigation }) {
       if (type === 'success') {
         await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);  // Set persistent auth state
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const facebookProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(credential);  // Sign in with Facebook credential
+        const facebookProfileData = await firebase.auth().signInWithCredential(credential);  // Sign in with Facebook credential
 
         // Do something with Facebook profile data
         // OR you have subscribed to auth state change, authStateChange handler will process the profile data
@@ -88,21 +124,13 @@ export default function SignUp({ navigation }) {
         let last_name = facebookProfileData.additionalUserInfo.profile.last_name
         let location = facebookProfileData.additionalUserInfo.profile.location.name
         let imageUrl = facebookProfileData.additionalUserInfo.profile.picture.data.url
-        let id = facebookProfileData.additionalUserInfo.profile.location.id
+        let id = uuid.v4()
         let provider = 'facebook'
 
         const dbRef = firebase.database().ref();
-        var myUserId = firebase.auth().currentUser.uid;
-        dbRef.child("users").child('users/' + id).get().then((snapshot) => {
-          if (snapshot.exists()) {
-       //     console.log(snapshot.val());
-            return 0
-          } else {
-         //   console.log("No data available");
+          if(exist(email_user)){
+            return 0 ;
           }
-        }).catch((error) => {
-       //  console.error(error);
-        });
 
         database.ref('users/' + id ).set({
           id_user: id,
@@ -121,61 +149,57 @@ export default function SignUp({ navigation }) {
 
   }
 
-  const HandleLoginWithGoogle = async  () => {
-    try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
-      const Token = await GoogleSignin.getTokens()
-      const user = firebase.auth.GoogleAuthProvider.credential(Token.idToken)
+  const HandleLoginWithGoogle = async () => {
    
-      const GoogleProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(user)
-     // console.log(GoogleProfileData)
-        let email_user = GoogleProfileData.additionalUserInfo.profile.email
-        let first_name =GoogleProfileData.additionalUserInfo.profile.family_name
-        let last_name = GoogleProfileData.additionalUserInfo.profile.given_name
-        let location = 'No Location for this Provider'
-        let imageUrl = GoogleProfileData.additionalUserInfo.profile.picture
-        let id = GoogleProfileData.user.uid
-        let provider = 'Google'
-
-        const dbRef = firebase.database().ref();
-        dbRef.child("users").child('users/' + id).get().then((snapshot) => {
-          if (snapshot.exists()) {
-            database.ref('users/' + id ).set({
-              id_user: id,
-              first_name: first_name,
-              last_name: last_name,
-              email: email_user,
-              profile_picture: imageUrl,
-              location: location,
-              provider: provider
-            })
-            return 0
-          } else {
-
-          }
-        })
-
-
+    try {
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signIn();
+        const Token = await GoogleSignin.getTokens()
+        const user = firebase.auth.GoogleAuthProvider.credential(Token.idToken)
+     
+        const GoogleProfileData = await firebase.auth().signInWithCredential(user)
+       // console.log(GoogleProfileData)
+          let email_user = GoogleProfileData.additionalUserInfo.profile.email
+          let first_name =GoogleProfileData.additionalUserInfo.profile.family_name
+          let last_name = GoogleProfileData.additionalUserInfo.profile.given_name
+          let location = 'No Location for this Provider'
+          let imageUrl = GoogleProfileData.additionalUserInfo.profile.picture
+          let id = uuid.v4()
+          let provider = 'Google'
+  
+          const dbRef = firebase.database().ref();
       
-
-
-
-      return firebase.auth().signInWithCredential(user);
-    } catch (error) {
-      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-     //  console.log(error)
-      } else if (error.code === statusCodes.IN_PROGRESS) {
-       // console.log(error)
-      } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
-       // console.log(error)
-      } else {
-      //  console.log(error)
+            if (exist(email_user)) {
+  
+              return 0
+            } else {
+              database.ref('users/' + id ).set({
+                id_user: id,
+                first_name: first_name,
+                last_name: last_name,
+                email: email_user,
+                profile_picture: imageUrl,
+                location: location,
+                provider: provider
+              })
+            }
+          
+      } catch (error) {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+       //  console.log(error)
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+         // console.log(error)
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+         // console.log(error)
+        } else {
+        //  console.log(error)
+        }
       }
+  
+    
+    
     }
-return  firebase.auth().signInWithCredential(user)
-
-    }
+      
 
 
 

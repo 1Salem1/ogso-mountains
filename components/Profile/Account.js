@@ -6,7 +6,7 @@ import firebase from 'firebase';
 
 export default function Account() {
   const user = firebase.auth().currentUser;
-  console.log(user)
+ // console.log(user)
   const [FirstName,setFirstName] = useState();
   const [LastName,setLastName] = useState();
   const [email, setEmail] =useState()
@@ -59,9 +59,9 @@ const SaveProfile =() => {
     
   const onLogout = () => {
     firebase.auth().signOut().then((x) => {
-      console.log(x)
+    //  console.log(x)
       }).catch((error) => {
-       console.log(error)
+     //  console.log(error)
       });
 }
 

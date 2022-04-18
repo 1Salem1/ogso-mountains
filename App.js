@@ -9,7 +9,6 @@ import React, { Component } from 'react';
 import firebase from 'firebase';
 import MainScreen from './components/MainScreen';
 import ForgetPassword from './Screens/ForgetPassword';
-import { getAuth, sendEmailVerification } from "firebase/auth";
 import firebaseConfig from './Configurations/Firebase'
 import WelcomeStep1 from './Screens/tuto/step1';
 import WelcomeStep2 from './Screens/tuto/step2';
@@ -17,8 +16,7 @@ import WelcomeStep3 from './Screens/tuto/step3';
 import WelcomeStep4 from './Screens/tuto/step4';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
-import { email } from 'react-native-communications';
-import EmailVerification from './Screens/EmailVerification';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
@@ -70,7 +68,7 @@ export default class App extends Component {
       loaded: false,
       fontloaded: false,
       emailverified: false,
-      startCheck:true
+      firstLaunch: null
     }
 
 
@@ -86,7 +84,14 @@ export default class App extends Component {
 
   componentDidMount() {
 
-
+    AsyncStorage.getItem("alreadyLaunched").then(value => {
+      if(value == null){
+           AsyncStorage.setItem('alreadyLaunched', true); 
+           this.setState({firstLaunch: true});
+      }
+      else{
+           this.setState({firstLaunch: false});
+      }}) 
 
 
 
@@ -124,7 +129,7 @@ export default class App extends Component {
 
   render() {
 
-    const { loggedIn, loaded, fontloaded , emailVerified } = this.state;
+    const { loggedIn, loaded, fontloaded , firstLaunch } = this.state;
     if (!fontloaded) {
       return (
         <AppLoading
@@ -142,6 +147,41 @@ export default class App extends Component {
           <Text >Loading </Text>
         </View>
 
+      )
+    }
+
+
+    if (firstLaunch) {      
+      return (
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="step4" 
+             screenOptions={{
+               
+             }}
+             headerMode="float"
+          >
+            <Stack.Screen options={{
+              headerShown: false,
+              animation: "slide_from_right",
+              
+            }} name="Login" component={LoginScreen} />
+            <Stack.Screen options={{
+              headerShown: false,
+              animation: "slide_from_right",
+            }} name="signup" component={SignUp} />
+            <Stack.Screen options={{
+             headerShown: false,
+             animation: "slide_from_right",
+            }} name="forgetpassword" component={ForgetPassword} />
+            <Stack.Screen options={{
+               headerShown: false,
+               animation: "slide_from_right",
+            }} name="step4" component={WelcomeStep4}
+
+
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
       )
     }
   
