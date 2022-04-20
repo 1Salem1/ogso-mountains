@@ -6,7 +6,7 @@ import * as Facebook from 'expo-facebook';
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
-
+import Icon from "react-native-vector-icons/Ionicons";
 GoogleSignin.configure({
   // scopes: ['https://www.googleapis.com/auth/drive.readonly'], 
    webClientId: '1047529689642-62qj96fckel3rc8e2014svlul8k9cl4u.apps.googleusercontent.com', 
@@ -267,6 +267,7 @@ export default function LoginScreen({ navigation }) {
 
         <StatusBar  style='dark' />
         <View style={styles.inputView}>
+          
           <TextInput
             onBlur={function(){
               if (!this.validateEmail(this.state.text_input_email)) {

@@ -17,7 +17,7 @@ import WelcomeStep4 from './Screens/tuto/step4';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Loader from './Configurations/Loader'
 const Stack = createNativeStackNavigator();
 
 
@@ -87,6 +87,7 @@ export default class App extends Component {
     AsyncStorage.getItem("alreadyLaunched").then(value => {
       if(value == null){
            AsyncStorage.setItem('alreadyLaunched', true); 
+           console.log('already launched')
            this.setState({firstLaunch: true});
       }
       else{
@@ -144,14 +145,14 @@ export default class App extends Component {
     if (!loaded) {      
       return (
         <View style={styles.container}>
-          <Text >Loading </Text>
+         <Loader visible={!loaded}/>
         </View>
 
       )
     }
 
 
-    if (firstLaunch) {      
+    if (!firstLaunch) {      
       return (
         <NavigationContainer>
           <Stack.Navigator initialRouteName="step4" 

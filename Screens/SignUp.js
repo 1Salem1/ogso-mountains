@@ -6,6 +6,7 @@ import * as Facebook from 'expo-facebook';
 import uuid from 'react-native-uuid';
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { AntDesign } from '@expo/vector-icons'; 
+
 import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 import {
   StyleSheet,
@@ -17,13 +18,89 @@ import {
 
 } from "react-native";
  
-const { URLSchemes } = AppAuth;
+
 
 export default function SignUp({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [FirstName, setFirstName] = useState("");
   const [LastName, setLastName] = useState("");
+  const [password2, setPassword2] = useState("");
+
+  // state to catch form login 
+  const [FirstNameT, setFirstNameT] = useState(null);
+  const [LastNameT, setLastNameT] = useState(null);
+  const [emailT, setemailT] = useState(null);
+
+
+
+const verifLastName = () =>{
+  if (FirstName.length > 1){
+    setFirstNameT(true)
+  }
+  else {
+   setFirstNameT(false)
+  }
+}
+
+
+
+const verifFirstName = () =>{
+  if (LastName.length > 1){
+    setLastNameT(true)
+  }
+  else {
+   setLastNameT(false)
+  }
+}
+
+
+
+const verifEmail= () =>{
+  let reg = new RegExp('/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/');
+
+  if (reg.test(email)){
+    setemailT(true)
+  }
+  else {
+   setemailT(false)
+  }
+}
+
+
+
+const verifPassword = () =>{
+  let reg = new RegExp('^(?=.*?[A-Za-z])(?=.*?[0-9]).{6,}$');
+  if (reg.test(password) && password.length >8){
+    setPassword(true)
+  }
+  else {
+   setPassword(false)
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   GoogleSignin.configure({
     // scopes: ['https://www.googleapis.com/auth/drive.readonly'], 
@@ -214,9 +291,12 @@ export default function SignUp({ navigation }) {
 
 
      <ImageBackground source={require('../assets/Backgrounds/Sign-Up.png')} resizeMode="cover" style={styles.image}>
-     <AntDesign style={{top : 50 , left : 10 , width : 30}}
+       <View style={{ flexDirection: "row",  marginTop: 60   } }>
+       <AntDesign style={{ left : 10 , width : 30}}
      onPress={navigation.goBack} name="left" size={24} color="black" />
-     <Text   onPress={()=> navigation.navigate('step4')}   style={{left :310 ,top : 35, fontWeight :'bold' , marginRight : 20}}>Sign In</Text>
+     <Text   onPress={()=> navigation.navigate('step4')}   style={{left :310 ,fontWeight :'bold' , marginRight : 20}}>Sign In</Text>
+       </View>
+  
 
       <View>
       <Text style={{ top :80, "marginTop": 0, "color": 'black', "fontSize": 35, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`SIGN UP`}</Text>
@@ -240,40 +320,47 @@ export default function SignUp({ navigation }) {
     
         
       <StatusBar  style='dark' />
+      
       <View style={[styles.container,{bottom:110} ] }>
+      <Text style={{top :130,marginBottom :30 , color : 'grey' , fontWeight :'bold'}}>Or With Email</Text>
       
-      
-      <View style={styles.inputView}>
+      <View style={[styles.inputView, FirstNameT? styles.inputViewGreen : styles.inputView]}>
+     
         <TextInput
           style={styles.TextInput}
           placeholder="First Name"
+          onChange={verifLastName}
           placeholderTextColor="#003f5c"
           onChangeText={(FirstName) => setFirstName(FirstName)}
         />
       </View>
-      <View style={styles.inputView}>
+      <View style={[styles.inputView, LastNameT? styles.inputViewGreen : styles.inputView]}>
         <TextInput
           style={styles.TextInput}
           placeholder="Last Name"
+          onChange={verifFirstName}
           placeholderTextColor="#003f5c"
           onChangeText={(LastName) => setLastName(LastName)}
         />
       </View>
  
-      <View style={styles.inputView}>
+      <View style={[styles.inputView, emailT? styles.inputViewGreen : styles.inputView]}>
         <TextInput
           style={styles.TextInput}
           placeholder="Your  Email"
+          onChange={verifEmail}
           placeholderTextColor="#003f5c"
           onChangeText={(email) => setEmail(email)}
         />
       </View>
  
  
-      <View style={styles.inputView}>
+      <View style={[styles.inputView, password? styles.inputViewGreen : styles.inputView]}>
         <TextInput
+          
           style={styles.TextInput}
           placeholder="Password"
+          onChange={verifPassword}
           placeholderTextColor="#003f5c"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
@@ -313,24 +400,72 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center',
   },
- 
   inputView: {
-    borderStyle :'solid',
     backgroundColor: "white",
     width: "70%",
     height: 45,
     marginBottom: 20,
     top : 140,
-    width: 280,
+    flexDirection :'row',
+    width: 290,
+  },
+  inputViewError: {
+    borderStyle :'dashed',
+    borderColor : 'red',
+    backgroundColor: "white",
+    width: "70%",
+    height: 45,
+    borderBottomWidth : 1.0,
+    borderTopWidth: 1.0,
+    borderLeftWidth :1.0,
+    borderRightWidth:1.0,
+    marginBottom: 20,
+    top : 140,
+    flexDirection :'row',
+    width: 290,
+  },
+  inputViewGreen: {
+    borderStyle :'solid',
+    borderColor : 'green',
+    backgroundColor: "white",
+    width: "70%",
+    height: 45,
+    borderBottomWidth : 1.5,
+    borderTopWidth: 1.5,
+    borderLeftWidth :1.5,
+    borderRightWidth:1.5,
+    
+    marginBottom: 20,
+    top : 140,
+    flexDirection :'row',
+    width: 290,
+  },
+  inputView: {
+   
+   opacity:0.9,
+    backgroundColor: "#f1f3f0",
+    borderColor:'grey',
+    width: "70%",
+    height: 45,
+    borderBottomWidth : 0.5,
+    borderTopWidth: 0.2,
+    borderLeftWidth :0.2,
+    borderRightWidth:0.5,
+    borderRadius: 5,
+    marginBottom: 20,
+    top : 140,
+    flexDirection :'row',
+    width: 290,
   },
  
   TextInput: {
-     width: 280,
+    width: 290,
     height: 50,
+   
     flex: 1,
     padding: 10,
     marginLeft: 20,
-    right : 10
+    right : 17,
   },
  
   forgot_button: {

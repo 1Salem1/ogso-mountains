@@ -8,7 +8,7 @@ export default function App() {
   return (
  
       <><WebView style={styles.container}
-      source={{ uri: "https://online.flippingbook.com/view/467555189/" }} />
+      source={{ uri: 'https://ogso-mountain-essentials.com/b2c-catalog/#1' }} />
  
       </>
   
