@@ -4,6 +4,7 @@ import uuid from 'react-native-uuid';
 import firebase from "firebase";
 import * as Facebook from 'expo-facebook';
 import { FontAwesome5 } from '@expo/vector-icons'; 
+import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { AntDesign } from '@expo/vector-icons'; 
 import { GoogleSignin, statusCodes } from 'react-native-google-signin';
 import Icon from "react-native-vector-icons/Ionicons";
@@ -20,13 +21,9 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
   TextInput,
-  Button,
   TouchableOpacity,
   ImageBackground,
-  KeyboardAvoidingView, 
-  Platform
 } from "react-native";
 
 
@@ -41,21 +38,6 @@ export default function LoginScreen({ navigation }) {
 
 
 
-
-  const exist = (email) => {
-    var firebaseRef =firebase.database().ref('users')
-    firebaseRef.once("value" ,function(snapshot){
-      var data = snapshot.val()
-      for(let i in data){
-        if (data[i].email.toLowerCase() == email.toLowerCase()){
-           return false
-        } 
-        else {
-          return true
-        }
-      }
-    })
-  }
 
 
 
@@ -80,15 +62,16 @@ export default function LoginScreen({ navigation }) {
           let last_name = GoogleProfileData.additionalUserInfo.profile.given_name
           let location = 'No Location for this Provider'
           let imageUrl = GoogleProfileData.additionalUserInfo.profile.picture
+          let newUser = GoogleProfileData.additionalUserInfo.isNewUser
           let id = uuid.v4()
           let provider = 'Google'
   
           const dbRef = firebase.database().ref();
        
-            if (exist(email_user)) {
+            if (false) {
   
               return 0
-            } else {
+            } else if (newUser) {
               database.ref('users/' + id ).set({
                 id_user: id,
                 first_name: first_name,
@@ -137,7 +120,7 @@ export default function LoginScreen({ navigation }) {
       if (type === 'success') {
         await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);  // Set persistent auth state
         const credential = firebase.auth.FacebookAuthProvider.credential(token);
-        const facebookProfileData = await firebase.auth().signInAndRetrieveDataWithCredential(credential);  // Sign in with Facebook credential
+        const facebookProfileData = await firebase.auth().signInWithCredential(credential);  // Sign in with Facebook credential
 
         // Do something with Facebook profile data
         // OR you have subscribed to auth state change, authStateChange handler will process the profile data
@@ -146,18 +129,14 @@ export default function LoginScreen({ navigation }) {
         let last_name = facebookProfileData.additionalUserInfo.profile.last_name
         let location = facebookProfileData.additionalUserInfo.profile.location.name
         let imageUrl = facebookProfileData.additionalUserInfo.profile.picture.data.url
+        let newUser = facebookProfileData.additionalUserInfo.isNewUser
         let id = uuid.v4()
         let provider = 'facebook'
 
         const dbRef = firebase.database().ref();
        
-          if (exist(email_user)) {
-       //     console.log(snapshot.val());
-            return 0
-          } else {
-         //   console.log("No data available");
-          }
 
+         if (newUser) {
         database.ref('users/' + id ).set({
           id_user: id,
           first_name: first_name,
@@ -167,8 +146,8 @@ export default function LoginScreen({ navigation }) {
           location: location,
           provider: provider
         })
-      } else {
-      }
+      } 
+    }
     } catch ({ message }) {
     //  console.log(`Facebook Login Error: ${message}`);
     }
@@ -210,72 +189,32 @@ export default function LoginScreen({ navigation }) {
         <Text style={{ "marginBottom": 30, "color": 'black', "fontSize": 35, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`SIGN IN`}</Text>
         
         
-       
-        <View style={{ flexDirection: "row", marginBottom: 50, marginTop: 60    }} >
-         <TouchableOpacity  onPress={HandleLoginWithGoogle}
-    style={{width: 155,
-    height: 55,
-    borderRadius: 5,
-    flexDirection:'row',
-    justifyContent:'center',
-    alignItems:'center',
-    backgroundColor: '#4285f4', }}>
-      <AntDesign style={{color : 'white' , marginRight:15}} name="google" size={24} color="black" />
-   <Text style={{
-        color: '#ffffff',
-        fontFamily: 'Museo',
-        fontSize: 14,
-        fontWeight: '400',
-        fontStyle: 'normal',
-        lineHeight: 32,
-        textAlign :'center',
-        justifyContent :'center',
-        alignContent :'center',
-        alignItems:'center'
+        <View style={{bottom : 120}}>
+  
+        <View style={{ flexDirection: "row",  position:'relative' , top : 130  , justifyContent :'center' , paddingBottom : 50 }} >
+         <View  style={{width : 140  , backgroundColor :'' }}>
+         <FontAwesome5Icon.Button  style={{padding : 15}}name="google"
+               backgroundColor={'#3367D6'}
+            title="With Google" onPress={HandleLoginWithGoogle} >With Google</FontAwesome5Icon.Button>
 
-
-   }}>Google</Text>
-
-         </TouchableOpacity>
+         </View>
          <View style={styles.space} /> 
-        <TouchableOpacity  onPress={HandleLoginWithFacebook}
-    style={{width: 155,
-     height: 55,
-     borderRadius: 5,
-     flexDirection:'row',
-     justifyContent:'center',
-     alignItems:'center',
-     backgroundColor: '#3b5998',}}>
-      <FontAwesome5  style={{color : 'white' , marginRight:15}}  name="facebook-f" size={24} color="black" />
-  <Text style={{
-            color: '#ffffff',
-            fontFamily: 'Museo',
-            fontSize: 14,
-            fontWeight: '400',
-            fontStyle: 'normal',
-            lineHeight: 32,
-            textAlign :'center',
-            justifyContent :'center',
-            alignContent :'center',
-            alignItems:'center'
-  }}>Facebook</Text>
+        <View style={{width : 160  }}>
+        <FontAwesome5Icon.Button  name='facebook' style={{padding : 15}}
+                backgroundColor={'#4267B2'}
+           onPress={HandleLoginWithFacebook} >With Facebook</FontAwesome5Icon.Button>
 
-        </TouchableOpacity>
+        </View>
          
         </View>
+      </View>
+
         <Text style={{marginBottom :30 , color : 'grey' , fontWeight :'bold'}}>Or With Email</Text>
 
         <StatusBar  style='dark' />
         <View style={styles.inputView}>
           
           <TextInput
-            onBlur={function(){
-              if (!this.validateEmail(this.state.text_input_email)) {
-                // not a valid email
-             } else {
-                // valid email
-             }
-            }}
             style={styles.TextInput}
             placeholder="Your Email"
             placeholderTextColor="#003f5c"
@@ -346,24 +285,29 @@ input: {
   },
 
   inputView: {
-    borderRadius: 5,
-    borderStyle: "solid",
-    borderColor: '#cccccc',
+    marginBottom : 20,
+   opacity:0.9,
+    backgroundColor: "#f1f3f0",
+    borderColor:'grey',
     width: "70%",
     height: 45,
-    marginBottom: 20,
-    width: 308,
-    height: 50,
-    backgroundColor: '#ffffff',
-    alignItems: "center",
+    borderBottomWidth : 0.5,
+    borderTopWidth: 0.2,
+    borderLeftWidth :0.2,
+    borderRightWidth:0.5,
+    borderRadius: 5,
+
+    flexDirection :'row',
+    width: 290,
   },
 
   TextInput: {
+    width: 290,
     height: 50,
     flex: 1,
-    marginLeft: 30,
-    left : 15,
-    width: 340
+    padding: 10,
+    marginLeft: 20,
+    right : 17,
   },
 
   forgot_button: {

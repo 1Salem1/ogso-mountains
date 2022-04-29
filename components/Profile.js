@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import firebase from 'firebase';
 import { AntDesign } from '@expo/vector-icons'; 
 import {
@@ -12,6 +12,7 @@ import {
 import ProfileTab from './Profile/ProfileTab';
 import { StatusBar } from "expo-status-bar";
 import { withNavigation } from 'react-navigation';
+import AppLoading from 'expo-app-loading';
 
 
 
@@ -20,66 +21,82 @@ import { withNavigation } from 'react-navigation';
 
 
 
-class Profile extends Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      Name : 'Dear Martian',
-      Email: null,
-      imageUrl : require('../assets/Avatar/avatar6.png')
-    }
+ function Profile  ({navigation}) {
 
 
+  function capitalizeFirstLetter(string) {
+
+    string = string.toLowerCase();
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  
+  const [Name , setName] = useState('Dear Martian')
+  const [imageUrl , setImageUrl]= useState(null) 
+  const [display , setDisplay ] = useState(false)
+
+
+  const fetchDate = () => {
+    const user = firebase.auth().currentUser;
+    var firebaseRef =firebase.database().ref('users')
+    firebaseRef.once("value" ,function(snapshot){
+      var data = snapshot.val()
+      for(let i in data){
+        if (data[i].email.toLowerCase() == user.email.toLowerCase()){
+         setImageUrl(data[i].profile_picture)
+          setName(capitalizeFirstLetter(data[i].first_name) + ' ' + capitalizeFirstLetter(data[i].last_name))
+          setDisplay(true)
+        } 
+      }
+    })
   }
 
 
-  componentDidMount() {
-    function fetchDate(){
-      var firebaseRef =firebase.database().ref('users')
-      firebaseRef.once("value" ,function(snapshot){
-        var data = snapshot.val()
-        for(let i in data){
-          if (data[i].email.toLowerCase() == user.email.toLowerCase()){
-          
-       
-              break
-          } 
-        }
-      })
-    }
-}
+useEffect(()=>{
+fetchDate()
+
+})
 
 
 
 
-
-
-  render() {
-    return (
-      <View style={styles.container}>
-        
-        <AntDesign onPress={() => { this.props.navigation.goBack() }} style={{top : 50 , right : 160 , width : 30}}
-     name="left" size={24} color="black" />
-           <StatusBar  style='dark' />
-        <View>
+if(display ){
+  return (
+    <View style={styles.container}>
       
-           <View style={{top : 130}} >
-           <View style={styles.bgCopy}>
-           <Image style={styles.avatar} source={this.state.imageUrl}/>
-         
-           </View>
-           <Text style={styles.welcomeBack}>Welcome back</Text>
-           <Text style={styles.flenBen}>{this.state.Name}</Text>
-           </View>
+      <AntDesign onPress={() => {navigation.goBack() }} style={{top : 50 , right : 160 , width : 30}}
+   name="left" size={24} color="black" />
+         <StatusBar  style='dark' />
+      <View>
+    
+         <View style={{top : 130}} >
+         <View style={styles.bgCopy}>
+         <Image style={styles.avatar}   source={{
+        uri: `${imageUrl}`
+      }}
+    />
+       
+         </View>
+         <Text style={styles.welcomeBack}>Welcome back</Text>
+         <Text style={styles.flenBen}>{Name}</Text>
+         </View>
 
-        </View>
-         
-          <ProfileTab   />
       </View>
-    );
-  }
+       
+        <ProfileTab   />
+    </View>
+  );
 }
+else {
+  return (
+    <AppLoading/>
+  )
+}
+ 
+
+   
+ 
+  }
+
 
 const styles = StyleSheet.create({
  

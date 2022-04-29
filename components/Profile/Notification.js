@@ -1,50 +1,12 @@
 import { Switch, View, Text , StyleSheet , TextInput ,TouchableOpacity, Image} from 'react-native'
 import React , {useState , useEffect} from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from 'firebase';
-import PushNotification from "react-native-push-notification";
 export default function Notification() {
   const [isEnabled, setIsEnabled] = useState(true);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const user = firebase.auth().currentUser;
  // console.log(user)
-
-
-
-useEffect(() => {
-  PushNotification.configure({
-    // (optional) Called when Token is generated (iOS and Android)
-    onRegister: function(token) {
-   //   console.log("TOKEN:", token);
-    },
-  
-    // (required) Called when a remote or local notification is opened or received
-    onNotification: function(notification) {
-   //   console.log("NOTIFICATION:", notification);
-  
-      // process the notification here
-  
-      // required on iOS only 
-      notification.finish(PushNotificationIOS.FetchResult.NoData);
-    },
-    // Android only
-    senderID: "1047529689642",
-    // iOS only
-    permissions: {
-      alert: true,
-      badge: true,
-      sound: true
-    },
-    popInitialNotification: true,
-    requestPermissions: true
-  });
-   }, []);
-
-
-
-
-
 
 
 
@@ -117,7 +79,7 @@ useEffect(() => {
    marginBottom:20,
     lineHeight: 14,}}>RECENT NOTIFICATIONS</Text>
 
-     <View 
+<View 
      style={styles.notifications}>
       <View style={{padding:10}} >
       <Image style={{height : 50 , width : 50}}source={require('../../assets/icons/Notification.png')} />

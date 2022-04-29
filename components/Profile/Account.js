@@ -17,7 +17,11 @@ export default function Account() {
   }, [])
 
 
+  function capitalizeFirstLetter(string) {
 
+    string = string.toLowerCase();
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
 
 function fetchDate(){
@@ -26,8 +30,8 @@ function fetchDate(){
     var data = snapshot.val()
     for(let i in data){
       if (data[i].email.toLowerCase() == user.email.toLowerCase()){
-          setFirstName(data[i].first_name)
-          setLastName(data[i].last_name)
+          setFirstName(capitalizeFirstLetter(data[i].first_name))
+          setLastName(capitalizeFirstLetter(data[i].last_name))
           setEmail(data[i].email)
           setId(data[i].id_user)
           break
@@ -37,7 +41,7 @@ function fetchDate(){
 }
 const SaveProfile =() => {
   user.updateProfile({
-    displayName: FirstName +' ' +LastName,
+    displayName: capitalizeFirstLetter(FirstName) +' ' + capitalizeFirstLetter(LastName),
   })
   user.updateEmail(email).then(() => {
     // Update successful

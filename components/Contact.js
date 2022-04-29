@@ -4,15 +4,36 @@ import { StatusBar } from "expo-status-bar";
 import { AntDesign } from '@expo/vector-icons';
 import Mailer from 'react-native-mail';
 import Communications from "react-native-communications";
-export default function Contact({ navigation }) {
+import TopBar from './bar/topBar';
+import firebase from 'firebase';
+import { useState , useEffect} from 'react';
+export default function Contact({navigation}) {
 
     const [Name, onChangeName] = React.useState(null);
     const [Email, onChangeEmail] = React.useState(null);
     const [Subject, onChangesubject] = React.useState(null);
     const [Message, onChangeMessage] = React.useState(null);
+    const [imageUrl , setImageUrl]= useState(null) 
 
-
-
+    const fetchDate = () => {
+        const user = firebase.auth().currentUser;
+        var firebaseRef =firebase.database().ref('users')
+        firebaseRef.once("value" ,function(snapshot){
+          var data = snapshot.val()
+          for(let i in data){
+            if (data[i].email.toLowerCase() == user.email.toLowerCase()){
+             setImageUrl(data[i].profile_picture)
+              return true 
+            } 
+          }
+        })
+      }
+    
+    
+    useEffect(()=>{
+    fetchDate()
+    
+    })
 
 
 
@@ -32,10 +53,22 @@ export default function Contact({ navigation }) {
 
 
     return (
+        
         <View style={styles.container}>
+            <View style={{flexDirection:'row' , top : 20}}>
+            <AntDesign onPress={() => {navigation.navigate('Home') }} style={{  right: 150,    top : 30, }} name="left" size={24} color="black" />
+           <TouchableOpacity style={{left : 150}} onPress={() => {navigation.navigate('profile') }} >
+           <Image style={styles.avatar}   source={{
+          uri: `${imageUrl}`
+        }}
+      />
+           </TouchableOpacity>
+    
+            </View>
+             <TopBar/>
                <StatusBar  style='dark' />
             <View style={{ marginTop: 70 }}>
-                <AntDesign onPress={() => navigation.navigate('Home')} style={{ right: 100, bottom: 10 }} name="left" size={24} color="black" />
+               
                 <Text style={styles.title}>Contact us </Text>
 
             </View>
@@ -115,6 +148,7 @@ export default function Contact({ navigation }) {
                     </View>
 
                 </SafeAreaView>
+              
             </ScrollView>
 
         </View>
@@ -131,13 +165,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        bottom: 40,
+        bottom: 20,
+        marginBottom :20,
         color: '#000000',
         fontFamily: 'Museo',
-        fontSize: 25,
+        fontSize: 28,
         fontWeight: '400',
         fontStyle: 'normal',
-        textAlign: 'center',
+        textAlign: 'left',
+        right : 90,
         lineHeight: 36,
     },
     inOur: {
@@ -188,5 +224,14 @@ const styles = StyleSheet.create({
         justifyContent :'center',
         fontWeight :'bold',
         top : 12
-    }
+    },
+    avatar: {
+        width: 50,
+        height: 50,
+        borderRadius: 63,
+        borderWidth: 4,
+        borderColor: "white",
+        top : 20,
+      
+      }
 })

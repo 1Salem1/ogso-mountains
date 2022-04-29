@@ -11,6 +11,7 @@ import TabBar from "react-native-underline-tabbar";
  import Notification from './Notification'
  
 export default class ProfileTab extends Component {
+  
   render() {
     return (
         <View style={[styles.container ]}>

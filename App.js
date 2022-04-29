@@ -17,7 +17,8 @@ import WelcomeStep4 from './Screens/tuto/step4';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Loader from './Configurations/Loader'
+import { NotificationListner , requestUserPermission , getFCMToken} from './Configurations/push_notification_helper';
+
 const Stack = createNativeStackNavigator();
 
 
@@ -77,16 +78,23 @@ export default class App extends Component {
 
 
   componentWillUnmount() {
-    
+   
     }
 
 
 
   componentDidMount() {
+    NotificationListner()
+    requestUserPermission()
+    getFCMToken()
+
+
+
+
 
     AsyncStorage.getItem("alreadyLaunched").then(value => {
-      if(value == null){
-           AsyncStorage.setItem('alreadyLaunched', true); 
+      if(JSON.parse(value) == null){
+           AsyncStorage.setItem('alreadyLaunched', JSON.stringify(true)); 
            console.log('already launched')
            this.setState({firstLaunch: true});
       }
@@ -131,6 +139,21 @@ export default class App extends Component {
   render() {
 
     const { loggedIn, loaded, fontloaded , firstLaunch } = this.state;
+
+
+
+   
+
+
+
+
+
+
+
+
+
+
+
     if (!fontloaded) {
       return (
         <AppLoading
@@ -145,46 +168,14 @@ export default class App extends Component {
     if (!loaded) {      
       return (
         <View style={styles.container}>
-         <Loader visible={!loaded}/>
+      <AppLoading/>
         </View>
 
       )
     }
 
 
-    if (!firstLaunch) {      
-      return (
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="step4" 
-             screenOptions={{
-               
-             }}
-             headerMode="float"
-          >
-            <Stack.Screen options={{
-              headerShown: false,
-              animation: "slide_from_right",
-              
-            }} name="Login" component={LoginScreen} />
-            <Stack.Screen options={{
-              headerShown: false,
-              animation: "slide_from_right",
-            }} name="signup" component={SignUp} />
-            <Stack.Screen options={{
-             headerShown: false,
-             animation: "slide_from_right",
-            }} name="forgetpassword" component={ForgetPassword} />
-            <Stack.Screen options={{
-               headerShown: false,
-               animation: "slide_from_right",
-            }} name="step4" component={WelcomeStep4}
 
-
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      )
-    }
   
 
 
@@ -246,7 +237,7 @@ export default class App extends Component {
 
 
 
-  else
+  else if(loggedIn )
   {
   return (
       <NavigationContainer >
@@ -262,6 +253,40 @@ export default class App extends Component {
     )
 
   }
+
+  if (!firstLaunch && !loggedIn) {      
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="step4" 
+           screenOptions={{
+             
+           }}
+           headerMode="float"
+        >
+          <Stack.Screen options={{
+            headerShown: false,
+            animation: "slide_from_right",
+            
+          }} name="Login" component={LoginScreen} />
+          <Stack.Screen options={{
+            headerShown: false,
+            animation: "slide_from_right",
+          }} name="signup" component={SignUp} />
+          <Stack.Screen options={{
+           headerShown: false,
+           animation: "slide_from_right",
+          }} name="forgetpassword" component={ForgetPassword} />
+          <Stack.Screen options={{
+             headerShown: false,
+             animation: "slide_from_right",
+          }} name="step4" component={WelcomeStep4}
+
+
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    )
+  }
 }
 }
 const styles = StyleSheet.create({
@@ -273,3 +298,5 @@ const styles = StyleSheet.create({
   },
 });
 LogBox.ignoreAllLogs();
+LogBox.ignoreLogs(['Setting a timer']);
+LogBox.ignoreLogs(['Warning: Async Storage has been extracted from react-native core']);

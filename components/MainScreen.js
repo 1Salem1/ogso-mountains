@@ -2,19 +2,19 @@ import { Text, View, StyleSheet , Image } from 'react-native'
 import React, { Component } from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from './Home'
-import Icon from "react-native-vector-icons/Ionicons";
-import FontAwesome from "react-native-vector-icons/FontAwesome5";
 import Profile from './Profile';
-import Faq from "./FAQ/faq"
-import { AntDesign } from '@expo/vector-icons'; 
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+import Notification from './Notification/Notification.js'
 import Contact from './Contact';
-import b2c from './PDF/b2c';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; 
+import Faq from './FAQ/faq'
+import { AntDesign } from '@expo/vector-icons'; 
+import { FontAwesome } from '@expo/vector-icons'; 
 import { createStackNavigator} from '@react-navigation/stack';
-import EmailVerification from '../Screens/EmailVerification';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
 export class MainScreen extends Component {
+  
   componentDidMount() {
 
   }
@@ -25,42 +25,59 @@ export class MainScreen extends Component {
   render() {
     return (
 
-      <Tab.Navigator>
-        <Tab.Screen name="Home"  component={Faq}
+      <Tab.Navigator  tabBarOptions={{
+        showLabel: false}}
+
+   
+      
+     
+>
+        <Tab.Screen name="Home"  component={Home}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: ({ color, size }) => (
-              <AntDesign name="home" size={30} />
-            ),
+           tabBarIcon: (color , focused) => 
+          ( <AntDesign name="home" size={30}   /> ) , tabBarOptions: {
+            activeTintColor: '#e8500e'
+        }
+
           }} />
-           <Tab.Screen name="Ski Practice"  component={Home}
+           <Tab.Screen name="Notifications"  component={Notification}
+          options={{
+            showLabel: false,
+
+            tabBarActiveTintColor: '#e8500e',
+            header: () => null,
+            animation: "slide_from_right",
+            tabBarIcon: () => <AntDesign name="bells"  size={30}  />
+          }} />
+           <Tab.Screen name="Ogso Selector"  component={Faq}
           options={{
             tabBarActiveTintColor: '#e8500e',
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="md-notifications" size={26} style={styles.icon}></Icon>
-            ),
+            tabBarIcon: () => <MaterialCommunityIcons name="comment-question-outline" size={30}  />
           }} />
-           <Tab.Screen name="Ogso Selector"  component={Contact}
+            <Stack.Screen name="contact" component={Contact}
           options={{
+            tabBarActiveTintColor: '#e8500e',
+            header: () => null,
+            animation: "slide_from_right",
+            tabBarIcon: () =>( <FontAwesome name="envelope-o" size={30}  />),  tabBarOptions: {
+              activeTintColor: 'tomato',
+              inactiveTintColor: 'gray',
+          },
+          }} />
+                  <Stack.Screen name="profile" component={Profile}
+                  
+          options={{
+            tabBarButton: () => null,
+            tabBarVisible: false,
             tabBarStyle: { display: "none" },
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: ({ color, size }) => (
-              <Icon2 name="comment-question-outline" size={26}  style={styles.icon}></Icon2>
-            ),
-          }} />
-            <Stack.Screen name="Profile" component={Profile}
-          options={{
-            tabBarStyle: { display: "none" },
-            header: () => null,
-            animation: "slide_from_right",
-            tabBarIcon: ({ color, size }) => (
-              <Icon name="ios-mail" size={26} style={styles.icon2}></Icon>
-            ),
+            tabBarIcon: () => (<Image source={require("../assets/icons/message.png")} style={{width: 20, height: 25}} />)
           }} />
    
       </Tab.Navigator>

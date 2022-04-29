@@ -1,14 +1,14 @@
-import { View, Text , StyleSheet, Button, Image , TouchableOpacity} from 'react-native'
+import { View, Text , StyleSheet, Button, Image} from 'react-native'
 import React from 'react'
 import firebase from 'firebase'
 import { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import AppLoading from 'expo-app-loading'
+import { AntDesign } from '@expo/vector-icons';
 
-
-export default function Home({navigation}) {
+export default function TopBar({navigation}) {
   
-  const [Name , setName] = useState('Dear Martian')
+
   const [imageUrl , setImageUrl]= useState(null) 
   const [display , setDisplay ] = useState(false)
 
@@ -29,7 +29,6 @@ export default function Home({navigation}) {
       for(let i in data){
         if (data[i].email.toLowerCase() == user.email.toLowerCase()){
          setImageUrl(data[i].profile_picture)
-          setName(capitalizeFirstLetter(data[i].first_name) + ' ' + capitalizeFirstLetter(data[i].last_name))
           setDisplay(true)
           return true 
         } 
@@ -52,23 +51,12 @@ if(display){
       <View style={styles.topContainer}>
       <View style={styles.smallContainer}>
           <StatusBar style='dark'/>
-      <Text style={styles.hiFoulen}><Text style={styles.Foulen}>Hi </Text>{Name}</Text>
-        <Text style={styles.Text}>Let’s go for a new Adventure</Text>
+     
         
-        <View>
-
-        </View>
+  
         
       </View>
-      <TouchableOpacity style={{ left : 150}} onPress={() => {navigation.navigate('profile') }}   >
-      <Image 
-         style={styles.avatar}   source={{
-          uri: `${imageUrl}`
-        }}
-      />
-      </TouchableOpacity>
-
-   
+  
       </View>
 
     
@@ -81,10 +69,7 @@ else {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-    },
+ 
     hiFoulen : {
       color: '#eb5c26',
       fontFamily: 'Museo',
@@ -120,13 +105,14 @@ const styles = StyleSheet.create({
     },
      
   avatar: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 63,
     borderWidth: 4,
     borderColor: "white",
     alignSelf:'center',
-    top : 50,
+    left : 150,
+    top : 20,
   
   },
   topContainer : {
