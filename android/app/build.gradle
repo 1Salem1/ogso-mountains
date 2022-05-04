@@ -86,6 +86,11 @@ project.ext.react = [
 
 apply from: new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), "../react.gradle")
 
+
+
+
+
+
 /**
  * Set this to true to create two separate APKs instead of one:
  *   - An APK that only works on ARM devices
@@ -199,6 +204,7 @@ dependencies {
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
     def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";
+     implementation project(':react-native-push-notification')
 
     // If your app supports Android versions before Ice Cream Sandwich (API level 14)
     // All fresco packages should use the same version
@@ -253,3 +259,5 @@ apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 applyNativeModulesAppBuildGradle(project)
 
 apply plugin: 'com.google.gms.google-services' // <--- this should be the last line
+
+

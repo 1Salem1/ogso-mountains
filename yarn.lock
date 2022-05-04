@@ -4753,7 +4753,7 @@ lodash.throttle@^4.1.1:
   resolved "https://registry.npmjs.org/lodash.throttle/-/lodash.throttle-4.1.1.tgz"
   integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
-lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21:
+lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -5891,6 +5891,13 @@ react-native-fbsdk@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/react-native-fbsdk/-/react-native-fbsdk-3.0.0.tgz"
   integrity sha512-i0JocuzLlGk13J0xFDjm8GlX7SADAL2kh/syE/HOn5HHdW+PFjC31MNj5AtzIw2TicHXpHGO6VPKNfdWFbxboA==
+
+react-native-firebase-push-notifications@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-firebase-push-notifications/-/react-native-firebase-push-notifications-2.0.2.tgz#dcba2fcc028b1606aac0929dc4528b2ac744dcf3"
+  integrity sha512-0znlKrbeGg9hjNaDHakvFv9/r4bHvokN9Jgw7QZhGOScy5EgJLWCnvXgDNdBxt59ljWr5zH/pSiA7/NjDjuq/Q==
+  dependencies:
+    lodash "^4.17.11"
 
 react-native-gesture-handler@~2.1.0:
   version "2.1.3"

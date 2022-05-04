@@ -16,6 +16,7 @@ import WelcomeStep3 from './Screens/tuto/step3';
 import WelcomeStep4 from './Screens/tuto/step4';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
+import PushController from './components/Notification/PushController';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NotificationListner , requestUserPermission , getFCMToken} from './Configurations/push_notification_helper';
 

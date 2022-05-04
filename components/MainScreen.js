@@ -25,48 +25,46 @@ export class MainScreen extends Component {
   render() {
     return (
 
-      <Tab.Navigator  tabBarOptions={{
-        showLabel: false}}
-
+      <Tab.Navigator     tabBarOptions={{
+        activeTintColor: '#e8500e',
+         style : {
+           height : 1100
+         }
+      }}
    
       
-     
->
+     >
+
         <Tab.Screen name="Home"  component={Home}
           options={{
-            tabBarActiveTintColor: '#e8500e',
+            "tabBarShowLabel": false,
             header: () => null,
             animation: "slide_from_right",
-           tabBarIcon: (color , focused) => 
-          ( <AntDesign name="home" size={30}   /> ) , tabBarOptions: {
-            activeTintColor: '#e8500e'
-        }
+           tabBarIcon: ({color} ) => 
+          ( <AntDesign name="home" size={30}  active={color === "#e8500e"}  color={color}/> )  
 
           }} />
            <Tab.Screen name="Notifications"  component={Notification}
           options={{
-            showLabel: false,
-
-            tabBarActiveTintColor: '#e8500e',
+            "tabBarShowLabel": false,
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: () => <AntDesign name="bells"  size={30}  />
+            tabBarIcon: ({color} , focused) =>  <AntDesign name="bells"  size={30}  color={color}/>
           }} />
            <Tab.Screen name="Ogso Selector"  component={Faq}
           options={{
-            tabBarActiveTintColor: '#e8500e',
+            "tabBarShowLabel": false,
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: () => <MaterialCommunityIcons name="comment-question-outline" size={30}  />
+            tabBarIcon: ({color}) =>  <MaterialCommunityIcons name="comment-question-outline" size={30}  color={color}/>
           }} />
             <Stack.Screen name="contact" component={Contact}
           options={{
-            tabBarActiveTintColor: '#e8500e',
+            "tabBarShowLabel": false,
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: () =>( <FontAwesome name="envelope-o" size={30}  />),  tabBarOptions: {
-              activeTintColor: 'tomato',
-              inactiveTintColor: 'gray',
+            tabBarIcon: ({color} , focused) => ( <FontAwesome name="envelope-o" size={30}  color={color}/>),  tabBarOptions: {
+            
           },
           }} />
                   <Stack.Screen name="profile" component={Profile}
@@ -77,7 +75,6 @@ export class MainScreen extends Component {
             tabBarStyle: { display: "none" },
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: () => (<Image source={require("../assets/icons/message.png")} style={{width: 20, height: 25}} />)
           }} />
    
       </Tab.Navigator>
