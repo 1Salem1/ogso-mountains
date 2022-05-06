@@ -10,6 +10,7 @@ import Faq from './FAQ/faq'
 import { AntDesign } from '@expo/vector-icons'; 
 import { FontAwesome } from '@expo/vector-icons'; 
 import { createStackNavigator} from '@react-navigation/stack';
+import Location from './SkiPractice/Location';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -35,7 +36,7 @@ export class MainScreen extends Component {
       
      >
 
-        <Tab.Screen name="Home"  component={Home}
+        <Tab.Screen name="Home"  component={Location}
           options={{
             "tabBarShowLabel": false,
             header: () => null,
