@@ -13,6 +13,9 @@ export default function Location() {
 
 
 
+
+
+
   const [isStopwatchStart, setIsStopwatchStart] = React.useState(false);
   const [resetStopwatch, setResetStopwatch] = React.useState(false);
 
@@ -27,12 +30,19 @@ var interval
     const [Locations, setLocations] = React.useState([]);
     const [altitude, setaltitude] = React.useState(0);
     const [distance, setdistance] = React.useState(0);
-    const [stop, setstop] = React.useState(false);
+    const [stop, setstop] = React.useState(true);
     const [speed, setspeed] = React.useState(0);
     const [slope , setslope] =  React.useState(0);
-    
 
 
+
+
+
+React.useEffect(()=>{
+
+
+
+})
 
 
 
@@ -52,55 +62,74 @@ var interval
             axios(config)
             .then(function (response) {
              // console.log(JSON.stringify(response.data))
-        
+             saved.push(response)
               setaltitude(response.data.results[0].elevation)
-              if(saved.length >3){
+              if(saved.length >2){
                 let start = {
-                  latitude: saved[length].latitude,
-                  longitude: saved[length].longitude
+                  latitude: saved[0].data.results[0].location.lat,
+                  longitude: saved[0].data.results[0].location.lng
                 }
                 
                 let end = {
-                  latitude: saved[length-1].latitude,
-                  longitude:saved[length-1].longitude
-                  
+                  latitude: saved[saved.length-1].data.results[0].location.lat,
+                  longitude: saved[saved.length-1].data.results[0].location.lng
                 }
              
-               setdistance(haversine(start, end , {threshold: 1, unit: 'meter'}))
-            
-               setspeed((distance /altitude)/0.0008333333 )
+                 var x = parseFloat(haversine(start, end )).toFixed(3)/3
+    
+                setdistance(x)
+               setspeed()
                
              }
             })
             .catch(function (error) {
-            //  console.log(error);
+                console.log(error)
             });
            
             setLocations([...Locations,location]) 
-            saved.push(location)
-           // console.log(saved)
-         
-            setslope(altitude/distance)
+         //   setslope(distance/altitude)
         })
         .catch(error => {
             const { code, message } = error;
            // console.warn(code, message);
+        }).catch((e)=>{
+          console.log(e)
         })
+
+      
+        
+
+
+
+
+
+
+
+
+
+
+
     }
      
 
 const StartTrack = () => {
-  setstop(!stop)
-  if(stop){
-   clearInterval(interval)
-  }
-   else  {
+
+
+
+
+
+
+  
+ 
      interval = setInterval(() => {
        Location()
        }, 1000);
      
-       
-      }
+       //clearInterval(interval) 
+      
+
+
+
 }
 
 
@@ -114,8 +143,8 @@ const StartTrack = () => {
                <Text  style={{marginRight:10}}>longitude {Locations[0]?.longitude.toFixed(3)}</Text>
                <Text style={{marginRight:10}}>latitude {Locations[0]?.latitude.toFixed(3)} </Text>
                <Text style={{marginRight:10}}>altitude {parseFloat(altitude).toFixed(3)} m</Text>
-               <Text style={{marginRight:10}}>distance {parseFloat(distance).toFixed(8)} m</Text>
-               <Text style={{marginRight:10}}>speed {parseFloat(speed).toFixed(2)} km/h</Text>
+               <Text style={{marginRight:10}}>distance {parseFloat(distance).toFixed(3)*1000} m</Text>
+               <Text style={{marginRight:10}}></Text>
                <Text style={{marginRight:10}}>Slope {parseFloat(slope).toFixed(2)} °</Text>
             
   

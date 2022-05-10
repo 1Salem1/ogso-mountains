@@ -1691,6 +1691,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@ovalmoney/react-native-fitness@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@ovalmoney/react-native-fitness/-/react-native-fitness-0.5.3.tgz#7b61dae4c63bb7c26c129b761f463afe80512186"
+  integrity sha512-N+0nifsYPmZIxx8u2Gjlbg9DJ6IpfieSBUKoFQhDpbGctfY22q/pDm9VuqM0ReCxJ9appBFfD5PiNP7YXk0ttg==
+
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@protobufjs/aspromise/-/aspromise-1.1.2.tgz"
@@ -5260,6 +5265,11 @@ mkdirp@^0.5.1:
   dependencies:
     minimist "^1.2.6"
 
+moment@2.29.1:
+  version "2.29.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
+  integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz"
@@ -5979,6 +5989,18 @@ react-native-get-location@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-native-get-location/-/react-native-get-location-2.2.1.tgz#e1582531e3be29b13a5817e8f06ea864648cefc5"
   integrity sha512-ff1CSsKZgmIcvMt1SefLJM8cV212iYYphZOoG2k0UAp+8egXe1jIs5N2NBHriAgq3Ze9WSCLGqfjXOAVvQuF2A==
+
+react-native-google-fit@^0.18.3:
+  version "0.18.3"
+  resolved "https://registry.yarnpkg.com/react-native-google-fit/-/react-native-google-fit-0.18.3.tgz#465746422d854099cca7c157341918f53e80ee71"
+  integrity sha512-6C3L7D8ftv+/sUYqdiQu+MiiZubLWh091kV3a//A88dOU4GHKb7OL57B/ymMlBIghCPyw4LtHOI0z1oVaeb4HQ==
+  dependencies:
+    moment "2.29.1"
+
+react-native-google-fitness@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-google-fitness/-/react-native-google-fitness-0.2.1.tgz#fbec02a12b53e39cb2a6d1581ca8bb4eb5f09686"
+  integrity sha512-HrpJTeDHaPRrf0+hOtXjbB3DcLwS1DHkgUZvL2dQpGp+vOkKj8jtrVD78PNQCvXRrkiejiwTrwloEVEBUx+rOQ==
 
 react-native-google-maps-services@^0.5.1:
   version "0.5.1"
