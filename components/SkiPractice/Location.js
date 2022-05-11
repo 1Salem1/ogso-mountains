@@ -64,7 +64,7 @@ React.useEffect(()=>{
              // console.log(JSON.stringify(response.data))
              saved.push(response)
               setaltitude(response.data.results[0].elevation)
-              if(saved.length >2){
+           
                 let start = {
                   latitude: saved[0].data.results[0].location.lat,
                   longitude: saved[0].data.results[0].location.lng
@@ -80,7 +80,7 @@ React.useEffect(()=>{
                 setdistance(x)
                setspeed()
                
-             }
+            
             })
             .catch(function (error) {
                 console.log(error)
