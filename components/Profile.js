@@ -54,7 +54,7 @@ import AppLoading from 'expo-app-loading';
 useEffect(()=>{
 fetchDate()
 
-})
+}, [])
 
 
 

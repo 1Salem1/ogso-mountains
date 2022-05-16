@@ -96,6 +96,15 @@ export class MainScreen extends Component {
             header: () => null,
             animation: "slide_from_right",
           }} />
+          <Stack.Screen name="skip" component={Location}
+                  
+                  options={{
+                    tabBarButton: () => null,
+                    tabBarVisible: false,
+                    tabBarStyle: { display: "none" },
+                    header: () => null,
+                    animation: "slide_from_right",
+                  }} />
    
       </Tab.Navigator>
     )
@@ -111,5 +120,5 @@ const styles = StyleSheet.create({
   },
 });
 
-
+console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
 export default MainScreen;

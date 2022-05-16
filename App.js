@@ -323,3 +323,4 @@ const styles = StyleSheet.create({
 LogBox.ignoreAllLogs();
 LogBox.ignoreLogs(['Setting a timer']);
 LogBox.ignoreLogs(['Warning: Async Storage has been extracted from react-native core']);
+console.ignoredYellowBox = ["Warning: Each", "Warning: Failed"];
