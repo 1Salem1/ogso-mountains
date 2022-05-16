@@ -11,6 +11,14 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { createStackNavigator} from '@react-navigation/stack';
 import Location from './SkiPractice/Location';
+
+
+
+import NotificationIcon from './SvgComponents/NotificationIcon';
+import ContactIcon from './SvgComponents/ContactIcon';
+import FaqIcon from './SvgComponents/FaqIcon';
+import HomeIcon from './SvgComponents/HomeIcon';
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -26,47 +34,58 @@ export class MainScreen extends Component {
   render() {
     return (
 
-      <Tab.Navigator     tabBarOptions={{
+      <Tab.Navigator 
+      
+      screenOptions={{
+        tabBarStyle: { position: 'absolute', height : 63 },
+        tabBarBadgeStyle : {
+          color : 'white',
+          backgroundColor :'#e8500e',
+          fontSize : 12
+        }
+      }}
+      
+      tabBarOptions={{
         activeTintColor: '#e8500e',
-         style : {
-           height : 1100
-         }
+        
       }}
    
       
      >
 
-        <Tab.Screen name="Home"  component={Location}
+        <Tab.Screen name="Home"  component={Home}
+        
           options={{
             "tabBarShowLabel": false,
             header: () => null,
             animation: "slide_from_right",
-           tabBarIcon: ({color} ) => 
-          ( <AntDesign name="home" size={30}  active={color === "#e8500e"}  color={color}/> )  
+           tabBarIcon: ({color , focused} ) => 
+          (
+             <HomeIcon  color={focused ? '#e8500e' : 'black'} /> )  
 
           }} />
            <Tab.Screen name="Notifications"  component={Notification}
           options={{
+            tabBarBadge: 6 ,
             "tabBarShowLabel": false,
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: ({color} , focused) =>  <AntDesign name="bells"  size={30}  color={color}/>
+            tabBarIcon: ({color , focused}) =>  
+            <NotificationIcon color={focused ? '#e8500e' : 'black'}/>
           }} />
-           <Tab.Screen name="Ogso Selector"  component={Faq}
+           <Tab.Screen name="faq"  component={Faq}
           options={{
             "tabBarShowLabel": false,
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: ({color}) =>  <MaterialCommunityIcons name="comment-question-outline" size={30}  color={color}/>
+            tabBarIcon: ({color ,focused}) =>  <FaqIcon color={focused ? '#e8500e' : 'black'} />
           }} />
             <Stack.Screen name="contact" component={Contact}
           options={{
             "tabBarShowLabel": false,
             header: () => null,
             animation: "slide_from_right",
-            tabBarIcon: ({color} , focused) => ( <FontAwesome name="envelope-o" size={30}  color={color}/>),  tabBarOptions: {
-            
-          },
+            tabBarIcon: ({color , focused}) => ( <ContactIcon color={focused ? '#e8500e' : 'black'} />)
           }} />
                   <Stack.Screen name="profile" component={Profile}
                   

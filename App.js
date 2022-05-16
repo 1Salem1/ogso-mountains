@@ -6,6 +6,7 @@ import SignUp from './Screens/SignUp';
 import LoginScreen from './Screens/LoginScreen';
 import { LogBox } from 'react-native';
 import React, { Component } from 'react';
+import firebaseApp from '@react-native-firebase/app';
 import firebase from 'firebase';
 import MainScreen from './components/MainScreen';
 import ForgetPassword from './Screens/ForgetPassword';
@@ -19,7 +20,10 @@ import AppLoading from 'expo-app-loading';
 import PushController from './components/Notification/PushController';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NotificationListner , requestUserPermission , getFCMToken} from './Configurations/push_notification_helper';
-
+import '@react-native-firebase/messaging';
+import PushNotification from 'react-native-push-notification';
+import {Platform} from 'react-native';
+import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
 const Stack = createNativeStackNavigator();
 
 
@@ -79,8 +83,16 @@ export default class App extends Component {
 
 
   componentWillUnmount() {
-   
-    }
+      firebaseApp.messaging().onMessage(response => {
+        console.log(JSON.stringify(response));
+        if (Platform.OS !== 'ios') {
+          showNotification(response.notification);
+          return;
+        }
+
+      });
+  
+  }
 
 
 
@@ -107,7 +119,17 @@ export default class App extends Component {
 
 
 
-
+      const showNotification = (
+     
+        ) => {
+          PushNotification.localNotification({
+            title: notification.title,
+            message: notification.body,
+          });
+    
+    
+    
+        }
 
 
 
