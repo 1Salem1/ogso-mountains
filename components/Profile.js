@@ -43,6 +43,7 @@ import AppLoading from 'expo-app-loading';
       for(let i in data){
         if (data[i].email.toLowerCase() == user.email.toLowerCase()){
          setImageUrl(data[i].profile_picture)
+         console.log(data[i].profile_picture)
           setName(capitalizeFirstLetter(data[i].first_name) + ' ' + capitalizeFirstLetter(data[i].last_name))
           setDisplay(true)
         } 
@@ -54,7 +55,7 @@ import AppLoading from 'expo-app-loading';
 useEffect(()=>{
 fetchDate()
 
-}, [])
+},[])
 
 
 

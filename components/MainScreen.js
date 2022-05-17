@@ -11,8 +11,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { createStackNavigator} from '@react-navigation/stack';
 import Location from './SkiPractice/Location';
-
-
+import PDF from './PDF/b2c';
+import SmartOgsoSelect from './SmartOgsoSelect';
 
 import NotificationIcon from './SvgComponents/NotificationIcon';
 import ContactIcon from './SvgComponents/ContactIcon';
@@ -101,10 +101,33 @@ export class MainScreen extends Component {
                   options={{
                     tabBarButton: () => null,
                     tabBarVisible: false,
-                    tabBarStyle: { display: "none" },
+                    "tabBarShowLabel": false,
                     header: () => null,
                     animation: "slide_from_right",
                   }} />
+                   <Stack.Screen name="pdf" component={PDF}
+                  
+                  options={{
+                    header: () => null,
+                    tabBarButton: () => null,
+                    "tabBarShowLabel": false,
+                    animation: "slide_from_right",
+                  }} />
+                      <Stack.Screen name="ogso-selector" component={SmartOgsoSelect}
+                  
+                  options={{
+                    tabBarStyle:{
+                      backgroundColor:'white',
+                      opacity : 0.8,
+                      position: 'absolute', height : 63,
+                      color : 'white'
+                    },
+                    header: () => null,
+                    tabBarButton: () => null,
+                    "tabBarShowLabel": false,
+                    animation: "slide_from_right",
+                  }} />
+   
    
       </Tab.Navigator>
     )

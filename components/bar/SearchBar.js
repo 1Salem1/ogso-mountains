@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, TextInput, View, Keyboard, Button } from "react-native";
 import { Feather, Entypo } from "@expo/vector-icons";
-
+import SearchIcon from "../SvgComponents/SearchIcon";
 
 const SearchBar = (props) => {
   return (
@@ -23,12 +23,7 @@ const SearchBar = (props) => {
             props.setClicked(true);
           }}
         />
-         <Feather
-          name="search"
-          size={20}
-          color="black"
-          style={{ marginLeft: 1 }}
-        />
+        <SearchIcon/>
         
         {props.clicked && (
           <Entypo name="cross" size={0} color="black" style={{ padding: 1 }} onPress={() => {

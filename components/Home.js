@@ -114,7 +114,7 @@ export default function Home({ navigation }) {
                 <Text style={{
 
                   marginTop: 22,
-                  width: 130,
+                  width: 170,
                   height: 177,
                   color: '#eb5c26',
                   fontFamily: 'Museo',
@@ -123,16 +123,16 @@ export default function Home({ navigation }) {
                   fontStyle: 'normal',
 
                   lineHeight: 21,
-                }}>Ski On Mars{"\n"}Product{"\n"}Selector{"\n"}{"\n"}<AntDesign style={{}} name="right" size={24} color="#e8500e" /> </Text>
+                }}>Ski On Mars{"\n"}Tracker{"\n"}{"\n"}{"\n"}<AntDesign style={{}} name="right" size={24} color="#e8500e" /> </Text>
 
-                <Image style={{ left: 30, marginTop: 25 }} source={require('../assets/Backgrounds/ski-on-mars-tracker.png')} />
+                <Image style={{ left: 10, marginTop: 25 }} source={require('../assets/Backgrounds/ski-on-mars-tracker.png')} />
               </TouchableOpacity>
             </View>
             <View style={styles.firstBottom2}>
-            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { navigation.navigate('profile') }} >
+            <TouchableOpacity  style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { navigation.navigate('ogso-selector') }}  >
                 <Text style={{
                   marginTop: 22,
-                  width: 130,
+                  width: 170,
                   height: 177,
                   color: '#9d76b1',
                   fontFamily: 'Museo',
@@ -141,16 +141,16 @@ export default function Home({ navigation }) {
                   fontStyle: 'normal',
 
                   lineHeight: 21,
-                }}>Smart{"\n"}Product{"\n"}Selector{"\n"}{"\n"}<AntDesign style={{}} name="right" size={24} color="#9d76b1" /> </Text>
+                }}>Smart Product{"\n"}Selector{"\n"}{"\n"}{"\n"}<AntDesign style={{}} name="right" size={24} color="#9d76b1" /> </Text>
 
-                <Image style={{ left: 30, marginTop: 25 }} source={require('../assets/Backgrounds/smart-product-selector.png')} />
+                <Image style={{ left: 10, marginTop: 25 }} source={require('../assets/Backgrounds/smart-product-selector.png')} />
               </TouchableOpacity>
             </View>
             <View style={styles.firstBottom3}>
-              <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { navigation.navigate('profile') }}>
+              <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { navigation.navigate('pdf') }}>
                 <Text style={{
                   marginTop: 22,
-                  width: 130,
+                  width: 170,
                   height: 177,
                   color: '#363e8d',
                   fontFamily: 'Museo',
@@ -159,9 +159,9 @@ export default function Home({ navigation }) {
                   fontStyle: 'normal',
 
                   lineHeight: 21,
-                }}>Product{"\n"}Catalog{"\n"}       {"\n"}{"\n"}<AntDesign style={{}} name="right" size={24} color="#363e8d" /> </Text>
+                }}>Product{"\n"}Catalog{"\n"}      {"\n"}{"\n"}<AntDesign style={{}} name="right" size={24} color="#363e8d" /> </Text>
 
-                <Image style={{ left: 30, marginTop: 25 }} source={require('../assets/Backgrounds/product-catalog.png')} />
+                <Image style={{ left: 10, marginTop: 25 }} source={require('../assets/Backgrounds/product-catalog.png')} />
               </TouchableOpacity>
             </View>
 

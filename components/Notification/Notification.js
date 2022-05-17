@@ -28,7 +28,7 @@ export default function Contact({navigation}) {
     useEffect(()=>{
     fetchDate()
     
-    })
+    },[])
 
 
 

@@ -1,4 +1,5 @@
-{
+{   "name": "martian",
+  "displayName": "martian",
   "expo": {
     "plugins": [
       [
@@ -8,7 +9,8 @@
         }
       ]
     ],
-    "name": "The Martian",
+    "name": "martian",
+    "displayName": "martian",
     "slug": "ogso",
     "version": "1.0.0",
     "orientation": "portrait",
