@@ -32,17 +32,6 @@ const Stack = createNativeStackNavigator();
 
 
 
-const config = {
-  animation: 'spring',
-  config: {
-    stiffness: 1000,
-    damping: 500,
-    mass: 3,
-    overshootClamping: true,
-    restDisplacementThreshold: 0.01,
-    restSpeedThreshold: 0.01,
-  },
-};
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -86,7 +75,11 @@ export default class App extends Component {
       firebaseApp.messaging().onMessage(response => {
         console.log(JSON.stringify(response));
         if (Platform.OS !== 'ios') {
-          showNotification(response.notification);
+          PushNotification.localNotification({
+            title: response.title,
+            message: response.body,
+          });
+      
           return;
         }
 
@@ -119,17 +112,7 @@ export default class App extends Component {
 
 
 
-      const showNotification = (
      
-        ) => {
-          PushNotification.localNotification({
-            title: notification.title,
-            message: notification.body,
-          });
-    
-    
-    
-        }
 
 
 

@@ -40,11 +40,13 @@ const List = (props) => {
         }}
       >
         <FlatList
+          
           data={props.data}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
         />
       </View>
+      
     </SafeAreaView>
   );
 };
@@ -53,16 +55,22 @@ export default List;
 
 const styles = StyleSheet.create({
   list__container: {
-    height: "85%",
+    height : "100%",
     width: "100%",
   },
   item: {
-    margin: 30,
-    borderBottomWidth: 2,
-    borderBottomColor: "lightgrey"
+    shadowColor: 'rgba(0,0,0, .4)', // IOS
+    shadowOffset: { height: 1, width: 1 }, // IOS
+    shadowOpacity: 1, // IOS
+    shadowRadius: 30, //IOS
+    elevation: 20, // Android
+    borderRadius: 5,
+    padding : 30,
+ 
   },
   title: {
-    fontSize: 20,
+    marginTop:25,
+    fontSize: 17,
     fontWeight: "bold",
     marginBottom: 5,
     fontStyle: "italic",

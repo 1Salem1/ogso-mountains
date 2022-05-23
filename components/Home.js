@@ -27,10 +27,11 @@ export default function Home({ navigation }) {
 
   const getData = async () => {
     const apiResponse = await fetch(
-      "https://my-json-server.typicode.com/kevintomas1995/logRocket_searchBar/languages"
+      "https://ogso-mountain-essentials.com/app/json/questions.json"
     );
     const data = await apiResponse.json();
     setFakeData(data);
+    
   };
 
 
@@ -70,7 +71,7 @@ export default function Home({ navigation }) {
       <View style={styles.container}  >
         <View style={styles.topContainer}>
           <View style={styles.smallContainer}>
-            <StatusBar style='dark' />
+            <StatusBar  style='dark' />
             <Text style={styles.hiFoulen}><Text style={styles.Foulen}>Hi </Text>{Name}</Text>
             <Text style={styles.Textc}>Let’s go for a new Adventure</Text>
 
@@ -100,13 +101,17 @@ export default function Home({ navigation }) {
           {searchPhrase == '' ? (
             <ActivityIndicator size="large" />
           ) : (
+           
 
-            <List
+<List
               searchPhrase={searchPhrase}
               data={fakeData}
               setClicked={setClicked}
             />
 
+               
+           
+             
           )}
           <View >
             <View style={styles.firstBottom1}>
@@ -266,7 +271,7 @@ const styles = StyleSheet.create({
     width: 370,
     height: 150,
     backgroundColor: '#e3ecfd',
-    marginBottom: 20,
+
     borderRadius: 20
   }
   ,

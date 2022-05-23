@@ -1,6 +1,7 @@
 import { Switch, View, Text , StyleSheet , TextInput ,TouchableOpacity, Image} from 'react-native'
 import React , {useState , useEffect} from 'react'
 import { FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import firebase from 'firebase';
 export default function Notification() {
   const [isEnabled, setIsEnabled] = useState(true);
@@ -9,7 +10,19 @@ export default function Notification() {
  // console.log(user)
 
 
-
+useEffect(()=>{
+  AsyncStorage.getItem("noti-Enable").then(value => {
+       if(isEnabled){
+        AsyncStorage.setItem('noti-Enable', JSON.stringify(true)); 
+       }
+       else {
+        AsyncStorage.setItem('noti-Enable', JSON.stringify(false)); 
+       }
+         
+        
+    }
+  ) 
+},[])
 
 
     
@@ -59,6 +72,7 @@ export default function Notification() {
         ios_backgroundColor="#3e3e3e"
         onValueChange={toggleSwitch}
         value={isEnabled}
+        
       />
         
         

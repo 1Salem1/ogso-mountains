@@ -1,10 +1,11 @@
 import { View, Text , StyleSheet } from 'react-native'
 import React from 'react'
-
+import SkiActivityRec from '../SkiPractice/SkiActivityRec';
 export default function ActivityHistory() {
   return (
     <View style={styles.container} >
       <Text style={styles.title}>ActivityHistory</Text>
+      <SkiActivityRec/>
     </View>
   )
 }
@@ -34,7 +35,6 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     lineHeight: 36,
     right: 100,
-    marginBottom: 10
   },
   
 

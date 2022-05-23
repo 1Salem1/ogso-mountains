@@ -5,12 +5,10 @@ import {
 } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from "react-native-underline-tabbar";
- import Account from './Account'
- import Policy from './Policy'
- import Activicty from './ActivityHistory'
- import Notification from './Notification'
-
-export default class ProfileTab extends Component {
+import SkiActivityRec from './SkiActivityRec';
+ import ContainerSkiMars from './ContainerSkiMars';
+ 
+export default class SkiTab extends Component {
   
   render() {
     return (
@@ -18,22 +16,26 @@ export default class ProfileTab extends Component {
           <ScrollableTabView 
          
               tabBarActiveTextColor="#e8500e"
-            
+              tabBarInactiveTextColor='#666666'
               renderTabBar={() => <TabBar 
               underlineColor="#e8500e"
-              tabBarTextStyle={{ color: '#666666',
-              fontFamily: 'Museo',
-              fontSize: 12,
-              fontWeight: '400',
-              fontStyle: 'normal',
-              textAlign: 'left',}}
+              
+              tabBarTextStyle={{
+                
+                 width : 150, 
+                fontFamily: 'Museo Sans 900',
+                fontSize: 14,
+                fontWeight: '400',
+                fontStyle: 'normal',
+                textAlign: 'left',
+                lineHeight: 31.7,
+                fontSize : 14 , fontWeight : 'bold'}}
              
               
               />}>
-            <Account tabLabel={{label: "Acccount" }} label="Account"/>
-            <Activicty tabLabel={{label: "Activity History"}} label="Activity"/>
-            <Notification tabLabel={{label: "Notifications"}} label="Notifications"/>
-            <Policy  tabLabel={{label: "Privacy Policy"}} label="privacyPolicy"/>
+            <ContainerSkiMars tabLabel={{label: "Ski On Mars" }} label="Ski On Mars"/>
+            <SkiActivityRec tabLabel={{label: "Recent Ski Activities"}} label="Recent Ski Activities"/>
+            
           
           </ScrollableTabView>
  
@@ -44,8 +46,8 @@ export default class ProfileTab extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+
+   
   },
   welcome: {
     fontSize: 20,

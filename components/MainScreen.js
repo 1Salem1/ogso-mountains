@@ -13,18 +13,45 @@ import { createStackNavigator} from '@react-navigation/stack';
 import Location from './SkiPractice/Location';
 import PDF from './PDF/b2c';
 import SmartOgsoSelect from './SmartOgsoSelect';
-
+import Map from './SkiPractice/Map';
 import NotificationIcon from './SvgComponents/NotificationIcon';
 import ContactIcon from './SvgComponents/ContactIcon';
 import FaqIcon from './SvgComponents/FaqIcon';
+import firebaseApp from '@react-native-firebase/app';
 import HomeIcon from './SvgComponents/HomeIcon';
-
+import SkiOnMars from './SkiOnMars/SkiOnMars';
+import { NotificationListner , requestUserPermission , getFCMToken} from '../Configurations/push_notification_helper';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
+
 export class MainScreen extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      number:0
+    }
+
+
+  }
+
   
+  incrementCount() {
+    this.setState((state) => {
+      // Important: read `state` instead of `this.state` when updating.
+      return {number: state.number + 1}
+    });
+  }
+
+
+
   componentDidMount() {
+    NotificationListner()
+    requestUserPermission()
+    getFCMToken()
+    firebaseApp.messaging().onMessage(response => {
+    this.incrementCount()
+    });
 
   }
 
@@ -32,6 +59,8 @@ export class MainScreen extends Component {
 
 
   render() {
+    const { number } = this.state;
+
     return (
 
       <Tab.Navigator 
@@ -66,7 +95,7 @@ export class MainScreen extends Component {
           }} />
            <Tab.Screen name="Notifications"  component={Notification}
           options={{
-            tabBarBadge: 6 ,
+            tabBarBadge: number ,
             "tabBarShowLabel": false,
             header: () => null,
             animation: "slide_from_right",
@@ -127,6 +156,37 @@ export class MainScreen extends Component {
                     "tabBarShowLabel": false,
                     animation: "slide_from_right",
                   }} />
+                  <Stack.Screen name="map" component={Map}
+                  
+                  options={{
+                    tabBarStyle:{
+                      backgroundColor:'white',
+                      opacity : 0.8,
+                      position: 'absolute', height : 63,
+                      color : 'white'
+                    },
+                    tabBarStyle: { display: "none" },
+                    header: () => null,
+                    tabBarButton: () => null,
+                    "tabBarShowLabel": false,
+                    animation: "slide_from_right",
+                  }} />
+                   <Stack.Screen name="SkiOnMars" component={SkiOnMars}
+                  
+                  options={{
+                    tabBarStyle:{
+                      backgroundColor:'white',
+                      opacity : 0.8,
+                      position: 'absolute', height : 63,
+                      color : 'white'
+                    },
+                    tabBarStyle: { display: "none" },
+                    header: () => null,
+                    tabBarButton: () => null,
+                    "tabBarShowLabel": false,
+                    animation: "slide_from_right",
+                  }} />
+   
    
    
       </Tab.Navigator>

@@ -69,7 +69,7 @@ if(display ){
          <StatusBar  style='dark' />
       <View>
     
-         <View style={{top : 130}} >
+         <View style={{top : 140}} >
          <View style={styles.bgCopy}>
          <Image style={styles.avatar}   source={{
         uri: `${imageUrl}`
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     shadowRadius: 32,
     borderRadius: 25,
     backgroundColor: '#ffffff',
-    bottom : 50
+    bottom : 40
   },
   container :{
     backgroundColor: '#ffffff',
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   }
   ,
   welcomeBack : {
-    top : -60,
+    top : -50,
     color: '#000000',
     fontSize: 18,
     fontWeight: 'bold',

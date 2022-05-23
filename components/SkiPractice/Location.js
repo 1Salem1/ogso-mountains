@@ -1,19 +1,53 @@
-import { View, Text , StyleSheet, Button ,TouchableOpacity ,TouchableHighlight, SafeAreaView , Image , ScrollView} from 'react-native'
+import { View, Text , StyleSheet, Button ,TouchableOpacity , Image , ScrollView} from 'react-native'
 import React , {useState , useEffect} from 'react'
 import { StatusBar } from 'expo-status-bar';
 import firebase from 'firebase';
 import GetLocation from 'react-native-get-location'
 import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 import { AntDesign } from '@expo/vector-icons';
+import LocationEnabler from "react-native-location-enabler"
 import { Entypo } from '@expo/vector-icons'; 
 import countries from './LocationsMaps.js'
+import { FontAwesome } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons'; 
+import { FontAwesome5 } from '@expo/vector-icons'; 
+import SkiTab from './SkiPractiseTab.js'
+import { LocationContext } from '../../Context/LocationContext.js';
+import SkiActivityRec from './SkiActivityRec.js';
 var axios = require('axios');
 const haversine = require('haversine')
 
 
 
 
-export default function Location({navigation}) {
+export default function Location({ route, navigation }) {
+
+
+
+
+  const {
+    PRIORITIES: { HIGH_ACCURACY },
+    addListener,
+    checkSettings,
+    requestResolutionSettings
+  } = LocationEnabler
+
+
+  const config = {
+    priority: HIGH_ACCURACY, // default BALANCED_POWER_ACCURACY
+    alwaysShow: true, // default false
+    needBle: false, // default false
+  };
+
+
+  const CheckLocation = () => {
+   const listener = addListener(({ locationEnabled }) =>
+  console.log(`Location are ${ locationEnabled ? 'enabled' : 'disabled' }`)
+  )
+  checkSettings(config)
+  requestResolutionSettings(config);
+  listener.remove();
+  }
 
 
 
@@ -25,15 +59,15 @@ export default function Location({navigation}) {
 
   const [isStopwatchStart, setIsStopwatchStart] = React.useState(false);
   const [resetStopwatch, setResetStopwatch] = React.useState(false);
+  const {value , setValue} = React.useContext(LocationContext)
 
 
 
-
-const saved=[]
+var saved= []
       
 var interval 
 
-
+    
     const [Locations, setLocations] = React.useState([]);
     const [altitude, setaltitude] = React.useState(0);
     const [distance, setdistance] = React.useState(0);
@@ -41,18 +75,12 @@ var interval
     const [speed, setspeed] = React.useState(0);
     const [slope , setslope] =  React.useState(0);
     const [weather , setWeather] =  React.useState(0);
-    const [snow , setsnow] =  React.useState('No Snow at the momment');
-    const [Country , setCountry] =  React.useState(null)
+    const [snow , setsnow] =  React.useState(0.00);
+    const [Country , setCountry] =  React.useState("We couldn't know your current location ")
     const [City , setCity] =  React.useState(null)
-
-
-
-
-
-
-
-
     const [imageUrl , setImageUrl]= useState(null) 
+
+     
 
     const fetchDate = () => {
         const user = firebase.auth().currentUser;
@@ -70,9 +98,16 @@ var interval
     
     
     useEffect(()=>{
+    CheckLocation()
     fetchDate()
     Location()
+
     },[])
+
+
+
+   
+    
 
 
 
@@ -95,15 +130,32 @@ const Weather= async (Location) =>{
 
  axios(configT)
   .then(function (response) {
-    console.log(JSON.stringify(response.data))
+   // console.log(JSON.stringify(response.data))
     const country = countries.filter(function (i,n){
       return i.abbreviation==response.data.sys.country;
   })[0];
-  console.log(country.country)
-    //console.log(response.data.city.country)
-    setCity(response.data.name)
-    setCountry(country.country)
+if (response.data.name){
+  setCity(response.data.name+' , ')
+}
+   // console.log(response.data.snow['1h'])
+  
+    setWeather(response.data.main.temp)
+    if (country){
+      setCountry(country.country)
+    }
+    if (response.data.snow){
+      setsnow(response.data.snow['1h'])
+    }
+    else {
+      setsnow(0.00)
+    }
 
+    if(!country.country && response.data.name ){
+      setCountry('We dont know this location')
+      setCity(null)
+    }
+  
+   
 }) .catch((error) => {
   console.log(error)
 })
@@ -128,7 +180,7 @@ const Weather= async (Location) =>{
             
             axios(config)
             .then(function (response) {
-              console.log(JSON.stringify(response.data))
+            //  console.log(JSON.stringify(response.data))
              saved.push(response)
               setaltitude(response.data.results[0].elevation)
            
@@ -176,49 +228,7 @@ const Weather= async (Location) =>{
 
 
     }
-     
 
-const StartTrack = () => {
-
-
-
-
-
-
-  
- 
-     interval = setInterval(() => {
-       Location()
-       }, 1000);
-     
-       //clearInterval(interval) 
-      
-
-
-
-}
-
-
-
-  
-
-
-/*     var myloop = [];
-        myloop.push(
-              <View style={{flexDirection:'column'}}>
-               <Text  style={{marginRight:10}}>longitude {Locations[0]?.longitude.toFixed(3)}</Text>
-               <Text style={{marginRight:10}}>latitude {Locations[0]?.latitude.toFixed(3)} </Text>
-               <Text style={{marginRight:10}}>altitude {parseFloat(altitude).toFixed(3)} m</Text>
-               <Text style={{marginRight:10}}>distance {parseFloat(distance).toFixed(3)*1000} m</Text>
-               <Text style={{marginRight:10}}></Text>
-               <Text style={{marginRight:10}}>Slope {parseFloat(slope).toFixed(2)} °</Text>
-            
-  
-              </View>
-           
-            
-        )
-     */
   return (
     
     <View style={styles.container}>
@@ -254,13 +264,79 @@ const StartTrack = () => {
     fontStyle: 'normal',
     textAlign: 'left',
     right : 35,
-    lineHeight: 22,}}>  <Entypo name="location-pin" size={17} color="#666666" /> {City}, {Country}</Text> 
+    lineHeight: 22,}}>  <Entypo name="location-pin" size={17} color="#666666" /> {City}{Country}</Text> 
     </View>
   
-    <View>
-
+    <View style={{flexDirection:'row' , marginTop:30 }}>
+    <FontAwesome5 name="thermometer-quarter" size={29} color="#e8500e" />
+       <Text style={{   color: '#707070',
+    fontFamily: 'Museo Sans 300',
+    fontSize: 22,
+    fontWeight: '400',
+    fontStyle: 'normal',
+    textAlign: 'left',
+    lineHeight: 22,
+    marginRight: 70 ,
+    
+    }}>   {weather}°C</Text>
+      <View style={{
+        flexDirection:'row' 
+      }}>
+        <FontAwesome name="snowflake-o" size={29} color="#e8500e" />
+       <Text style={{
+          color: '#707070',
+         fontFamily: 'Museo Sans 300',
+         fontSize: 22,
+         fontWeight: '400',
+         fontStyle: 'normal',
+         textAlign: 'left',
+         lineHeight: 22,
+       }}
+       >   {parseFloat(snow).toFixed(2)} cm</Text>
      
+      </View>
+       
     </View>
+    <Text style={{left :120,
+     color: '#707070',
+     fontFamily: 'Museo',
+     bottom : 5,
+     fontSize: 12,
+    }} >   Last 3 hours Snowfall</Text>
+    <TouchableOpacity onPress={() => { navigation.navigate('map') }} style={{width: 220,
+    height: 57,
+    right : 60,
+    borderRadius: 5,
+    marginTop:20,
+    borderColor: '#cccccc',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    
+    justifyContent:'center',
+    backgroundColor: '#ffffff',}}>
+      <View style={{flexDirection:'row'}} >
+      <MaterialIcons style={{marginLeft:7}} name="my-location" size={24} color="#666" /> 
+      <Text style={{
+       
+         color: '#666666',
+         fontFamily: 'Museo',
+         fontSize: 14,
+         textAlign:'center',
+         fontWeight: '400',
+         fontStyle: 'normal',
+         textAlign: 'center',
+       
+         lineHeight: 22,
+      }}>  Select another place</Text>
+      </View>
+   
+    </TouchableOpacity>
+
+
+<SkiTab />
+
+
+
 
 </View>
 )

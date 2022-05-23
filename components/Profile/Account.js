@@ -79,6 +79,9 @@ const SaveProfile =() => {
 
   return (
     <View style={styles.container}>
+      <View>
+        
+      </View>
       <Text style={styles.title}>Account</Text>
 
       <View style={styles.child}>
@@ -175,11 +178,8 @@ const styles = StyleSheet.create({
 
     alignItems: 'center',
     paddingBottom: 5,
-    shadowColor: 'rgba(91, 77, 188, 0.18)',
-    shadowOffset: { width: 12, height: 0 },
-    shadowRadius: 32,
-    borderRadius: 25,
-    height: 380,
+   
+    width :'100%'
 
   },
   title: {

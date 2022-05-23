@@ -2,13 +2,34 @@ import { View, Text, StyleSheet, SafeAreaView, TextInput, ScrollView, TouchableO
 import React from 'react'
 import { StatusBar } from "expo-status-bar";
 import { AntDesign } from '@expo/vector-icons';
-import Mailer from 'react-native-mail';
-import Communications from "react-native-communications"
 import firebase from 'firebase';
+import firebaseApp from '@react-native-firebase/app';
 import { useState , useEffect} from 'react';
+import { NotificationListner , requestUserPermission , getFCMToken} from '../../Configurations/push_notification_helper';
 export default function Contact({navigation}) {
 
     const [imageUrl , setImageUrl]= useState(null) 
+    const [myloop, setnotification ] = useState([])
+     const [key,setKeys] = useState(0)
+
+    const Notifictions = async  () => {
+      firebaseApp.messaging().onMessage(response => {
+
+
+      
+    
+        if (Platform.OS !== 'ios') {
+           setKeys(key+1)
+          setnotification([...myloop, {key : key ,title : JSON.stringify(response.notification.title), body : JSON.stringify(response.notification.body)}]) 
+         
+    // console.log(myloop)
+
+
+        }
+
+      });
+    }
+
 
     const fetchDate = () => {
         const user = firebase.auth().currentUser;
@@ -26,53 +47,58 @@ export default function Contact({navigation}) {
     
     
     useEffect(()=>{
-    fetchDate()
-    
-    },[])
+fetchDate()
+    Notifictions()
+    })
 
 
 
-    var myloop = [];
+   const notification = myloop.map((item , index) => {
 
-    for (let i = 0; i < 6; i++) {
-      myloop.push(
-        <View 
-        style={styles.notifications}>
-         <View style={{padding:10}} >
-         <Image style={{height : 50 , width : 50}}source={require('../../assets/icons/Notification.png')} />
-           </View>
-           <View style={{
-             padding : 20
-           }}>
-           <Text style={{
-              
-             
-                 color: '#000000',
-                 fontFamily: 'Museo',
-                 fontSize: 14,
-                 fontWeight: '400',
-                 fontStyle: 'normal',
-                 textAlign: 'left',
-                
-                 lineHeight: 14,
-           }}>New Products are coming</Text>
-          <Text style={{
-             
-        
-              color: '#a1a1a1',
-              fontFamily: 'Museo',
-              fontSize: 13,
-              fontWeight: '400',
-              fontStyle: 'normal',
-              textAlign: 'left',
-              lineHeight: 14,
-          }}>checkout our website</Text>
-           </View>
-        
-        </View>
-      
-      );
+    if(index==5){
+      return <></>
     }
+return(
+    <View 
+    key={index}
+    style={styles.notifications}>
+     <View style={{padding:10}} >
+     <Image style={{height : 50 , width : 50}}source={require('../../assets/icons/Notification.png')} />
+       </View>
+       <View style={{
+         padding : 20
+       }}>
+       <Text style={{
+          
+         
+             color: '#000000',
+             fontFamily: 'Museo',
+             fontSize: 14,
+             fontWeight: '400',
+             fontStyle: 'normal',
+             textAlign: 'left',
+            
+             lineHeight: 14,
+       }}>{item.title}</Text>
+      <Text style={{
+         
+    
+          color: '#a1a1a1',
+          fontFamily: 'Museo',
+          fontSize: 13,
+          fontWeight: '400',
+          fontStyle: 'normal',
+          textAlign: 'left',
+          lineHeight: 14,
+      }}>{item.body}</Text>
+       </View>
+    
+    </View>
+  
+)
+
+   })
+
 
 
 
@@ -97,22 +123,16 @@ export default function Contact({navigation}) {
             <ScrollView
              
              Vertical
-             height ='100%'
+             height ='80%'
              showsVerticalScrollIndicator ={false}
              showsHorizontalScrollIndicator={false}
              contentContainerStyle={{ flexGrow: 1 }}>
-                <View style={{     justifyContent: 'center',  alignItems: 'center', }}>
-                  
-                </View>
-          
-               
-          
-                {myloop}
-                
+               {notification}
+                <View style={{height : 100}}></View>
             </ScrollView>
             <View>
 
-                <TouchableOpacity  style={{marginBottom:20}}>
+                <TouchableOpacity  style={{bottom : 80}}>
                     <View style={{  width: 113,height: 50,borderRadius: 15,borderColor: '#ffd6c7',borderStyle: 'solid',justifyContent :'center',borderWidth: 1,backgroundColor: '#ffffff'}}>
                         <Text style={{ color: '#666666',fontFamily: 'Museo',fontSize: 14,fontWeight: '400',fontStyle: 'normal',textAlign: 'center',lineHeight: 22,}}>Delete all</Text>
                     </View>
