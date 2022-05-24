@@ -14,6 +14,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import SkiTab from './SkiPractiseTab.js'
 import { LocationContext } from '../../Context/LocationContext.js';
 import SkiActivityRec from './SkiActivityRec.js';
+
 var axios = require('axios');
 const haversine = require('haversine')
 

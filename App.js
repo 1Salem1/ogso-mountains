@@ -198,13 +198,13 @@ export default class App extends Component {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="step1" 
              screenOptions={{
-               
+              animation: "slide_from_right",
              }}
              headerMode="float"
           >
             <Stack.Screen options={{
               headerShown: false,
-              animation: "slide_from_right",
+             
               
             }} name="Login" component={LoginScreen} />
             <Stack.Screen options={{
