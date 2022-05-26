@@ -16,13 +16,14 @@ import SkiTab from '../SkiPractice/SkiPractiseTab.js';
 import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons'; 
 import style from '../SkiPractice/MapStyle/map.js';
-import MapView, { Callout, Circle, Marker } from "react-native-maps"
+import MapView, { Callout, Circle, Marker , Polyline } from "react-native-maps"
 import MarkerSvg from '../SvgComponents/MarkerSvg.js';
 import TimerIcon from '../SvgComponents/TimerIcon.js';
 import Iconx from '../SvgComponents/xIcon.js';
 import IconV from '../SvgComponents/vIcons.js';
 import { setAdvertiserTrackingEnabledAsync } from 'expo-facebook';
 import ListIcon from '../SvgComponents/ListIcons.js';
+import MapViewDirections from 'react-native-maps-directions';
 var axios = require('axios');
 const haversine = require('haversine')
 
@@ -34,7 +35,7 @@ export default function Location({navigation }) {
 
     const window = Dimensions.get('window');
     const { width, height }  = window
-    
+    const [tr , setTr] = React.useState()
     
 
     var MapStyle = style
@@ -58,8 +59,9 @@ export default function Location({navigation }) {
 
   const CheckLocation = () => {
    const listener = addListener(({ locationEnabled }) =>
-  console.log(`Location are ${ locationEnabled ? 'enabled' : 'disabled' }`)
-  )
+  setTr(true)
+ )
+ 
   checkSettings(config)
   requestResolutionSettings(config);
   listener.remove();
@@ -67,10 +69,7 @@ export default function Location({navigation }) {
 
 
 
-  const Tracking = () =>{
 
-
-  }
 
 
 
@@ -84,8 +83,8 @@ export default function Location({navigation }) {
   const [resetTimer, setResetTimer] = useState(false);
   const [resetStopwatch, setResetStopwatch] = useState(false);
     const [Locations, setLocations] = React.useState([]);
-    const [altitude, setaltitude] = React.useState("--");
-    const [distance, setdistance] = React.useState("--");
+    const [altitude, setaltitude] = React.useState(0.00);
+    const [distance, setdistance] = React.useState("0.00");
     const [stop, setstop] = React.useState(true);
     const [speed, setspeed] = React.useState(0);
     const [slope , setslope] =  React.useState('--');
@@ -95,14 +94,17 @@ export default function Location({navigation }) {
     const [City , setCity] =  React.useState(null)
     const [lat, setLat] = React.useState(0)
     const [lon, setlon] = React.useState(0)
-    const [calories, setcalories] = React.useState(0)
+    const [calories, setcalories] = React.useState(0) 
+    const [verf , setTverf] = React.useState(false)
 
     
     
     useEffect(()=>{
     CheckLocation()
     Location()
-
+     if(tr){
+       Location()
+     }
     },[])
 const Weather= async (Location) =>{
 
@@ -152,8 +154,11 @@ if (response.data.name){
         
         })
         .then(location   => {
+
+      
            setLat(location.latitude)
            setlon(location.longitude)
+        
           Weather(location)
            // console.log(location);
            var config = {
@@ -166,6 +171,7 @@ if (response.data.name){
             .then(function (response) {
             //  console.log(JSON.stringify(response.data))
              saved.push(response)
+             console.log(saved)
               setaltitude(response.data.results[0].elevation)
            
                 let start = {
@@ -178,11 +184,11 @@ if (response.data.name){
                   longitude: saved[saved.length-1].data.results[0].location.lng
                 }
              
-                 var x = parseFloat(haversine(start, end )).toFixed(3)/3
+                 var x = parseFloat(haversine(start, end ), {unit: 'meter'} 
+                 )
     
                 setdistance(x)
-               setspeed()
-               
+          
             
             })
             .catch(function (error) {
@@ -216,6 +222,7 @@ if (response.data.name){
     if (weather) {
 		return(
     <View style={styles.container}>
+      
 	<MapView      
     
     
@@ -231,20 +238,26 @@ if (response.data.name){
 					customMapStyle={MapStyle}
 					style={styles.map}
 					initialRegion={{
-						latitude: lat,
-						longitude: lon,
-						latitudeDelta: 0.2,
-						longitudeDelta: 0.2
+            latitude: lat,
+            longitude: lon,
+						latitudeDelta: 0.0222,
+						longitudeDelta: 0.0421
 					}}
 					provider="google"
 				>
+ <Polyline
+		coordinates={[
+		
+			{     latitude: lat,
+        longitude: lon }
+		]}
 
+		strokeWidth={6}
+	/>
 					<Marker
 						coordinate={{ latitude: lat, longitude: lon }}
 						pinColor="black"
 						draggable={false}
-				
-					
 					>
 						<MarkerSvg />
 					</Marker>
@@ -273,8 +286,12 @@ if (response.data.name){
                   </View> 
                 
                   <View style={{flexDirection:'column' , bottom : 50}}>
-                      
+                  <TouchableOpacity onPress={() => { navigation.navigate('skip') }}  style={{padding :10,height : 50 , width:40 ,bottom: 20, right : 100}}>
+                    <Text></Text>
+                    <AntDesign name="left" size={28} color="black" />
+</TouchableOpacity>  
                   <View style={{flexDirection:'row'  , alignItems:'center'}}>
+                    
                   <FontAwesome  style={{marginRight:10}} name="circle" size={24}  color={isStopwatchStart ? 'red' : 'black'}  />
                   <Text style={styles.title}>TAP TO RECORD</Text>  
                  
@@ -373,15 +390,16 @@ if (response.data.name){
 </View>
 {isStopwatchStart ==true ?(
     <View style={{ bottom:20,flexDirection:'row', width:300,height : 50 ,justifyContent:'space-between'}}>
-    <Iconx style={{top :120, right : 10 ,height : 90,width:70}}/> 
-     <IconV style={{top :120, right : 5,height : 90,width:70}}/>       
+    <Iconx style={{top :90, right : 10 ,height : 90,width:70}}/> 
+     <IconV style={{top :90, right : 5,height : 90,width:70}}/>       
      </View>) 
      : (
-        <View style={{ bottom:20,flexDirection:'row', width:300,height : 50 ,justifyContent:'space-between'}}>
-        <ListIcon  style={{top :120, left : 195,height : 90,width:70}} />    
+        <View style={{left : 85,top:100,flexDirection:'row', borderRadius:100 ,width:70,height : 70 ,backgroundColor:'white' }}>
+        <ListIcon style={{textAlign:'center' , bottom :15, left :20}}  />    
      </View>
      )
      
+
     
 }
 </View>
@@ -390,12 +408,12 @@ if (response.data.name){
 }} onPress={() => {
     setIsStopwatchStart(!isStopwatchStart);
     setResetStopwatch(false);
-    Tracking()
   }} >
            <TimerIcon />  
           
           </TouchableOpacity>   
          
+
         
                         
 			

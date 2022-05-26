@@ -4,15 +4,31 @@ import { StatusBar } from "expo-status-bar";
 import { AntDesign } from '@expo/vector-icons';
 import firebase from 'firebase';
 import firebaseApp from '@react-native-firebase/app';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState , useEffect} from 'react';
-import { NotificationListner , requestUserPermission , getFCMToken} from '../../Configurations/push_notification_helper';
-export default function Contact({navigation}) {
 
+export default function Contact({navigation}) {
+    
+  var database = firebase.database();
     const [imageUrl , setImageUrl]= useState(null) 
     const [myloop, setnotification ] = useState([])
      const [key,setKeys] = useState(0)
-
+  
     const Notifictions = async  () => {
+      const user = firebase.auth().currentUser
+      var firebaseRef =firebase.database().ref('notifications').child(user.uid)
+      firebaseRef.once("value" ,function(snapshot){
+        var data = snapshot.val()
+        console.log(data)
+      
+      })
+ 
+
+
+
+
+
+
       firebaseApp.messaging().onMessage(response => {
 
 
@@ -20,15 +36,22 @@ export default function Contact({navigation}) {
     
         if (Platform.OS !== 'ios') {
            setKeys(key+1)
-          setnotification([...myloop, {key : key ,title : JSON.stringify(response.notification.title), body : JSON.stringify(response.notification.body)}]) 
+          
          
-    // console.log(myloop)
+          database.ref('notifications/' + key ).set({
+            title : response.notification.title , 
+            body : response.notification.body ,
+            user : firebase.auth().currentUser.email
+          })
+
+             }
+             
+    })
 
 
-        }
-
-      });
-    }
+  
+  }
+  
 
 
     const fetchDate = () => {
@@ -52,9 +75,8 @@ fetchDate()
     })
 
 
-
    const notification = myloop.map((item , index) => {
-
+        
     if(index==5){
       return <></>
     }
