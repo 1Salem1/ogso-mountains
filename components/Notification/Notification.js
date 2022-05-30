@@ -4,31 +4,50 @@ import { StatusBar } from "expo-status-bar";
 import { AntDesign } from '@expo/vector-icons';
 import firebase from 'firebase';
 import firebaseApp from '@react-native-firebase/app';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useState , useEffect} from 'react';
-
+import { NotificationListner , requestUserPermission , getFCMToken} from '../../Configurations/push_notification_helper';
 export default function Contact({navigation}) {
-    
-  var database = firebase.database();
+  const user = firebase.auth().currentUser;
     const [imageUrl , setImageUrl]= useState(null) 
-    const [myloop, setnotification ] = useState([])
+    const [myloop, setnotification ] = useState([{key :key, title : 'salem' , body : 'dahmani'}])
+    const [arr , setArr] = useState()
      const [key,setKeys] = useState(0)
+
+    var  saved = []
+
+
+
+const saveDate = async (myArray) => {
+
+  try {
+    await AsyncStorage.setItem('@MySuperStore:key', JSON.stringify(myArray));
+  } catch (error) {
+    // Error saving data
+  }
   
+  try {
+    const myArray = await AsyncStorage.getItem('@MySuperStore:key');
+    if (myArray !== null) {
+      // We have data!!
+      console.log("FROM ASYNC STORAGE",JSON.parse(myArray));
+    }
+  } catch (error) {
+   console.log(error)
+  }
+
+
+
+
+}
+
+
+
+
+
+
     const Notifictions = async  () => {
-      const user = firebase.auth().currentUser
-      var firebaseRef =firebase.database().ref('notifications').child(user.uid)
-      firebaseRef.once("value" ,function(snapshot){
-        var data = snapshot.val()
-        console.log(data)
-      
-      })
- 
-
-
-
-
-
-
       firebaseApp.messaging().onMessage(response => {
 
 
@@ -36,26 +55,21 @@ export default function Contact({navigation}) {
     
         if (Platform.OS !== 'ios') {
            setKeys(key+1)
-          
-         
-          database.ref('notifications/' + key ).set({
-            title : response.notification.title , 
-            body : response.notification.body ,
-            user : firebase.auth().currentUser.email
-          })
-
-             }
-             
-    })
+           
+          setnotification([...myloop, {key : key ,title : JSON.stringify(response.notification.title), body : JSON.stringify(response.notification.body)}]) 
+       
+    // console.log(myloop)
+     saveDate(myloop)
 
 
-  
-  }
-  
+        }
+
+      });
+    }
 
 
     const fetchDate = () => {
-        const user = firebase.auth().currentUser;
+       
         var firebaseRef =firebase.database().ref('users')
         firebaseRef.once("value" ,function(snapshot){
           var data = snapshot.val()
@@ -72,14 +86,11 @@ export default function Contact({navigation}) {
     useEffect(()=>{
 fetchDate()
     Notifictions()
-    })
+    },[])
+
 
 
    const notification = myloop.map((item , index) => {
-        
-    if(index==5){
-      return <></>
-    }
 return(
     <View 
     key={index}
@@ -145,12 +156,12 @@ return(
             <ScrollView
              
              Vertical
-             height ='80%'
+             height ='100%'
              showsVerticalScrollIndicator ={false}
              showsHorizontalScrollIndicator={false}
              contentContainerStyle={{ flexGrow: 1 }}>
                {notification}
-                <View style={{height : 100}}></View>
+                <View style={{marginBottom:10}}></View>
             </ScrollView>
             <View>
 

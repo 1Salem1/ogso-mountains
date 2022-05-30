@@ -286,17 +286,15 @@ input: {
 
   inputView: {
     marginBottom : 20,
-   opacity:0.9,
-    backgroundColor: "#f1f3f0",
+    backgroundColor:'white',
     borderColor:'grey',
     width: "70%",
     height: 45,
-    borderBottomWidth : 0.5,
-    borderTopWidth: 0.2,
-    borderLeftWidth :0.2,
-    borderRightWidth:0.5,
+    borderBottomWidth : 2,
+    borderBottomColor: "#e8500e",
     borderRadius: 5,
-
+    flexDirection :'row',
+    width: 290,
     flexDirection :'row',
     width: 290,
   },

@@ -256,13 +256,13 @@ export default function App ({navigation}) {
     //Accordion Content view
     return (
       <Animatable.View
-        duration={400}
+        duration={100}
         style={[styles.content, isActive ? styles.active : styles.inactive]}
         transition="backgroundColor">
         <Animatable.Text
           animation={isActive ? 'bounceIn' : undefined}
           style={{ textAlign: 'left',color: '#666666',
-          fontFamily: 'Museo Sans 300',
+          fontFamily: 'Museo',
           fontSize: 15,
           fontWeight: '400',
           fontStyle: 'normal',
@@ -426,10 +426,12 @@ const styles = StyleSheet.create({
     lineHeight: 14,
   },
   header: {
+    marginTop:10,
     marginLeft : 20,
     color: '#000000',
-    fontFamily: 'Museo',
+    fontFamily: 'MuseO',
     fontSize: 14,
+   
     fontWeight: '400',
     fontStyle: 'normal',
     textAlign: 'left',
@@ -442,6 +444,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontStyle: 'normal',
     textAlign: 'left',
+    textTransform: 'capitalize',
     },
   textHeader: {
     marginLeft : 20,
@@ -511,7 +514,7 @@ const styles = StyleSheet.create({
     paddingLeft:20,
     color: '#000000',
     fontFamily: 'Museo',
-    fontSize: 16,
+    fontSize: 17,
     fontStyle: 'normal',
     textAlign: 'left',
   },

@@ -33,8 +33,8 @@ export default function ForgetPassword({ navigation }) {
     <View style={styles.container}>
           <ImageBackground source={require('../assets/Backgrounds/Sign-In.png')} resizeMode="cover" style={styles.image}>
           <AntDesign style={{top : 50 , right : 170 }}onPress={navigation.goBack} name="left" size={24} color="black" />
-          <Text style={{ top :110 , "color": 'black', "fontSize": 30, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`FORGET PASSWORD`}</Text>
-          <Text style={{ top : 130,  color : 'grey' }}>We will send you a reset link by email</Text>
+          <Text style={{ top :210 , "color": 'black', "fontSize": 30, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`FORGET PASSWORD`}</Text>
+          <Text style={{ top : 220,  color : 'grey' }}>We will send you a reset link by email</Text>
         <View style={{flex : 1 , justifyContent :'center' }}>
         <StatusBar style="auto" />
       <View style={styles.inputView}>
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "center",
+
   },
  
   image: {
@@ -75,14 +75,17 @@ const styles = StyleSheet.create({
   },
  
   inputView: {
-    width: 308,
-    height: 50,
+    marginBottom : 20,
+    backgroundColor:'white',
+    borderColor:'grey',
+    width: "70%",
+    height: 45,
+    borderBottomWidth : 2,
+    borderBottomColor: "#e8500e",
     borderRadius: 5,
-    borderColor: '#cccccc',
-    borderStyle: 'solid',
-    borderWidth: 1,
-    backgroundColor: '#ffffff',
-    marginBottom :30
+    flexDirection :'row',
+    width: 308,
+
   },
  
   TextInput: {

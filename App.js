@@ -10,6 +10,7 @@ import firebaseApp from '@react-native-firebase/app';
 import firebase from 'firebase';
 import MainScreen from './components/MainScreen';
 import ForgetPassword from './Screens/ForgetPassword';
+import firestore from '@react-native-firebase/firestore';
 import firebaseConfig from './Configurations/Firebase'
 import WelcomeStep1 from './Screens/tuto/step1';
 import WelcomeStep2 from './Screens/tuto/step2';
@@ -24,6 +25,7 @@ import '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
 import {Platform} from 'react-native';
 import {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
+
 const Stack = createNativeStackNavigator();
 
 
@@ -73,12 +75,14 @@ export default class App extends Component {
 
   componentWillUnmount() {
       firebaseApp.messaging().onMessage(response => {
+       const userT = firebase.auth().currentUser
         console.log(JSON.stringify(response));
         if (Platform.OS !== 'ios') {
           PushNotification.localNotification({
             title: response.title,
             message: response.body,
           });
+    
       
           return;
         }

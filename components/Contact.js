@@ -150,7 +150,9 @@ export default function Contact({navigation}) {
                 </SafeAreaView>
               
             </ScrollView>
+            <View style={{height : 100}}>
 
+</View>
         </View>
     )
 }
@@ -177,6 +179,9 @@ const styles = StyleSheet.create({
         lineHeight: 36,
     },
     inOur: {
+        alignContent: 'center',
+        alignItems: "center",
+        justifyContent: 'center',
         width: 320,
         height: 137,
         color: '#666666',
@@ -188,7 +193,7 @@ const styles = StyleSheet.create({
         lineHeight: 23,
     },
     input: {
-        width: 335,
+        width: 345,
         height: 45,
         borderRadius: 5,
         borderColor: '#cccccc',
@@ -201,9 +206,9 @@ const styles = StyleSheet.create({
     },
     TextStyle: {
         color: 'black',
-        fontFamily: 'Museo',
+        fontFamily: 'Muso',
         fontSize: 13,
-        fontWeight: '400',
+        fontWeight: '700',
         fontStyle: 'normal',
         textAlign: 'left',
         left: 30,

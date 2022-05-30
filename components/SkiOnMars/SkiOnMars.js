@@ -2,6 +2,7 @@ import { View, Text , StyleSheet, Button ,TouchableOpacity , Image , ScrollView 
 import React , {useState , useEffect} from 'react'
 import { StatusBar } from 'expo-status-bar';
 import firebase from 'firebase';
+import Geolocation from '@react-native-community/geolocation';
 import GetLocation from 'react-native-get-location'
 import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 import { AntDesign } from '@expo/vector-icons';
@@ -23,8 +24,10 @@ import Iconx from '../SvgComponents/xIcon.js';
 import IconV from '../SvgComponents/vIcons.js';
 import { setAdvertiserTrackingEnabledAsync } from 'expo-facebook';
 import ListIcon from '../SvgComponents/ListIcons.js';
-import MapViewDirections from 'react-native-maps-directions';
+import MapViewDirections from 'react-native-maps-directions'
+import { useWindowDimensions } from 'react-native';
 var axios = require('axios');
+
 const haversine = require('haversine')
 
 
@@ -35,7 +38,7 @@ export default function Location({navigation }) {
 
     const window = Dimensions.get('window');
     const { width, height }  = window
-    const [tr , setTr] = React.useState()
+    const [tr , setTr] = React.useState(false)
     
 
     var MapStyle = style
@@ -84,11 +87,11 @@ export default function Location({navigation }) {
   const [resetStopwatch, setResetStopwatch] = useState(false);
     const [Locations, setLocations] = React.useState([]);
     const [altitude, setaltitude] = React.useState(0.00);
-    const [distance, setdistance] = React.useState("0.00");
+    const [distance, setdistance] = React.useState(0.00);
     const [stop, setstop] = React.useState(true);
-    const [speed, setspeed] = React.useState(0);
-    const [slope , setslope] =  React.useState('--');
-    const [weather , setWeather] =  React.useState(0);
+    const [speed, setspeed] = React.useState(0.00);
+    const [slope , setslope] =  React.useState(0.00);
+    const [weather , setWeather] =  React.useState(0.00);
     const [snow , setsnow] =  React.useState(0.00);
     const [Country , setCountry] =  React.useState("We couldn't know your current location ")
     const [City , setCity] =  React.useState(null)
@@ -97,15 +100,54 @@ export default function Location({navigation }) {
     const [calories, setcalories] = React.useState(0) 
     const [verf , setTverf] = React.useState(false)
 
-    
+    const { heightT, widthT } = useWindowDimensions();
     
     useEffect(()=>{
     CheckLocation()
     Location()
      if(tr){
        Location()
+
+
+
+
+
+
      }
     },[])
+
+
+
+const Tracking = () => {
+
+  var interval
+ 
+if (tr){
+ 
+   interval = setInterval(function() {
+    console.log('working')
+    console.log(tr)
+    //Location()
+    
+  }, 1000);
+}
+else {
+  clearInterval(interval)
+}
+
+ 
+
+}
+
+
+
+
+
+
+
+
+
+
 const Weather= async (Location) =>{
 
   var configT = {
@@ -142,7 +184,7 @@ if (response.data.name){
     }
    
 }) .catch((error) => {
-  console.log(error)
+ // console.log(error)
 })
 
 }
@@ -171,7 +213,7 @@ if (response.data.name){
             .then(function (response) {
             //  console.log(JSON.stringify(response.data))
              saved.push(response)
-             console.log(saved)
+         //    console.log(saved)
               setaltitude(response.data.results[0].elevation)
            
                 let start = {
@@ -192,17 +234,17 @@ if (response.data.name){
             
             })
             .catch(function (error) {
-                console.log(error)
+              //  console.log(error)
             });
            
             setLocations([...Locations,location]) 
-         //   setslope(distance/altitude)
+           Geolocation.getCurrentPosition(info =>  setslope(info.coords.speed)); 
         })
         .catch(error => {
             const { code, message } = error;
            // console.warn(code, message);
         }).catch((e)=>{
-          console.log(e)
+        //  console.log(e)
         })
       
         
@@ -341,8 +383,8 @@ if (response.data.name){
         </View>
    
         <View  style={{flexDirection:'row' , marginLeft:30}}>
-            <Text style={styles.kcal}>{calories}</Text>
-            <Text style={styles.kcal}>kcal</Text>
+            <Text style={styles.kcal}>{calories.toFixed(2)}</Text>
+            <Text style={styles.kcal}> kcal</Text>
         </View>
     </View>
     <View  style={{bottom :150 , left : 100 , position:'absolute'}} >
@@ -352,19 +394,19 @@ if (response.data.name){
         </View>
    
         <View  style={{flexDirection:'row' , marginLeft:30}}>
-            <Text style={styles.kcal}>{distance}</Text>
-            <Text style={styles.kcal}>km</Text>
+            <Text style={styles.kcal}>{distance.toFixed(2)}</Text>
+            <Text style={styles.kcal}> km</Text>
         </View>
     </View>
     <View  style={{top :0 , left : 100 , position:'absolute'}} >
         <View style={{flexDirection:'row'}}>
-        <FontAwesome5 style={{marginRight:10}} name="ruler-combined" size={24} color="#eb5c26" />
-        <Text style={styles.calories}>SLOPE</Text>
+        <MaterialIcons style={{marginRight:10}} name="speed" size={24} color="#eb5c26" />
+        <Text style={styles.calories}>SPEED</Text>
         </View>
    
         <View  style={{flexDirection:'row' , marginLeft:30}}>
-            <Text style={styles.kcal}>{slope}</Text>
-            <Text style={styles.kcal}>°</Text>
+            <Text style={styles.kcal}>{slope.toFixed(2)}</Text>
+            <Text style={styles.kcal}> km/h</Text>
         </View>
        
        
@@ -390,7 +432,11 @@ if (response.data.name){
 </View>
 {isStopwatchStart ==true ?(
     <View style={{ bottom:20,flexDirection:'row', width:300,height : 50 ,justifyContent:'space-between'}}>
-    <Iconx style={{top :90, right : 10 ,height : 90,width:70}}/> 
+    <Iconx onPress={()=>{
+      setResetStopwatch(true)
+      setResetTimer(true)
+      setTr(!tr)
+    }} style={{top :90, right : 10 ,height : 90,width:70}}/> 
      <IconV style={{top :90, right : 5,height : 90,width:70}}/>       
      </View>) 
      : (
@@ -408,6 +454,9 @@ if (response.data.name){
 }} onPress={() => {
     setIsStopwatchStart(!isStopwatchStart);
     setResetStopwatch(false);
+    setTr(!tr)
+    Tracking()
+  
   }} >
            <TimerIcon />  
           

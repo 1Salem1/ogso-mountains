@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import firebase from "firebase";
 import * as AppAuth from 'expo-app-auth';
 import * as Facebook from 'expo-facebook';
-import uuid from 'react-native-uuid';
+
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { AntDesign } from '@expo/vector-icons'; 
 
@@ -11,6 +11,7 @@ import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-goog
 import {
   StyleSheet,
   Text,
+  useWindowDimensions ,
   View,
   TextInput,
   TouchableOpacity,
@@ -112,26 +113,6 @@ const verifPassword = () =>{
 
 
   var database = firebase.database();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -267,8 +248,10 @@ const verifPassword = () =>{
       
 
 
-
-
+    const { height, width } = useWindowDimensions();
+ 
+    console.log(height)
+    console.log(width)
  
   return (
     <View 
@@ -279,9 +262,12 @@ const verifPassword = () =>{
 
 
      <ImageBackground source={require('../assets/Backgrounds/Sign-Up.png')} resizeMode="cover" style={styles.image}>
-       <View style={{ flexDirection: "row",  marginTop: 60   } }>
-       <AntDesign style={{ left : 10 , width : 30}}
+       <View style={{ flexDirection: "row",  marginTop: height / 14   } }>
+         <TouchableOpacity style={{ left : 20 , width : 30}} >
+         <AntDesign 
      onPress={navigation.goBack} name="left" size={24} color="black" />
+         </TouchableOpacity>
+     
      <Text   onPress={()=> navigation.navigate('Login')}   style={{left :310 ,fontWeight :'bold' , marginRight : 20}}>Sign In</Text>
        </View>
   
@@ -289,14 +275,14 @@ const verifPassword = () =>{
       <View>
       <Text style={{ top :80, "marginTop": 0, "color": 'black', "fontSize": 35, "fontWeight": "400", "fontStyle": "normal", "fontFamily": "Esoris", "textAlign": "center", "lineHeight": 38.5 }}>{`SIGN UP`}</Text>
         <View style={{ flexDirection: "row",  position:'relative' , top : 130  , justifyContent :'center' , paddingBottom : 50 }} >
-         <View  style={{width : 140  , backgroundColor :'' }}>
+         <View  style={{width : width/3+20  , backgroundColor :'' }}>
          <FontAwesome5Icon.Button  style={{padding : 15}}name="google"
                backgroundColor={'#3367D6'}
             title="With Google" onPress={HandleLoginWithGoogle} >With Google</FontAwesome5Icon.Button>
 
          </View>
          <View style={styles.space} /> 
-        <View style={{width : 160  }}>
+        <View style={{width : width/3+20 }}>
         <FontAwesome5Icon.Button  name='facebook' style={{padding : 15}}
                 backgroundColor={'#4267B2'}
            onPress={HandleLoginWithFacebook} >With Facebook</FontAwesome5Icon.Button>
@@ -430,15 +416,12 @@ const styles = StyleSheet.create({
   },
   inputView: {
     marginBottom : 20,
-   opacity:0.9,
-    backgroundColor: "#f1f3f0",
+    backgroundColor:'white',
     borderColor:'grey',
     width: "70%",
     height: 45,
-    borderBottomWidth : 0.5,
-    borderTopWidth: 0.2,
-    borderLeftWidth :0.2,
-    borderRightWidth:0.5,
+    borderBottomWidth : 2,
+    borderBottomColor: "#e8500e",
     borderRadius: 5,
     top : 140,
     flexDirection :'row',
