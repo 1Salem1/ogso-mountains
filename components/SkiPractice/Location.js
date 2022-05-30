@@ -23,7 +23,30 @@ const haversine = require('haversine')
 
 export default function Location({ route, navigation }) {
 
+  const  lat = route.params?.lat;
+  
+  const lon = route.params?.lon;
 
+
+
+
+
+
+  useEffect(()=>{
+
+    if( lat || lon){
+
+      const L = {
+        latitude : lat,
+        longitude  : lon
+      }
+      console.log(L)
+      Weather(L)
+
+}
+
+
+  })
 
 
   const {
