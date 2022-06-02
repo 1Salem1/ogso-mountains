@@ -13,8 +13,8 @@ function TimerIcon(props) {
       enableBackground="new 0 0 1024 1024"
       {...props}
     >
-      <Circle cx={498} cy={470} r={75} fill="#ea500e" />
-      <Circle cx={498} cy={470} r={25} fill="#fff" />
+      <Circle cx={498} cy={470} r={475} fill="#ea500e" />
+      <Circle cx={498} cy={470} r={95} fill="#fff" />
     </Svg>
   )
 }

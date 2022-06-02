@@ -38,6 +38,7 @@ export default function Location({navigation }) {
 
     const window = Dimensions.get('window');
     const { width, height }  = window
+   // console.log(width,height)
     const [tr , setTr] = React.useState(false)
     
 
@@ -67,7 +68,9 @@ export default function Location({navigation }) {
  
   checkSettings(config)
   requestResolutionSettings(config);
+  Location()
   listener.remove();
+
   }
 
 
@@ -100,7 +103,7 @@ export default function Location({navigation }) {
     const [calories, setcalories] = React.useState(0) 
     const [verf , setTverf] = React.useState(false)
 
-    const { heightT, widthT } = useWindowDimensions();
+   
     
     useEffect(()=>{
     CheckLocation()
@@ -114,12 +117,12 @@ export default function Location({navigation }) {
 
 
      }
-    },[])
+    })
 
 
 
 const Tracking = () => {
-
+/* 
   var interval
  
 if (tr){
@@ -133,7 +136,7 @@ if (tr){
 }
 else {
   clearInterval(interval)
-}
+} */
 
  
 
@@ -440,9 +443,9 @@ if (response.data.name){
      <IconV style={{top :90, right : 5,height : 90,width:70}}/>       
      </View>) 
      : (
-        <View style={{left : 85,top:100,flexDirection:'row', borderRadius:100 ,width:70,height : 70 ,backgroundColor:'white' }}>
+        <TouchableOpacity onPress={() => {navigation.navigate('ListRecords') }} style={{left : 85,top:100,flexDirection:'row', borderRadius:100 ,width:70,height : 70 ,backgroundColor:'white' , }}>
         <ListIcon style={{textAlign:'center' , bottom :15, left :20}}  />    
-     </View>
+     </TouchableOpacity>
      )
      
 
@@ -450,7 +453,7 @@ if (response.data.name){
 }
 </View>
              
-<TouchableOpacity style={{elevation:300,top :150,height : 600, width:600 , alignContent:'center' , textAlign:'center' , alignItems:'center'
+<TouchableOpacity style={{elevation:300,top :390, height : 70, width:100 , 
 }} onPress={() => {
     setIsStopwatchStart(!isStopwatchStart);
     setResetStopwatch(false);
@@ -458,7 +461,7 @@ if (response.data.name){
     Tracking()
   
   }} >
-           <TimerIcon />  
+           <TimerIcon style={{height : '100%' , width:'100%'}}/>  
           
           </TouchableOpacity>   
          

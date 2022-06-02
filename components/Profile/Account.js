@@ -2,7 +2,8 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-nativ
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import React ,  {useEffect, useState} from 'react'
 import firebase from 'firebase';
-
+import { useNavigation } from '@react-navigation/native';
+import RNRestart from 'react-native-restart'; 
 
 export default function Account() {
   const user = firebase.auth().currentUser;
@@ -10,12 +11,13 @@ export default function Account() {
   const [FirstName,setFirstName] = useState();
   const [LastName,setLastName] = useState();
   const [email, setEmail] =useState()
-  const [name , setName] =useState()
   const [id , setId] = useState()
+  const [Image,setImageUrl] = useState()
   useEffect(() => {
     fetchDate()
-  }, [])
+  },[])
 
+  const navigation = useNavigation(); 
 
   function capitalizeFirstLetter(string) {
 
@@ -33,6 +35,7 @@ function fetchDate(){
           setFirstName(capitalizeFirstLetter(data[i].first_name))
           setLastName(capitalizeFirstLetter(data[i].last_name))
           setEmail(data[i].email)
+          setImageUrl(data[i].profile_picture)
           setId(data[i].id_user)
           break
       } 
@@ -52,12 +55,20 @@ const SaveProfile =() => {
   });
   firebase.database().ref('users').child(id).remove();
 
+
   firebase.database().ref('users/'+ user.uid).set({
     id_user: user.uid,
     first_name: FirstName,
     last_name: LastName,
     email: email,
+    profile_picture: Image
   })
+  .catch((e)=>{
+    console.log(e)
+  })
+  RNRestart.Restart();
+
+
 
 }
     
@@ -133,7 +144,10 @@ const SaveProfile =() => {
     lineHeight: 20,}}>
         Sign Out</Text>
         </TouchableOpacity >
-        <TouchableOpacity  onPress={SaveProfile}
+        <TouchableOpacity  onPress={()=>{
+          SaveProfile()
+          navigation.navigate('Home')
+        }}
         style={{
           width: 159,
           height: 50,

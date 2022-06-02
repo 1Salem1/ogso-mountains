@@ -128,8 +128,10 @@ export default function Contact({navigation}) {
                        
                     </View>
 
-                    <View style={[styles.input, { height: 300 }]}>
+                    <View style={[styles.input, { height: 300  ,overflow:'hidden'}]}>
                         <TextInput
+                            multiline = {true}
+                            numberOfLines = {4}
                             style={[styles.TextStyle, { bottom: 120 }]}
                             onChangeText={onChangeMessage}
                             value={Message}

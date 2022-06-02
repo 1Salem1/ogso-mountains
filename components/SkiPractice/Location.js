@@ -26,6 +26,7 @@ export default function Location({ route, navigation }) {
   const  lat = route.params?.lat;
   
   const lon = route.params?.lon;
+  
 
 
 
@@ -33,7 +34,7 @@ export default function Location({ route, navigation }) {
 
 
   useEffect(()=>{
-
+console.log(lat, lon )
     if( lat || lon){
 
       const L = {
@@ -67,9 +68,11 @@ export default function Location({ route, navigation }) {
   const CheckLocation = () => {
    const listener = addListener(({ locationEnabled }) =>
   console.log(`Location are ${ locationEnabled ? 'enabled' : 'disabled' }`)
+
   )
   checkSettings(config)
   requestResolutionSettings(config);
+  Location()
   listener.remove();
   }
 
@@ -83,7 +86,6 @@ export default function Location({ route, navigation }) {
 
   const [isStopwatchStart, setIsStopwatchStart] = React.useState(false);
   const [resetStopwatch, setResetStopwatch] = React.useState(false);
-  const {value , setValue} = React.useContext(LocationContext)
 
 
 

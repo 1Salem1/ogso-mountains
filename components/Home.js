@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Button, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, Button, Image, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native'
 import React from 'react'
 import firebase from 'firebase'
 import { useEffect, useState } from 'react'
@@ -15,7 +15,6 @@ export default function Home({ navigation }) {
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
   const [fakeData, setFakeData] = useState();
-
 
   function capitalizeFirstLetter(string) {
 
@@ -38,7 +37,7 @@ export default function Home({ navigation }) {
 
   useEffect(() => {
     getData()
-  }, []);
+  });
 
 
   const fetchDate = () => {
@@ -244,7 +243,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1, //IOS
     elevation: 20, // Android
     width: 370,
-    height: 150,
+    height: Dimensions.get('screen').height/6,
     backgroundColor: '#fff4f2',
     marginBottom: 20,
     borderRadius: 20
@@ -256,7 +255,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1, //IOS
     elevation: 20, // Android
     width: 370,
-    height: 150,
+    height:  Dimensions.get('screen').height/6,
     backgroundColor: '#ffebf6',
     marginBottom: 20,
     borderRadius: 20
@@ -269,7 +268,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1, //IOS
     elevation: 20, // Android
     width: 370,
-    height: 150,
+    height:  150,
     backgroundColor: '#e3ecfd',
 
     borderRadius: 20

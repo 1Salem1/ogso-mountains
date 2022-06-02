@@ -3,22 +3,22 @@ import React from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import Rec from './Rec'
 import { SafeAreaView } from 'react-native-safe-area-context'
-export default function SkiActivityRec() {
+export default function SkiActivityRec(props , navigation) {
   return (
 
-    <View style={{flex: 1}}>
+    <View style={{flex: 1 , justifyContent:'center' , alignItems:'center' }}>
  <ScrollView
       vertical={true}
-        style={{ flexGrow:0 }}
+        style={styles.contentContainer}
         showsVerticalScrollIndicator={false}>
          <View>
-         <Rec/>
-            <Rec/>
-            <Rec/>
-            <Rec/>
+         <Rec activity="1" onPress={() => { navigation.navigate('ListRecords') }}/>
+            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
+            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
+            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
 
-            <Rec/>
-            <Rec/>
+            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
+            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
          </View>
             <View style={{height : 100}}>
 
