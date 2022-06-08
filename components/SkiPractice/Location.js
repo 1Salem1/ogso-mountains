@@ -12,7 +12,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
 import SkiTab from './SkiPractiseTab.js'
-import { LocationContext } from '../../Context/LocationContext.js';
 import SkiActivityRec from './SkiActivityRec.js';
 
 var axios = require('axios');
@@ -65,16 +64,21 @@ console.log(lat, lon )
   };
 
 
-  const CheckLocation = () => {
-   const listener = addListener(({ locationEnabled }) =>
-  console.log(`Location are ${ locationEnabled ? 'enabled' : 'disabled' }`)
+  const CheckLocation = async () => {
 
-  )
-  checkSettings(config)
-  requestResolutionSettings(config);
-  Location()
+
+ const r  = await  requestResolutionSettings(config);
+
+ 
+  const listener = addListener(({ locationEnabled }) => {
+    if(locationEnabled){
+ CheckLocation()
+    }
+   })
   listener.remove();
   }
+
+
 
 
 
@@ -87,11 +91,10 @@ console.log(lat, lon )
   const [isStopwatchStart, setIsStopwatchStart] = React.useState(false);
   const [resetStopwatch, setResetStopwatch] = React.useState(false);
 
-
+  var database = firebase.database();
 
 var saved= []
       
-var interval 
 
     
     const [Locations, setLocations] = React.useState([]);

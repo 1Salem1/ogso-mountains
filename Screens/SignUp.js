@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import firebase from "firebase";
 import * as AppAuth from 'expo-app-auth';
 import * as Facebook from 'expo-facebook';
-
+import uuid from 'react-native-uuid';
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { AntDesign } from '@expo/vector-icons'; 
 

@@ -226,6 +226,8 @@ export default class App extends Component {
             <Stack.Screen options={{
                headerShown: false,
                animation: "slide_from_right",
+               
+    
             }} name="step2" component={WelcomeStep2} />
             <Stack.Screen options={{ 
                headerShown: false,

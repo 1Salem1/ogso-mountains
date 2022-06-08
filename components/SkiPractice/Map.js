@@ -6,7 +6,8 @@ import { Button } from "react-native-elements"
 import { StatusBar } from "expo-status-bar"
 import MarkerSvg from "../SvgComponents/MarkerSvg"
 import style from "./MapStyle/map"
-import { LocationContext } from "../../Context/LocationContext"
+
+
 export default function App({ navigation }) {
 	const [lat, setLat] = React.useState(0)
 	const [lon, setlon] = React.useState(0)
@@ -134,5 +135,5 @@ const styles = StyleSheet.create({
 		shadowRadius: 35,
 		elevation:30
 	  },
-
+ 
 })

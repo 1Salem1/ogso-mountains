@@ -22,6 +22,7 @@ import HomeIcon from './SvgComponents/HomeIcon';
 import SkiOnMars from './SkiOnMars/SkiOnMars';
 import { NotificationListner , requestUserPermission , getFCMToken} from '../Configurations/push_notification_helper';
 import ListRecords from './SkiOnMars/ListRecords';
+import SingleActivityRec from './SkiPractice/SingleActivityRec';
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -188,6 +189,21 @@ export class MainScreen extends Component {
                     animation: "slide_from_right",
                   }} />
                              <Stack.Screen name="ListRecords" component={ListRecords}
+                  
+                  options={{
+                    tabBarStyle:{
+                      backgroundColor:'white',
+                      opacity : 0.8,
+                      position: 'absolute', height : 63,
+                      color : 'white'
+                    },
+                    tabBarStyle: { display: "none" },
+                    header: () => null,
+                    tabBarButton: () => null,
+                    "tabBarShowLabel": false,
+                    animation: "slide_from_right",
+                  }} />
+                                      <Stack.Screen name="SkiRecS" component={SingleActivityRec}
                   
                   options={{
                     tabBarStyle:{

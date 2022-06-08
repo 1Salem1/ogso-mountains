@@ -12,14 +12,13 @@ export default function SkiActivityRec(props , navigation) {
         style={styles.contentContainer}
         showsVerticalScrollIndicator={false}>
          <View>
-         <Rec activity="1" onPress={() => { navigation.navigate('ListRecords') }}/>
-            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
-            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
-            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
-
-            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
-            <Rec activity='1' onPress={() => { navigation.navigate('ListRecords') }}/>
+       
+            <Rec  />
          </View>
+
+
+
+
             <View style={{height : 100}}>
 
             </View>

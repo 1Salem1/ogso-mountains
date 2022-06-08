@@ -1,4 +1,4 @@
-import { View, Text , StyleSheet, Button ,TouchableOpacity , Image , ScrollView ,TouchableHighlight, Dimensions} from 'react-native'
+import { View, Text , StyleSheet, Button ,TouchableOpacity , Image , ScrollView ,TouchableHighlight, Dimensions ,  KeyboardAvoidingView , TextInput} from 'react-native'
 import React , {useState , useEffect} from 'react'
 import { StatusBar } from 'expo-status-bar';
 import firebase from 'firebase';
@@ -26,6 +26,8 @@ import { setAdvertiserTrackingEnabledAsync } from 'expo-facebook';
 import ListIcon from '../SvgComponents/ListIcons.js';
 import MapViewDirections from 'react-native-maps-directions'
 import { useWindowDimensions } from 'react-native';
+import Modal from "react-native-modal";
+import ModalCalories from '../Modals/ModelCalories.js';
 var axios = require('axios');
 
 const haversine = require('haversine')
@@ -35,7 +37,7 @@ const haversine = require('haversine')
 
 export default function Location({navigation }) {
 
-
+    var TimingInterval = null
     const window = Dimensions.get('window');
     const { width, height }  = window
    // console.log(width,height)
@@ -75,10 +77,47 @@ export default function Location({navigation }) {
 
 
 
+const Startinterval = () => {
+
+  TimingInterval = setInterval(() => {
+  //  Location()
+  console.log('FROM TIMMING WORKING')
+  }, 3000);
+}
 
 
+const StopInterval = () => {
+
+  clearInterval(TimingInterval);
+
+}
 
 
+const saveSkiingData = () => {
+  console.log('works')
+  const id = uuid.v4()
+
+  database.ref('skiactivity/' + id).set({
+    height:  HeightUser,
+    weight: WeightUser,
+    speed: speed,
+    calories: calories,
+    altitude: altitude,
+    weather : weather,
+    snow : snow ,
+    Time : Time,
+    country : Country,
+    City : City,
+    UpDistance : DistanceUp ,
+    DownDistance : DistanceDown,
+    speed : slope ,
+    distance : distance,
+    TimeUp : TimeUp ,
+    TimeDown : TimeDown ,
+    TimeFixed : TimeFixed
+    
+  })
+}
 
 
 
@@ -86,10 +125,65 @@ export default function Location({navigation }) {
   const [isTimerStart, setIsTimerStart] = useState(false);
   const [isStopwatchStart, setIsStopwatchStart] = useState(false);
   const [timerDuration, setTimerDuration] = useState(90000);
-  const [resetTimer, setResetTimer] = useState(false);
+  const [resetTimer, setResetTimer] = useState(true);
+
+
+
+
+
+
+  const [isTimerStartup, setIsTimerStartup] = useState(false);
+  const [isStopwatchStartup, setIsStopwatchStartup] = useState(false);
+  const [timerDurationup, setTimerDurationup] = useState(90000);
+  const [resetTimerup, setResetTimerup] = useState(true);
+  const [resetStopwatchup, setResetStopwatchup] = useState(false);
+
+
+
+
+
+
+  const [isTimerStartDown, setIsTimerStartDown] = useState(false);
+  const [isStopwatchStartDown, setIsStopwatchStartDown] = useState(false);
+  const [timerDurationDown, setTimerDurationDown] = useState(90000);
+  const [resetTimerDown, setResetTimerDown] = useState(true);
+  const [resetStopwatchDown, setResetStopwatchDown] = useState(false);
+
+
+
+  const [isTimerStartFixed, setIsTimerStartFixed] = useState(false);
+  const [isStopwatchStartFixed, setIsStopwatchStartFixed] = useState(false);
+  const [timerDurationFixed, setTimerDurationFixed] = useState(90000);
+  const [resetTimerFixed, setResetTimerFixed] = useState(true);
+  const [resetStopwatchfixed, setResetStopwatchfixed] = useState(false);
+
+
+
+
+
   const [resetStopwatch, setResetStopwatch] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(true);
+  const [HeightUser, onChangeHeightUser] = React.useState(0);
+  const [WeightUser, onChangeWeightUser] = React.useState(0);
+  const [number, onChangeNumber] = React.useState(null);
+  const [Time, setTime] = React.useState(null);
+  const [TimeUp, setTimeUp] = React.useState(null);
+  const [TimeFixed, setTimeFixed] = React.useState(null)
+  const [TimeDown, setTimeDown] = React.useState(null);
+
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+
+
+
+
     const [Locations, setLocations] = React.useState([]);
     const [altitude, setaltitude] = React.useState(0.00);
+    const [DistanceUp, setDistanUp] = React.useState(0.00);
+    const [DistanceDown, setDistanDown] = React.useState(0.00);
     const [distance, setdistance] = React.useState(0.00);
     const [stop, setstop] = React.useState(true);
     const [speed, setspeed] = React.useState(0.00);
@@ -101,6 +195,8 @@ export default function Location({navigation }) {
     const [lat, setLat] = React.useState(0)
     const [lon, setlon] = React.useState(0)
     const [calories, setcalories] = React.useState(0) 
+
+    
     const [verf , setTverf] = React.useState(false)
 
    
@@ -117,30 +213,11 @@ export default function Location({navigation }) {
 
 
      }
-    })
+    },[])
 
 
 
-const Tracking = () => {
-/* 
-  var interval
- 
-if (tr){
- 
-   interval = setInterval(function() {
-    console.log('working')
-    console.log(tr)
-    //Location()
-    
-  }, 1000);
-}
-else {
-  clearInterval(interval)
-} */
 
- 
-
-}
 
 
 
@@ -194,6 +271,64 @@ if (response.data.name){
 
 
 
+const checkTimerStatus =() => {
+  if (saved[saved.length-2].data.results[0].elevation < saved[saved.length-1].data.results[0].elevation ){
+    if(!isStopwatchStartup){
+      setIsStopwatchStart(!isStopwatchStartup);
+      setResetStopwatchup(false); 
+    }
+
+    if(isStopwatchStartFixed){
+      setIsStopwatchStart(!isStopwatchStartFixed);
+      setResetStopwatchup(false); 
+    }
+
+    if(isStopwatchStartDown){
+      setIsStopwatchStart(!isStopwatchStartDown);
+      setResetStopwatchup(false); 
+    }
+  }
+
+  if (saved[saved.length-2].data.results[0].elevation > saved[saved.length-1].data.results[0].elevation ){
+    if(!isStopwatchStartDown){
+      setIsStopwatchStart(!isStopwatchStartDown);
+      setResetStopwatchup(false); 
+    }
+
+    if(isStopwatchStartFixed){
+      setIsStopwatchStart(!isStopwatchStartFixed);
+      setResetStopwatchup(false); 
+    }
+
+    if(isStopwatchStartup){
+      setIsStopwatchStart(!isStopwatchStartup);
+      setResetStopwatchup(false); 
+    }
+  }
+  else if ( 1>(saved[saved.length-2].data.results[0].elevation - saved[saved.length-1].data.results[0].elevation )) {
+    if(isStopwatchStartFixed){
+      setIsStopwatchStart(!isStopwatchStartFixed);
+      setResetStopwatchup(false); 
+    }
+
+    if(isStopwatchStartup){
+      setIsStopwatchStart(!isStopwatchStartup);
+      setResetStopwatchup(false); 
+    }
+  }
+
+ 
+ const x = parseFloat(haversine(saved[saved.length-1].data.results[0].location.lat,saved[saved.length-1].data.results[0].location.lat), {unit: 'meter'}) 
+  if (x <5){
+
+
+  }
+
+}
+
+
+
+
     const  Location = async () =>{
         await GetLocation.getCurrentPosition({
         
@@ -230,7 +365,33 @@ if (response.data.name){
                 }
              
                  var x = parseFloat(haversine(start, end ), {unit: 'meter'} 
+               
                  )
+                 if(x !=0 ){
+                   setcalories(WeightUser)
+                } 
+
+
+                if (saved.length>2){
+
+
+                  if (saved[saved.length-2].data.results[0].elevation < saved[saved.length-1].data.results[0].elevation ){
+                           setDistanUp(distance+ parseFloat(haversine(
+                             {  latitude: saved[saved.length-2].data.results[0].location.lat,
+                                longitude: saved[saved.length-2].data.results[0].location.lng}, 
+                             {  latitude: saved[saved.length-1].data.results[0].location.lat,
+                                longitude: saved[saved.length-1].data.results[0].location.lng} ), {unit: 'meter'} ))
+                  }    if (saved[saved.length-2].data.results[0].elevation > saved[saved.length-1].data.results[0].elevation ){
+                    setDistanDown(distance+ parseFloat(haversine(
+                      {  latitude: saved[saved.length-2].data.results[0].location.lat,
+                         longitude: saved[saved.length-2].data.results[0].location.lng}, 
+                      {  latitude: saved[saved.length-1].data.results[0].location.lat,
+                         longitude: saved[saved.length-1].data.results[0].location.lng} ), {unit: 'meter'} ))
+           }
+
+  
+                }
+             
     
                 setdistance(x)
           
@@ -341,7 +502,31 @@ if (response.data.name){
                   <Text style={styles.title}>TAP TO RECORD</Text>  
                  
                   </View>
-                  <Stopwatch  options={options} laps  start={isStopwatchStart}  reset={resetStopwatch} />
+                  <Stopwatch  options={options} laps   start={isStopwatchStart}  reset={resetStopwatch}  getTime={(time) => {
+                    console.log(time)
+              setTime(time);
+            }} />
+
+       {false==true?  (
+    <><Stopwatch options={options} laps start={isStopwatchStartup} reset={re} getTime={(time) => {
+                console.log(time);
+                setTime(TimeUp);
+              } } /><Stopwatch style={{}} options={options} laps start={isStopwatchStartDown} reset={resetTimerDown} getTime={(time) => {
+                console.log(time);
+                setTime(TimeDown);
+              } } /><Stopwatch style={{}} options={options} laps start={isStopwatchStartFixed} reset={resetStopwatch} getTime={(time) => {
+                console.log(time);
+                setTime(TimeFixed);
+              } } /></>
+        
+
+       ): (
+         <Text></Text>
+       )
+           
+
+       }
+    
                   </View>
                 
                  
@@ -436,11 +621,16 @@ if (response.data.name){
 {isStopwatchStart ==true ?(
     <View style={{ bottom:20,flexDirection:'row', width:300,height : 50 ,justifyContent:'space-between'}}>
     <Iconx onPress={()=>{
-      setResetStopwatch(true)
-      setResetTimer(true)
+      StopInterval()
+      setIsStopwatchStart(false);
+  setResetStopwatch(true);
       setTr(!tr)
     }} style={{top :90, right : 10 ,height : 90,width:70}}/> 
-     <IconV style={{top :90, right : 5,height : 90,width:70}}/>       
+     <IconV style={{top :90, right : 5,height : 90,width:70}}
+     onPress={()=>{
+       saveSkiingData()
+     }}
+     />       
      </View>) 
      : (
         <TouchableOpacity onPress={() => {navigation.navigate('ListRecords') }} style={{left : 85,top:100,flexDirection:'row', borderRadius:100 ,width:70,height : 70 ,backgroundColor:'white' , }}>
@@ -457,17 +647,57 @@ if (response.data.name){
 }} onPress={() => {
     setIsStopwatchStart(!isStopwatchStart);
     setResetStopwatch(false);
-    setTr(!tr)
-    Tracking()
-  
+    StopInterval()
   }} >
            <TimerIcon style={{height : '100%' , width:'100%'}}/>  
-          
+        
           </TouchableOpacity>   
          
 
+          <View style={{ flex: 1 }}>
+    <Modal isVisible={isModalVisible}>
+      <View style={{ flex: 1 , justifyContent:'center'  }}>
         
-                        
+<View style={{backgroundColor:'#F8bb9d',height : 220 , width : '100%' , padding :20 , borderRadius:30}}>
+
+<Text style={{textAlign:'center' ,  fontFamily:'Museo',marginBottom:20, color:'white'}}>Dear Martian , For better tracking experience share with us your height and weight  </Text>
+<KeyboardAvoidingView behavior="position">
+<TextInput
+        style={styles.input}
+        onChangeText={onChangeHeightUser}
+        placeholder="Your Height in cm"
+        
+        maxLength={3}
+      />
+
+<TextInput
+        style={styles.input}
+        onChangeText={onChangeWeightUser}
+        placeholder="Your Weight in Kg"
+        maxLength={3}
+      />      
+</KeyboardAvoidingView>
+
+          <View style={{height : '13%' , flexDirection:'column' , alignItems:'center'}}>
+
+<TouchableOpacity onPress={toggleModal} style={{
+  flexDirection:'row',
+  justifyContent:'center',
+  alignItems:'center',
+   borderRadius: 5,
+   backgroundColor: '#e8500e',
+  height : '190%',
+  width :'60%' 
+
+}} >
+ <Text style={{   color :'white'}}>Confirm</Text> 
+</TouchableOpacity>
+</View>
+</View>
+       
+      </View>
+    </Modal>
+  </View>       
 			
     </View>
   )}
@@ -548,7 +778,14 @@ const styles = StyleSheet.create({
         fontStyle: 'normal',
         textAlign: 'left',
         lineHeight: 22,
-      }
+      },
+      input: {
+        height: 40,
+        margin: 12,
+        padding: 10,
+        backgroundColor:'white',
+        borderRadius:20,
+      },
 
 })
 

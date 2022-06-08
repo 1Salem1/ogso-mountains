@@ -66,6 +66,7 @@ const SaveProfile =() => {
   .catch((e)=>{
     console.log(e)
   })
+
   RNRestart.Restart();
 
 
