@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {
   StyleSheet,
   View
@@ -7,10 +7,38 @@ import ScrollableTabView from 'react-native-scrollable-tab-view';
 import TabBar from "react-native-underline-tabbar";
 import SkiActivityRec from './SkiActivityRec';
  import ContainerSkiMars from './ContainerSkiMars';
+ import firebase from 'firebase';
+export default function SkiTab  () {
  
-export default class SkiTab extends Component {
+  const [data,setData] = useState()
+
+  const fetchDate = () => {
+    var tab = []
+    const user = firebase.auth().currentUser;
+    var firebaseRef =firebase.database().ref('skiactivity')
+    firebaseRef.once("value" ,function(snapshot){
+      var data = snapshot.val()
+     // console.log("FROM DATA", data)
+      for(let i in data){
+        if (data[i].email.toLowerCase() == user.email.toLowerCase()){
+               tab.push(data[i])
+            
+        } 
+       // console.log("from data", tab)
+        return tab
+      }
+    })
+  }
+
+
+ useEffect(()=>{
+setData(fetchDate())
+ },[])
+
+
+
   
-  render() {
+ 
     return (
         <View style={[styles.container ]}>
           <ScrollableTabView 
@@ -34,7 +62,7 @@ export default class SkiTab extends Component {
               
               />}>
             <ContainerSkiMars tabLabel={{label: "Ski On Mars" }} label="Ski On Mars"/>
-            <SkiActivityRec tabLabel={{label: "Recent Ski Activities"}} label="Recent Ski Activities"/>
+            <SkiActivityRec tab={data} tabLabel={{label: "Recent Ski Activities"}} label="Recent Ski Activities"/>
             
           
           </ScrollableTabView>
@@ -42,7 +70,6 @@ export default class SkiTab extends Component {
         </View>
     );
   }
-}
 const styles = StyleSheet.create({
   container: {
     flex: 1,

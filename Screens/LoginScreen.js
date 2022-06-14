@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import uuid from 'react-native-uuid';
+ 
 import firebase from "firebase";
 import * as Facebook from 'expo-facebook';
 import { FontAwesome5 } from '@expo/vector-icons'; 

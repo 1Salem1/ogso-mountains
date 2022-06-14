@@ -1,36 +1,33 @@
 import { View, Text , StyleSheet, Button ,TouchableOpacity , Image , ScrollView ,TouchableHighlight, Dimensions ,  KeyboardAvoidingView , TextInput} from 'react-native'
 import React , {useState , useEffect} from 'react'
-import { StatusBar } from 'expo-status-bar';
 import firebase from 'firebase';
+import uuid from 'react-native-uuid';
 import Geolocation from '@react-native-community/geolocation';
 import GetLocation from 'react-native-get-location'
 import { Stopwatch, Timer } from 'react-native-stopwatch-timer';
 import { AntDesign } from '@expo/vector-icons';
 import LocationEnabler from "react-native-location-enabler"
-import { Entypo } from '@expo/vector-icons'; 
 import { MaterialCommunityIcons } from '@expo/vector-icons'; 
 import countries from '../SkiPractice/LocationsMaps.js';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
-import SkiTab from '../SkiPractice/SkiPractiseTab.js';
 import { Ionicons } from '@expo/vector-icons';
-import { Octicons } from '@expo/vector-icons'; 
 import style from '../SkiPractice/MapStyle/map.js';
 import MapView, { Callout, Circle, Marker , Polyline } from "react-native-maps"
 import MarkerSvg from '../SvgComponents/MarkerSvg.js';
 import TimerIcon from '../SvgComponents/TimerIcon.js';
 import Iconx from '../SvgComponents/xIcon.js';
-import IconV from '../SvgComponents/vIcons.js';
-import { setAdvertiserTrackingEnabledAsync } from 'expo-facebook';
+import IconV from '../SvgComponents/vIcons.js'
 import ListIcon from '../SvgComponents/ListIcons.js';
-import MapViewDirections from 'react-native-maps-directions'
-import { useWindowDimensions } from 'react-native';
-import Modal from "react-native-modal";
-import ModalCalories from '../Modals/ModelCalories.js';
+import Modal from "react-native-modal"; 
 var axios = require('axios');
 
 const haversine = require('haversine')
+
+
+var ENDTIME
+
 
 
 
@@ -77,10 +74,31 @@ export default function Location({navigation }) {
 
 
 
+const getCurrentTime = () => {
+  var d = new Date(); 
+return d.getHours()+ ':' + d.getMinutes() + ':' + d.getSeconds();
+
+}
+
+
+
+const getCurrentDate =() => {
+  var today = new Date();
+var dd = String(today.getDate()).padStart(2, '0');
+var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+var yyyy = today.getFullYear();
+
+return mm + '/' + dd + '/' + yyyy;
+
+}
+
+
+
+
 const Startinterval = () => {
 
   TimingInterval = setInterval(() => {
-  //  Location()
+    Location()
   console.log('FROM TIMMING WORKING')
   }, 3000);
 }
@@ -93,16 +111,19 @@ const StopInterval = () => {
 }
 
 
+
+
+
 const saveSkiingData = () => {
+  const user = firebase.auth().currentUser;
   console.log('works')
   const id = uuid.v4()
-
+  var database = firebase.database();
   database.ref('skiactivity/' + id).set({
     height:  HeightUser,
     weight: WeightUser,
     speed: speed,
     calories: calories,
-    altitude: altitude,
     weather : weather,
     snow : snow ,
     Time : Time,
@@ -114,8 +135,17 @@ const saveSkiingData = () => {
     distance : distance,
     TimeUp : TimeUp ,
     TimeDown : TimeDown ,
-    TimeFixed : TimeFixed
-    
+    TimeFixed : TimeFixed,
+     email : user.email,
+     EndingTime : getCurrentTime(),
+     date : getCurrentDate(),
+    StartingTime : ENDTIME,
+   // altitudeMax : Math.max(...ArAltitudes),
+   // altitudeMin : Math.Min(...ArAltitudes),
+   // SpeedMin : Math.min(...ArSpeed),
+   // SpeedMax :  Math.max(...ArSpeed) 
+
+  
   })
 }
 
@@ -126,41 +156,23 @@ const saveSkiingData = () => {
   const [isStopwatchStart, setIsStopwatchStart] = useState(false);
   const [timerDuration, setTimerDuration] = useState(90000);
   const [resetTimer, setResetTimer] = useState(true);
-
-
-
-
-
-
+  const [startTime , setStartTime] = useState()
+  const [endTime , setendTime] = useState()
   const [isTimerStartup, setIsTimerStartup] = useState(false);
   const [isStopwatchStartup, setIsStopwatchStartup] = useState(false);
   const [timerDurationup, setTimerDurationup] = useState(90000);
   const [resetTimerup, setResetTimerup] = useState(true);
   const [resetStopwatchup, setResetStopwatchup] = useState(false);
-
-
-
-
-
-
   const [isTimerStartDown, setIsTimerStartDown] = useState(false);
   const [isStopwatchStartDown, setIsStopwatchStartDown] = useState(false);
   const [timerDurationDown, setTimerDurationDown] = useState(90000);
   const [resetTimerDown, setResetTimerDown] = useState(true);
   const [resetStopwatchDown, setResetStopwatchDown] = useState(false);
-
-
-
   const [isTimerStartFixed, setIsTimerStartFixed] = useState(false);
   const [isStopwatchStartFixed, setIsStopwatchStartFixed] = useState(false);
   const [timerDurationFixed, setTimerDurationFixed] = useState(90000);
   const [resetTimerFixed, setResetTimerFixed] = useState(true);
   const [resetStopwatchfixed, setResetStopwatchfixed] = useState(false);
-
-
-
-
-
   const [resetStopwatch, setResetStopwatch] = useState(false);
   const [isModalVisible, setModalVisible] = useState(true);
   const [HeightUser, onChangeHeightUser] = React.useState(0);
@@ -170,6 +182,11 @@ const saveSkiingData = () => {
   const [TimeUp, setTimeUp] = React.useState(null);
   const [TimeFixed, setTimeFixed] = React.useState(null)
   const [TimeDown, setTimeDown] = React.useState(null);
+  const [ArSpeed , setArspeed] = React.useState(null)
+
+
+
+
 
 
   const toggleModal = () => {
@@ -195,6 +212,7 @@ const saveSkiingData = () => {
     const [lat, setLat] = React.useState(0)
     const [lon, setlon] = React.useState(0)
     const [calories, setcalories] = React.useState(0) 
+    const [ArAltitudes , setAraltitudes] = React.useState(0)
 
     
     const [verf , setTverf] = React.useState(false)
@@ -317,12 +335,6 @@ const checkTimerStatus =() => {
     }
   }
 
- 
- const x = parseFloat(haversine(saved[saved.length-1].data.results[0].location.lat,saved[saved.length-1].data.results[0].location.lat), {unit: 'meter'}) 
-  if (x <5){
-
-
-  }
 
 }
 
@@ -353,7 +365,7 @@ const checkTimerStatus =() => {
              saved.push(response)
          //    console.log(saved)
               setaltitude(response.data.results[0].elevation)
-           
+              setAraltitudes([...ArAltitudes,response.data.results[0].elevation]) 
                 let start = {
                   latitude: saved[0].data.results[0].location.lat,
                   longitude: saved[0].data.results[0].location.lng
@@ -402,7 +414,8 @@ const checkTimerStatus =() => {
             });
            
             setLocations([...Locations,location]) 
-           Geolocation.getCurrentPosition(info =>  setslope(info.coords.speed)); 
+           Geolocation.getCurrentPosition(info =>  setslope(info.coords.speed));
+           setArSpeed([...ArSpeed,info.coords.speed])  
         })
         .catch(error => {
             const { code, message } = error;
@@ -624,16 +637,22 @@ const checkTimerStatus =() => {
       StopInterval()
       setIsStopwatchStart(false);
   setResetStopwatch(true);
+         var today = new Date();
+         var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+         setendTime(time)
       setTr(!tr)
     }} style={{top :90, right : 10 ,height : 90,width:70}}/> 
      <IconV style={{top :90, right : 5,height : 90,width:70}}
      onPress={()=>{
+      ENDTIME = getCurrentDate() 
+      setIsStopwatchStart(false);
+      setResetStopwatch(true);
        saveSkiingData()
      }}
      />       
      </View>) 
      : (
-        <TouchableOpacity onPress={() => {navigation.navigate('ListRecords') }} style={{left : 85,top:100,flexDirection:'row', borderRadius:100 ,width:70,height : 70 ,backgroundColor:'white' , }}>
+        <TouchableOpacity onPress={() => {navigation.navigate('ListRecords') }} style={{left : 85,top:90,flexDirection:'row', borderRadius:100 ,width:70,height : 70 ,backgroundColor:'white' , }}>
         <ListIcon style={{textAlign:'center' , bottom :15, left :20}}  />    
      </TouchableOpacity>
      )
@@ -646,9 +665,18 @@ const checkTimerStatus =() => {
 <TouchableOpacity style={{elevation:300,top :390, height : 70, width:100 , 
 }} onPress={() => {
     setIsStopwatchStart(!isStopwatchStart);
-    setResetStopwatch(false);
-    StopInterval()
-  }} >
+    
+    if(isStopwatchStart){ 
+    checkTimerStatus()
+       
+    }
+    else {
+      StopInterval()
+    
+    }
+    setResetStopwatch(false); 
+
+  }} > 
            <TimerIcon style={{height : '100%' , width:'100%'}}/>  
         
           </TouchableOpacity>   

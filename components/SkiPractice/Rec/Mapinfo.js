@@ -26,7 +26,7 @@ export default function Mapinfo() {
 	
 				</MapView>
         <View style={{height : 40}}></View>
-        <ShareButton/>
+
     </View>
   )
 }

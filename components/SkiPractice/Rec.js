@@ -6,7 +6,7 @@ import { Fontisto } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons'; 
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
-export default function Rec() {
+export default function Rec(props) {
 
     const navigation = useNavigation(); 
 
@@ -38,14 +38,14 @@ export default function Rec() {
                             fontWeight: '400',
                             top: 3,
 
-                        }} >Les aiguilles de midi,<Text style={{ fontFamily: '' }}></Text> France</Text>
+                        }} >{props.data.City}<Text style={{ fontFamily: '' }}></Text>{props.data.country}</Text>
 
                     </View>
-                    <FontAwesome5 name="info-circle" style={{ left: 70 }} size={24} color="#e8500e" />
+                    <FontAwesome5 name="info-circle" style={{ left: 140 }} size={24} color="#e8500e" />
                 
                 </View >
                 <View style={{ flexDirection: 'row', marginTop: 10, marginLeft: 10 }}>
-                    <AntDesign name="calendar" size={24} color="#666666" /><Text style={styles.dateT}> 17/05/2022</Text>
+                    <AntDesign name="calendar" size={24} color="#666666" /><Text style={styles.dateT}> {props.data.date}</Text>
                 </View>
 
                 <View style={{
@@ -62,7 +62,7 @@ export default function Rec() {
                             fontStyle: 'normal',
                             textAlign: 'left',
                             left: 30
-                        }}>256kcal</Text>
+                        }}>{props.data.calories}kcal</Text>
                     </View>
                     <View>
                         <Text style={styles.title}>DISTANCE</Text>
@@ -75,7 +75,7 @@ export default function Rec() {
                             fontStyle: 'normal',
                             textAlign: 'left',
                             left: 30
-                        }}>5,6 km</Text>
+                        }}>{props.data.distance}km</Text>
                     </View>
                     <View>
                         <Text style={styles.title}>AVG. SPEED</Text>

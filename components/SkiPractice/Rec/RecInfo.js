@@ -63,7 +63,6 @@ export default function RecInfo() {
 <View style={{height : 10,}}></View>
 
 
-<ShareButton/>
 
     </View>
   )
